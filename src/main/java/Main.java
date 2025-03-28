@@ -1,25 +1,31 @@
-
-import java.io.File;  // Import the File class
-import java.io.FileNotFoundException;  // Import this class to handle errors
-import java.util.Scanner; // Import the Scanner class to read text files
+import system.Login;
 
 public class Main {
-    public static void main(String[] args) {
-        String choice;
-        Scanner sc = new Scanner(System.in);
-        System.out.println("Enter choice: ");
-        choice = sc.nextLine();
-        try {
-            File myObj = new File("src/main/data/ApplicantList.csv");
-            Scanner myReader = new Scanner(myObj);
-            while (myReader.hasNextLine()) {
-                String data = myReader.nextLine();
-                System.out.println(data);
-            }
-            myReader.close();
-        } catch (FileNotFoundException e) {
-            System.out.println("An error occurred.");
-            e.printStackTrace();
-        }
+    //Add in attributes
+    String[] userData;
+    public static void main(String[] args){
+        System.out.println("Welcome to BTO System! \nPlease Login");
+        new Main().run();
+    }
+
+    public void run(){
+        start();
+        runUntilQuit();
+        exit();
+    }
+
+    private void start(){
+        Login login = new Login();
+        userData = login.getData();
+    }
+
+    private void runUntilQuit(){
+        System.out.println("Getting Data...");
+        System.out.printf("Hello, %s!\n", userData[0]);
+        return;
+    }
+
+    private void exit(){
+        System.exit(0);
     }
 }
