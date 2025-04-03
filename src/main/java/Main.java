@@ -1,23 +1,36 @@
+import storage.Storage;
 import system.Login;
+import ui.Messages;
+import ui.Ui;
+
 import java.util.List;
 
-public class Main {
-    //Add in attributes
+public class Main{
     List<String> userData;
+    private Ui ui;
+
     public static void main(String[] args){
-        System.out.println("Welcome to BTO System! \nPlease Login");
+        System.out.println(Messages.APPLICATION_NAME);
         new Main().run();
     }
 
     public void run(){
-        start();
+        initialize();
         runUntilQuit();
         exit();
     }
 
-    private void start(){
+    private void initialize(){
+        ui = new Ui();
+        Storage storage = new Storage();
         Login login = new Login();
-        userData = login.getData();
+        while(userData == null) {
+            userData = login.fetchDatabase(ui.readUserID(), ui.readPassword(), storage);
+            if(userData == null){
+                System.out.println("Invalid credentials!");
+            }
+        }
+        System.out.println(userData);
     }
 
     private void runUntilQuit(){
