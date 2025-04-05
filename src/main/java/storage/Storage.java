@@ -5,6 +5,7 @@ import java.io.FileNotFoundException;
 import java.util.*;
 
 public class Storage {
+    //NAME, USER_ID, AGE, MARITAL, PASSWORD, TYPE
     private Map<String, ArrayList<String>> USERS = new HashMap<>(); //Main storage for user info
     String[] userTypes = {"Applicant", "Manager", "Officer"};
     public Storage() {

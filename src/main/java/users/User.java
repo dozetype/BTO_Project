@@ -1,12 +1,13 @@
 package users;
 
-public abstract class Users {
+public abstract class User {
+    private String name;
     private String userID;
     private String password;
     private int age;
     private MaritalStatus maritalStatus;
 
-    public Users(String userID, String password, int age, MaritalStatus maritalStatus) {
+    public User(String userID, String password, int age, MaritalStatus maritalStatus) {
         this.userID = userID;
         this.password = password;
         this.age = age;
