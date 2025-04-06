@@ -9,24 +9,27 @@ public class Ui {
         scanner = new Scanner(System.in);
     }
 
-    //Won't accept empty input
-    public String readInput(){
+    public String inputString(){
         String input = scanner.nextLine();
-        while(input.isEmpty()){
+        while(input.isEmpty()){ //Won't accept empty input
             input = scanner.nextLine();
         }
         return input;
     }
 
-    //For reading userID
+    //Print and Ask
     public String readUserID(){
         System.out.println("Enter User ID:");
-        return readInput();
+        return inputString();
     }
 
-    //For reading userID
     public String readPassword(){
         System.out.println("Enter Password:");
-        return readInput();
+        return inputString();
+    }
+
+    public String readNewPassword(){
+        System.out.println("Enter New Password:");
+        return inputString();
     }
 }

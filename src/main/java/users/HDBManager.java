@@ -2,8 +2,8 @@ package users;
 
 import java.util.List;
 
-public class HDBOfficer extends Applicant {
-    public HDBOfficer(List<String> userData) {
+public class HDBManager extends User{
+    public HDBManager(List<String> userData) {
         super(userData);
     }
 
@@ -11,5 +11,4 @@ public class HDBOfficer extends Applicant {
     public void menu() {
         return;
     }
-
 }

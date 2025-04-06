@@ -1,8 +1,18 @@
 package users;
 
+import ui.Messages;
+
+import java.util.List;
+
 public class Applicant extends User {
-    public Applicant(String userID, String password, int age, MaritalStatus maritalStatus) {
-        super(userID, password, age, maritalStatus);
-        System.out.println(getPassword());
+    public Applicant(List<String> userData) {
+        super(userData);
+        System.out.println(getMaritalStatus());
     }
+
+    @Override
+    public void menu() {
+        return;
+    }
+
 }
