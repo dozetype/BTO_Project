@@ -17,6 +17,15 @@ public class Ui {
         return input;
     }
 
+    public int inputInt(){
+        System.out.print("Enter Number: ");
+        String input = scanner.nextLine();
+        while(input.isEmpty()){
+            input = scanner.nextLine();
+        }
+        return Integer.parseInt(input);
+    }
+
     //Print and Ask
     public String readUserID(){
         System.out.println("Enter User ID:");
@@ -31,5 +40,10 @@ public class Ui {
     public String readNewPassword(){
         System.out.println("Enter New Password:");
         return inputString();
+    }
+
+    public String switchOff(){
+        System.out.println("Press any key to start, 0 to Quit: ");
+        return scanner.nextLine();
     }
 }

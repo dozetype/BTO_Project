@@ -23,12 +23,12 @@ public abstract class User {
         return;
     }
 
-    public void changePassword() {
+    public void changePassword(String newPassword) {
         //TODO add change password functionality
-        return;
+        this.password = newPassword;
     }
 
-    public List<String> close(String type){
+    public List<String> close(String type){ //return user data
         List<String> data = new ArrayList<>();
         data = getAll();
         data.add(type); //add user type
@@ -40,11 +40,16 @@ public abstract class User {
     }
     public void getFilterList(){ //show list of filter
         for(int i = 0; i < this.filterList.size(); i++){
-            System.out.println(i + ": " + this.filterList.get(i));
+            System.out.println(i+1 + ") " + this.filterList.get(i));
         }
     }
     public void removeFilter(int index){ //removes 1 element
-        this.filterList.remove(index+1);
+        try {
+            this.filterList.remove(index - 1);
+        }
+        catch(IndexOutOfBoundsException e){
+            System.out.println("Filter Index Out of Bounds, Please Try Again");
+        }
     }
 
 

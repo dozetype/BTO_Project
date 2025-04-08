@@ -1,10 +1,14 @@
 package users;
 
+import storage.Storage;
+
 import java.util.List;
 
 public class HDBManager extends User{
-    public HDBManager(List<String> userData) {
+    private Storage storage;
+    public HDBManager(List<String> userData, Storage storage) {
         super(userData);
+        this.storage = storage;
     }
 
     @Override
