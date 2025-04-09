@@ -7,7 +7,7 @@ import java.util.List;
 public class HDBManager extends User{
     private Storage storage;
     public HDBManager(List<String> userData, Storage storage) {
-        super(userData);
+        super(userData, "Manager");
         this.storage = storage;
     }
 

@@ -7,7 +7,7 @@ import java.util.List;
 import java.util.Objects;
 
 public class Main{
-    List<String> currUserData;
+    List<String> loginUserData;
     User currUser;
     private Ui ui;
     private Storage storage;
@@ -31,23 +31,22 @@ public class Main{
     private void runUntilQuit(){
         while(!Objects.equals(ui.switchOff(), "0")) {
             Login login = new Login();
-            while (currUserData == null) {
-                currUserData = login.fetchDatabase(ui.readUserID(), ui.readPassword(), storage);
-                if (currUserData == null) {
+            while (loginUserData == null) {
+                loginUserData = login.fetchDatabase(ui.readUserID(), ui.readPassword(), storage);
+                if (loginUserData == null) {
                     System.out.println("Invalid credentials!");
                 }
             }
-            if (currUserData.get(5).equals("Manager")) {
-                currUser = new HDBManager(currUserData, storage);
-            } else if (currUserData.get(5).equals("Officer")) {
-                currUser = new HDBOfficer(currUserData, storage);
+            if (loginUserData.get(5).equals("Manager")) {
+                currUser = new HDBManager(loginUserData, storage);
+            } else if (loginUserData.get(5).equals("Officer")) {
+                currUser = new HDBOfficer(loginUserData, storage);
             } else {
-                currUser = new Applicant(currUserData, storage);
+                currUser = new Applicant(loginUserData, storage);
             }
 
             currUser.menu();
-            System.out.printf("Hello, %s, %s!\n", currUserData.get(0), currUserData.get(5));
-            storage.updateUser(currUser.close(currUserData.get(5)));
+            loginUserData = null;//log out
         }
     }
 

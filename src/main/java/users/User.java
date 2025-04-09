@@ -4,19 +4,21 @@ import java.util.ArrayList;
 import java.util.List;
 
 public abstract class User {
-    private String name; //0
-    private String userID; //1
-    private String age; //2
-    private MaritalStatus maritalStatus; //3
+    private final String name; //0
+    private final String userID; //1
+    private final String age; //2
+    private final MaritalStatus maritalStatus; //3
     private String password; //4
+    private String userType;
     private ArrayList<String> filterList = new ArrayList<>(); //Store individual users filter
 
-    public User(List<String> userData) {
+    public User(List<String> userData, String userType) {
         this.name = userData.get(0);
         this.userID = userData.get(1);
         this.age = userData.get(2);
         this.maritalStatus = MaritalStatus.valueOf(userData.get(3).toUpperCase());
         this.password = userData.get(4);
+        this.userType = userType;
     }
 
     public void menu(){ //overridden by children
@@ -24,15 +26,7 @@ public abstract class User {
     }
 
     public void changePassword(String newPassword) {
-        //TODO add change password functionality
         this.password = newPassword;
-    }
-
-    public List<String> close(String type){ //return user data
-        List<String> data = new ArrayList<>();
-        data = getAll();
-        data.add(type); //add user type
-        return data;
     }
 
     public void setFilterList(String filter){ //adds 1 filter
@@ -59,24 +53,22 @@ public abstract class User {
     public String getAge(){ return this.age; }
     public MaritalStatus getMaritalStatus(){ return this.maritalStatus; }
     public String getPassword(){ return this.password; }
-    public List<String> getAll(){
+    public String getUserType(){ return this.userType; }
+    public List<String> getAllUserData(){
         List<String> list = new ArrayList<>();
         list.add(name);
         list.add(userID);
         list.add(age);
         list.add(maritalStatus.toString());
         list.add(password);
+        list.add(userType);
         return list;
     }
 
-    public void setUserID(String userID){ this.userID = userID; }
     public void setPassword(String password){
         this.password = password;
     }
-    public void setAge(String age){
-        this.age = age;
-    }
-    public void setMaritalStatus(MaritalStatus maritalStatus){
-        this.maritalStatus = maritalStatus;
+    public void setUserType(String userType){
+        this.userType = userType;
     }
 }

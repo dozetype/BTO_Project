@@ -1,21 +1,21 @@
 package users;
 
 import storage.Storage;
+import ui.Messages;
 
 import java.util.List;
 
 public class HDBOfficer extends Applicant {
     public HDBOfficer(List<String> userData, Storage storage) {
         super(userData, storage);
+        setUserType("Officer");
     }
 
     @Override
     public void menu() {
         int choice;
         do {
-            System.out.println("Welcome to the Officer Menu");
-            System.out.println("1. Add Filter");
-            System.out.println("2. View Filters");
+            System.out.println("Hello "+getName()+", "+getUserType()+"\n"+ Messages.APPLICANT_MENU);
             choice = ui.inputInt();
             switch (choice) {
                 case 1:
