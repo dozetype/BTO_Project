@@ -40,8 +40,8 @@ public class Project {
             System.out.println(e.getMessage());
         }
         this.createdBy = data[11];
-        this.units.put(data[2], 3); this.prices.put(data[2], 4);
-        this.units.put(data[5], 6); this.prices.put(data[5], 7);
+        this.units.put(data[2], data[3]); this.prices.put(data[2], data[4]);
+        this.units.put(data[5], data[6]); this.prices.put(data[5], data[7]);
         String[] officers = data[12].replaceAll("\"", "").split(",");
         this.projectTeam = new ProjectTeam(officers, data[11], data[10], null);
         //TODO add enquries

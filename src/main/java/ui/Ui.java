@@ -28,22 +28,22 @@ public class Ui {
 
     //Print and Ask
     public String readUserID(){
-        System.out.println("Enter User ID:");
+        System.out.print("Enter User ID: ");
         return inputString();
     }
 
     public String readPassword(){
-        System.out.println("Enter Password:");
+        System.out.print("Enter Password: ");
         return inputString();
     }
 
     public String readNewPassword(){
-        System.out.println("Enter New Password:");
+        System.out.print("Enter New Password: ");
         return inputString();
     }
 
     public String switchOff(){
-        System.out.println("Press any key to Login, 0 to Quit: ");
+        System.out.print ("Press any key to Login, 0 to Quit: ");
         return scanner.nextLine();
     }
 }
