@@ -3,6 +3,8 @@ package storage;
 import java.lang.reflect.Array;
 import java.util.*;
 
+import static java.util.Arrays.*;
+
 public class Storage {
     StorageController storageController;
     //NAME, USER_ID, AGE, MARITAL, PASSWORD, TYPE
@@ -32,6 +34,14 @@ public class Storage {
     }
     public void addProject(ArrayList<String> newProject) {
         PROJECTS.put(newProject.get(0), newProject);
+    }
+    public void registerProject(String userID, String projectName) {
+        List<String> OfficerList = new ArrayList<>();
+        if (PROJECTS.containsKey(projectName)) {
+            ArrayList<String> projectInfo = PROJECTS.get(projectName);
+            projectInfo.add(userID);
+        }
+
     }
 
 

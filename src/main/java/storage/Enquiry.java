@@ -30,7 +30,18 @@ public class Enquiry {
         return reply;
     }
 
-    public void setReply(String reply){
+    public void setReply(String reply) {
         this.reply = reply;
+    }
+
+    public String toString() {
+        return "Enquiry{" +
+                "ID='" + ID + '\'' +
+                ", asker ID='" + askerID + '\'' +
+                ", projectName='" + projectName + '\'' +
+                ", question='" + question + '\'' +
+                ", reply='" + reply + '\'' +
+                // Add other fields you want to display
+                '}';
     }
 }
