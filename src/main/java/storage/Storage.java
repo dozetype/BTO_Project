@@ -5,7 +5,7 @@ import java.util.*;
 public class Storage {
     StorageController storageController;
     //NAME, USER_ID, AGE, MARITAL, PASSWORD, TYPE
-    private Map<String, ArrayList<String>> USERS; //Main storage for user info
+    private Map<String, ArrayList<String>> USERS; //Main storage for user info, only creating one user at a time
     private Map<String, Project> PROJECTS;
     private Map<String, Enquiry> ENQUIRIES;
 

@@ -3,7 +3,7 @@ package users;
 import java.util.ArrayList;
 import java.util.List;
 
-public abstract class User {
+public abstract class User implements IUser {
     private final String name; //0
     private final String userID; //1
     private final String age; //2

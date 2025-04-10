@@ -1,6 +1,5 @@
 package users;
 import storage.Enquiry;
-import storage.Project;
 import storage.Storage;
 import ui.Messages;
 import ui.Ui;
@@ -8,7 +7,7 @@ import ui.Ui;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Applicant extends User {
+public class Applicant extends User implements IApplicant {
     Ui ui = new Ui();
     Storage storage;
     public Applicant(List<String> userData, Storage storage) {
@@ -58,16 +57,16 @@ public class Applicant extends User {
     }
 
     //TODO repair this
-//    protected void viewProject(){
+    public void viewProject(){
 //        int count=1;
 //        for (Project p : storage.getProject().values()) {
 //            System.out.print(count++ +") ");
 //            p.forEach(item -> System.out.print(item + " | "));
 //        }
 //        System.out.println();
-//    }
+    }
 
-    protected void viewEnquiries(){
+    public void viewEnquiries(){
         for(Enquiry e : storage.getEnquiries().values()) {
             if(e.getAskerID().equals(getUserID())) {
                 System.out.println("Your Question: " + e.getQuestion() + "\n" +"Your Reply: " + e.getReply());
@@ -75,7 +74,7 @@ public class Applicant extends User {
         }
     }
 
-    protected void addEnquiry(){
+    public void addEnquiry(){
         List<String> projectNames = new ArrayList<>();
         int count=1;
         for(String s : storage.getProject().keySet()) {
@@ -89,11 +88,11 @@ public class Applicant extends User {
             String question = ui.inputString();
             storage.addEnquiries(getUserID(), projectName, question);
         } catch (Exception e) {
-            System.out.println(e.getMessage());;
+            System.out.println(e.getMessage());
         }
     }
 
-    protected void removeEnquiry(){
+    public void removeEnquiry(){
         List<String> enquiryIDList = new ArrayList<>();
         int count=1;
         for(Enquiry e : storage.getEnquiries().values()) {
@@ -108,7 +107,7 @@ public class Applicant extends User {
                 String enquiryID = enquiryIDList.get(ui.inputInt() - 1);
                 storage.removeEnquiries(enquiryID);
             }catch (Exception e) {
-                System.out.println(e.getMessage());;
+                System.out.println(e.getMessage());
             }
         }
         else{

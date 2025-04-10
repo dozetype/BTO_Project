@@ -10,7 +10,7 @@ import java.util.List;
 public class HDBOfficer extends Applicant {
     private OfficerStatus officerStatus=OfficerStatus.NEITHER;
     private RegistrationStatus registrationStatus= RegistrationStatus.NOT_REGISTERED;
-    private String ProjectAllocated="Acacia Breeze";
+    private String ProjectAllocated="Acacia Breeze"; //find out Project allocated and Registration from ProjectTeam
     public HDBOfficer(List<String> userData, Storage storage) {
         super(userData, storage);
         setUserType("Officer");
