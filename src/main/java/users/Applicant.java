@@ -56,7 +56,7 @@ public class Applicant extends User {
         }while(choice < 10);
     }
 
-    private void viewProject(){
+    protected void viewProject(){
         int count=1;
         for (ArrayList i : storage.getProject().values()) {
             System.out.print(count++ +") ");
@@ -65,7 +65,7 @@ public class Applicant extends User {
         System.out.println();
     }
 
-    private void viewEnquiries(){
+    protected void viewEnquiries(){
         for(Enquiry e : storage.getEnquiries().values()) {
             if(e.getAskerID().equals(getUserID())) {
                 System.out.println("Your Question: " + e.getQuestion() + "\n" +"Your Reply: " + e.getReply());
@@ -73,7 +73,7 @@ public class Applicant extends User {
         }
     }
 
-    private void addEnquiry(){
+    protected void addEnquiry(){
         List<String> projectNames = new ArrayList<>();
         int count=1;
         for(String s : storage.getProject().keySet()) {
@@ -91,7 +91,7 @@ public class Applicant extends User {
         }
     }
 
-    private void removeEnquiry(){
+    protected void removeEnquiry(){
         List<String> enquiryIDList = new ArrayList<>();
         int count=1;
         for(Enquiry e : storage.getEnquiries().values()) {
