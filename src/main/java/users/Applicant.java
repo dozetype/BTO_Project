@@ -1,5 +1,6 @@
 package users;
 import storage.Enquiry;
+import storage.Project;
 import storage.Storage;
 import ui.Messages;
 import ui.Ui;
@@ -40,9 +41,9 @@ public class Applicant extends User {
                     setPassword(ui.inputString());
                     storage.updateUserData(getAllUserData());
                     break;
-                case 5:
-                    viewProject();
-                    break;
+//                case 5:
+//                    viewProject();
+//                    break;
                 case 6:
                     viewEnquiries();
                     break;
@@ -56,14 +57,15 @@ public class Applicant extends User {
         }while(choice < 10);
     }
 
-    protected void viewProject(){
-        int count=1;
-        for (ArrayList i : storage.getProject().values()) {
-            System.out.print(count++ +") ");
-            i.forEach(item -> System.out.print(item + " | "));
-        }
-        System.out.println();
-    }
+    //TODO repair this
+//    protected void viewProject(){
+//        int count=1;
+//        for (Project p : storage.getProject().values()) {
+//            System.out.print(count++ +") ");
+//            p.forEach(item -> System.out.print(item + " | "));
+//        }
+//        System.out.println();
+//    }
 
     protected void viewEnquiries(){
         for(Enquiry e : storage.getEnquiries().values()) {

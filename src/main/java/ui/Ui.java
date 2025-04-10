@@ -43,7 +43,7 @@ public class Ui {
     }
 
     public String switchOff(){
-        System.out.println("Press any key to start, 0 to Quit: ");
+        System.out.println("Press any key to Login, 0 to Quit: ");
         return scanner.nextLine();
     }
 }

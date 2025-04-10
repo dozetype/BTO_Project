@@ -41,9 +41,9 @@ public class HDBOfficer extends Applicant {
                     setPassword(ui.inputString());
                     storage.updateUserData(getAllUserData());
                     break;
-                case 5:
-                    super.viewProject();
-                    break;
+//                case 5:
+//                    super.viewProject();
+//                    break;
                 case 6:
                     viewEnquiries();
                     break;
@@ -77,7 +77,7 @@ public class HDBOfficer extends Applicant {
             try {
                 System.out.print("Pick which Project you would like to register as Officer: ");
                 String projectName = projectNames.get(ui.inputInt() - 1);
-                storage.registerProject(getUserID(), projectName);
+//                storage.registerProject(getUserID(), projectName);
                 System.out.println("Please wait for the result. You are applying as Officer in "+projectName);
                 setRegistrationStatus(RegistrationStatus.PENDING);
                 System.out.println(storage.getProject());
@@ -97,6 +97,7 @@ public class HDBOfficer extends Applicant {
     }
 
     private void replyToEnquiry() {
+        //TODO only be able to view enq with unanswered qns
         viewEnquiries();
         System.out.println("Please choose the Enquiries ID: ");
         String enquiryID = ui.inputString();

@@ -1,22 +1,19 @@
 package storage;
 
-import java.lang.reflect.Array;
 import java.util.*;
-
-import static java.util.Arrays.*;
 
 public class Storage {
     StorageController storageController;
     //NAME, USER_ID, AGE, MARITAL, PASSWORD, TYPE
     private Map<String, ArrayList<String>> USERS; //Main storage for user info
-    private Map<String, ArrayList<String>> PROJECTS;
+    private Map<String, Project> PROJECTS;
     private Map<String, Enquiry> ENQUIRIES;
 
     public Storage(){
         storageController = new StorageController();
         USERS = storageController.readUserFile();
-        PROJECTS = storageController.readProjectFile();
         ENQUIRIES = storageController.readEnquiryFile();
+        PROJECTS = storageController.readProjectFile();
     }
 
     public ArrayList<String> getUserData(String userID){
@@ -27,22 +24,23 @@ public class Storage {
     }
 
 
-    public Map<String, ArrayList<String>> getProject(){
+    public Map<String, Project> getProject(){
         return PROJECTS;
     }
     public void updateProject(List<String> projectData) {
     }
-    public void addProject(ArrayList<String> newProject) {
-        PROJECTS.put(newProject.get(0), newProject);
+    public void addProject(Project newProject) {
+        PROJECTS.put(newProject.getProjectName(), newProject);
     }
-    public void registerProject(String userID, String projectName) {
-        List<String> OfficerList = new ArrayList<>();
-        if (PROJECTS.containsKey(projectName)) {
-            ArrayList<String> projectInfo = PROJECTS.get(projectName);
-            projectInfo.add(userID);
-        }
 
-    }
+    //TODO repair this
+//    public void registerProject(String userID, String projectName) {
+//        List<String> OfficerList = new ArrayList<>();
+//        if (PROJECTS.containsKey(projectName)) {
+//            Project projectInfo = PROJECTS.get(projectName);
+//            projectInfo.add(userID);
+//        }
+//    }
 
 
     public Map<String, Enquiry> getEnquiries(){
@@ -63,7 +61,8 @@ public class Storage {
      */
     public void close(){
         storageController.writeUserFile(USERS);
-        storageController.writeProjectFile(PROJECTS);
+        //TODO repair this
+//        storageController.writeProjectFile(PROJECTS);
         storageController.writeEnquiryFile(ENQUIRIES);
     }
 }

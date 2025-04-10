@@ -3,101 +3,72 @@ package storage;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.time.LocalDate;
+import java.util.List;
 
 import users.Applicant;
 import users.HDBManager;
 import users.HDBOfficer;
-import users.MaritalStatus;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 public class Project {
-    private String projectName;
-    private String neighbourhood;
-    private LocalDate openingDate;
-    private LocalDate closingDate;
-    private HDBManager HDBManagerInCharge;
-    private HashMap<String, Integer> numberOfUnits; // key: flatType, value: number of units
-    private ArrayList<Applicant> applicants;
-    private ArrayList<HDBOfficer> HDBOfficers;
-    private ArrayList<Enquiry> enquiries;
-
-    private int availableHDBOfficerSlots = 10; // maximum available slots for HDB officers
+    private final String projectName;
+    private final String neighbourhood;
+    private long openingDate; //TODO maybe can use long instead
+    private long closingDate;
+    private final String createdBy;
+    private HashMap<String, Integer> units = new HashMap<>();; // key: flatType, value: number of units
+    private HashMap<String, Integer> prices = new HashMap<>();;
+    private ProjectTeam projectTeam;
+    private List<Enquiry> enquiries;
     private boolean projectVisibility;
 
-    public Project(String projectName, String neighbourhood, LocalDate openingDate, LocalDate closingDate, HDBManager HDBManagerInCharge) {
-        this.projectName = projectName;
-        this.neighbourhood = neighbourhood;
-        this.openingDate = openingDate;
-        this.closingDate = closingDate;
-        this.HDBManagerInCharge = HDBManagerInCharge;
-        this.numberOfUnits = new HashMap<>();
-        this.applicants = new ArrayList<>();
-        this.HDBOfficers = new ArrayList<>();
-        this.enquiries = new ArrayList<>();
+    public Project(String[] data) {
+        /*
+        (0)Project Name,(1)Neighborhood,(2)Type 1,(3)Number of units for Type 1,(4)Selling price for Type 1,
+        (5)Type 2,(6)Number of units for Type 2,(7)Selling price for Type 2,
+        (8)Application opening date,(9)Application closing date,(10)Manager,(11)Officer Slot,(12)Officer
+         */
+        this.projectName = data[0];
+        this.neighbourhood = data[1];
+        SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
+        try {
+            this.openingDate = formatter.parse(data[8]).getTime();
+            this.closingDate = formatter.parse(data[9]).getTime();
+            System.out.println(this.openingDate + " " + this.closingDate + " " + formatter.format(new Date(this.openingDate)));
+        }catch (Exception e){
+            System.out.println(e.getMessage());
+        }
+        this.createdBy = data[11];
+        this.units.put(data[2], 3); this.prices.put(data[2], 4);
+        this.units.put(data[5], 6); this.prices.put(data[5], 7);
+        String[] officers = data[12].replaceAll("\"", "").split(",");
+        this.projectTeam = new ProjectTeam(officers, data[11], data[10], null);
+        //TODO add enquries
+//        this.units = new HashMap<>();
+//        this.applicants = new ArrayList<>();
+//        this.HDBOfficers = new ArrayList<>();
+//        this.enquiries = new ArrayList<>();
     }
 
     public String getProjectName() { return projectName; }
-
-    public void setProjectName(String projectName) {
-        this.projectName = projectName;
-    }
-
     public String getNeighbourhood() { return neighbourhood; }
-
-    public void setNeighbourhood(String neighbourhood) {
-        this.neighbourhood = neighbourhood;
-    }
-
-    public LocalDate getOpeningDate() { return openingDate; }
-
-    public void setOpeningDate(LocalDate openingDate) {
-        this.openingDate = openingDate;
-    }
-
-    public LocalDate getClosingDate() { return closingDate; }
-
-    public void setClosingDate(LocalDate closingDate) {
-        this.closingDate = closingDate;
-    }
-
-    public HDBManager getHDBManagerInCharge() { return HDBManagerInCharge; }
-
-    public void setHDBManagerInCharge(HDBManager HDBManagerInCharge) {
-        this.HDBManagerInCharge = HDBManagerInCharge;
-    }
-
-    public HashMap<String, Integer> getNumberOfUnits() { return numberOfUnits; }
-
-    public void setNumberOfUnits(HashMap<String, Integer> numberOfUnits) {
-        this.numberOfUnits = numberOfUnits;
-    }
-
-    public ArrayList<Applicant> getApplicants() { return applicants; }
-
-    public void setApplicants(ArrayList<Applicant> applicants) {
-        this.applicants = applicants;
-    }
-
-    public ArrayList<HDBOfficer> getHDBOfficers() { return HDBOfficers; }
-
-    public void setHDBOfficers(ArrayList<HDBOfficer> HDBOfficers) {
-        this.HDBOfficers = HDBOfficers;
-    }
-
-    public ArrayList<Enquiry> getEnquiries() { return enquiries; }
-
-    public void setEnquiries(ArrayList<Enquiry> enquiries) {
-        this.enquiries = enquiries;
+    public long getOpeningDate() { return openingDate; }
+    public long getClosingDate() { return closingDate; }
+    public String getCreatedBy() { return createdBy; }
+    public HashMap<String, Integer> getUnits() { return units; }
+    public HashMap<String, Integer> getPrices() { return prices; }
+    public ProjectTeam getProjectTeam() { return projectTeam; }
+    public void setUnits(HashMap<String, Integer> units) {
+        this.units = units;
     }
 
     // method to check flat availability
     public void updateFlatAvailability(String flatType, int numberOfUnits) {
-        this.numberOfUnits.put(flatType, numberOfUnits);
+        this.units.put(flatType, numberOfUnits);
     }
 
     public void toggleProjectVisibility() {
-        if (projectVisibility) {
-            projectVisibility = false;
-        }
-        else projectVisibility = true;
+        projectVisibility = !projectVisibility;
     }
 }

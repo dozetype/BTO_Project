@@ -26,7 +26,6 @@ public class StorageController {
         }
         catch (FileNotFoundException e){
             System.out.println("An error occurred.");
-            e.printStackTrace();
         }
         return USERS;
     }
@@ -52,21 +51,20 @@ public class StorageController {
     /*
     Initialise PROJECTS data
      */
-    public Map<String, ArrayList<String>> readProjectFile(){
-        Map<String, ArrayList<String>> PROJECTS = new HashMap<>();
+    public Map<String, Project> readProjectFile(){
+        Map<String, Project> PROJECTS = new HashMap<>();
         try{
             Scanner data = new Scanner(new File("src/main/user_data/ProjectList.csv"));
             data.nextLine(); //for skipping the title
             while(data.hasNextLine()) {// Going through all user data
                 String line = data.nextLine();
                 String[] row = line.split(","); //delimiting
-                PROJECTS.put(row[0], new ArrayList<>(Arrays.asList(row))); //appending into hashmap
+                PROJECTS.put(row[0], new Project(row)); //appending into hashmap
             }
             data.close();
         }
         catch (FileNotFoundException e){
             System.out.println("An error occurred.");
-            e.printStackTrace();
         }
         return PROJECTS;
     }
@@ -107,7 +105,6 @@ public class StorageController {
         }
         catch (FileNotFoundException e){
             System.out.println("An error occurred.");
-            e.printStackTrace();
         }
         return ENQUIRIES;
     }
