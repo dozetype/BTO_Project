@@ -19,11 +19,18 @@ public class Ui {
 
     public int inputInt(){
         System.out.print("Enter Number: ");
-        String input = scanner.nextLine();
-        while(input.isEmpty()){
-            input = scanner.nextLine();
+        int number;
+        while (true) {
+            String input = scanner.nextLine();
+            try {
+                number = Integer.parseInt(input);
+                break; // valid input, break the loop
+            } catch (NumberFormatException e) {
+                System.out.println("That's not a valid integer. Try again.");
+            }
         }
-        return Integer.parseInt(input);
+
+        return number;
     }
 
     //Print and Ask

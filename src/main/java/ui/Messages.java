@@ -19,6 +19,8 @@ public class Messages {
             
             8) Remove Enquiries\
             
+            0) EXIT\
+            
             """;
 
     public static final String OFFICER_MENU = """
@@ -42,7 +44,28 @@ public class Messages {
             
             10) View Registration Status\
             
-            11) Reply Enquiry
+            11) Reply Enquiry\
+            
+            0) EXIT\
+            
+            """;
+
+    public static final String MANAGER_MENU = """
+            1) Add Filter\
+
+            2) View Filters\
+            
+            3) Remove Filter\
+            
+            4) Change Password\
+            
+            5) View Projects\
+            
+            6) View Enquiries\
+            
+            7) Add Enquiries\
+            
+            8) Remove Enquiries\
             
             """;
 }

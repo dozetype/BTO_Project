@@ -9,52 +9,51 @@ import java.util.List;
 
 public class Applicant extends User implements IApplicant {
     Ui ui = new Ui();
-    Storage storage;
-    public Applicant(List<String> userData, Storage storage) {
+//    Storage storage;
+    public Applicant(List<String> userData) {
         super(userData, "Applicant");
-        this.storage = storage;
     }
 
-    @Override
-    public void menu(){
-        int choice;
-        do {
-            System.out.println("Hello "+getName()+", "+getUserType()+"\n"+Messages.APPLICANT_MENU);
-            choice = ui.inputInt();
-            switch (choice) {
-                case 1:
-                    System.out.print("Enter filter to add: ");
-                    setFilterList(ui.inputString());
-                    break;
-                case 2:
-                    System.out.println("Current Filters: ");
-                    getFilterList();
-                    break;
-                case 3:
-                    System.out.println("Remove Filter");
-                    getFilterList();
-                    removeFilter(ui.inputInt());
-                    break;
-                case 4:
-                    System.out.print("Enter New Password: ");
-                    setPassword(ui.inputString());
-                    storage.updateUserData(getAllUserData());
-                    break;
-//                case 5:
-//                    viewProject();
+//    @Override
+//    public void menu(){
+//        int choice;
+//        do {
+//            System.out.println("Hello "+getName()+", "+getUserType()+"\n"+Messages.APPLICANT_MENU);
+//            choice = ui.inputInt();
+//            switch (choice) {
+//                case 1:
+//                    System.out.print("Enter filter to add: ");
+//                    setFilterList(ui.inputString());
 //                    break;
-                case 6:
-                    viewEnquiries();
-                    break;
-                case 7:
-                    addEnquiry();
-                    break;
-                case 8:
-                    removeEnquiry();
-                    break;
-            }
-        }while(choice < 10);
-    }
+//                case 2:
+//                    System.out.println("Current Filters: ");
+//                    getFilterList();
+//                    break;
+//                case 3:
+//                    System.out.println("Remove Filter");
+//                    getFilterList();
+//                    removeFilter(ui.inputInt());
+//                    break;
+//                case 4:
+//                    System.out.print("Enter New Password: ");
+//                    setPassword(ui.inputString());
+//                    storage.updateUserData(getAllUserData());
+//                    break;
+////                case 5:
+////                    viewProject();
+////                    break;
+//                case 6:
+//                    viewEnquiries();
+//                    break;
+//                case 7:
+//                    addEnquiry();
+//                    break;
+//                case 8:
+//                    removeEnquiry();
+//                    break;
+//            }
+//        }while(choice < 10);
+//    }
 
     //TODO repair this
     public void viewProject(){
@@ -66,7 +65,7 @@ public class Applicant extends User implements IApplicant {
 //        System.out.println();
     }
 
-    public void viewEnquiries(){
+    public void viewEnquiries(Storage storage){
         for(Enquiry e : storage.getEnquiries().values()) {
             if(e.getAskerID().equals(getUserID())) {
                 System.out.println("Your Question: " + e.getQuestion() + "\n" +"Your Reply: " + e.getReply());
@@ -74,7 +73,7 @@ public class Applicant extends User implements IApplicant {
         }
     }
 
-    public void addEnquiry(){
+    public void addEnquiry(Storage storage){
         List<String> projectNames = new ArrayList<>();
         int count=1;
         for(String s : storage.getProject().keySet()) {
@@ -92,7 +91,7 @@ public class Applicant extends User implements IApplicant {
         }
     }
 
-    public void removeEnquiry(){
+    public void removeEnquiry(Storage storage){
         List<String> enquiryIDList = new ArrayList<>();
         int count=1;
         for(Enquiry e : storage.getEnquiries().values()) {
