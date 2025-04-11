@@ -9,14 +9,15 @@ import java.util.List;
 public class ProjectTeam {
     private final String Manager;
     private final int maxSlots;
-    private String[] officers;
-    private String[] officerRegistration; //TODO maybe load this from using another project.csv
+    private List<String> officers;
+    private List<String> officersApplying; //TODO maybe load this from using another project.csv
 
-    public ProjectTeam(String hdbManager, String slots, String[] officers, String[] officerRegistration) {
-        this.officers = officers;
-        this.maxSlots = Integer.parseInt(slots);
+    public ProjectTeam(String hdbManager, String slots, String[] officers, String[] officersApplying) {
         this.Manager = hdbManager;
-        this.officerRegistration = officerRegistration;
+        this.maxSlots = Integer.parseInt(slots);
+        this.officers = List.of(officers);
+        this.officersApplying = List.of(officersApplying);
+        System.out.println("Officer Applying " + this.officersApplying);
     }
 
     public List<String> getListOfStrings() {
@@ -24,12 +25,13 @@ public class ProjectTeam {
         list.add(Manager);
         list.add(String.valueOf(maxSlots));
         list.add("\""+String.join(".", officers)+"\"");
+        list.add("\""+String.join(".", officersApplying)+"\"");
         return list;
     }
     /**
      * @return NRIC of Officers
      */
-    public String[] getOfficers() {
+    public List<String> getOfficers() {
         return officers;
     }
 

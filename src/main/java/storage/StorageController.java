@@ -49,7 +49,7 @@ public class StorageController implements IStorageController {
 
     public void writeProjectFile(Map<String, Project> PROJECT){ //Replace userList.csv
         try(BufferedWriter bw = new BufferedWriter(new FileWriter("src/main/database/ProjectList.csv"))){
-            bw.write("Project Name,Neighborhood,Type 1,Number of units for Type 1,Selling price for Type 1,Type 2,Number of units for Type 2,Selling price for Type 2,Application opening date,Application closing date,Manager,Officer Slot,Officer,VISIBILITY\n");
+            bw.write("Project Name,Neighborhood,Type 1,Type 1 Units,Type 1 Price,Type 2,Type 2 Units,Type 2 Price,Opening date,Closing date,Manager,Officer Slot,Officer,OFFICER APPLYING,VISIBILITY\n");
             for (Project p : PROJECT.values()) { //using info in USERS to write file
                 String line = String.join(",", p.getListOfStrings()) + "\n";
                 bw.write(line);

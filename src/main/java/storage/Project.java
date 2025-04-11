@@ -23,7 +23,7 @@ public class Project {
         (0)Project Name,(1)Neighborhood,(2)Type 1,(3)Number of units for Type 1,(4)Selling price for Type 1,
         (5)Type 2,(6)Number of units for Type 2,(7)Selling price for Type 2,
         (8)Application opening date,(9)Application closing date,(10)Manager,(11)Officer Slot,(12)Officer,
-        (13)Visibility
+        (13)Officer Applying,(14)Visibility
          */
         projectName = data[0];
         neighbourhood = data[1];
@@ -39,8 +39,9 @@ public class Project {
         units.put(FlatType.valueOf(data[2]), Integer.valueOf(data[3])); prices.put(FlatType.valueOf(data[2]), Integer.valueOf(data[4]));
         units.put(FlatType.valueOf(data[5]), Integer.valueOf(data[6])); prices.put(FlatType.valueOf(data[5]), Integer.valueOf(data[7]));
         String[] officers = data[12].replaceAll("\"", "").split("\\."); //remove "" and split "."
-        projectTeam = new ProjectTeam(data[10], data[11], officers, null);
-        projectVisibility = Boolean.parseBoolean(data[13]);
+        String[] officerApplying = data[13].replaceAll("\"", "").split("\\."); //remove "" and split "."
+        projectTeam = new ProjectTeam(data[10], data[11], officers, officerApplying);
+        projectVisibility = Boolean.parseBoolean(data[14]);
     }
 
     /**
