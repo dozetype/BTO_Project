@@ -49,7 +49,7 @@ public class Storage {
         PROJECTS.put(newProject.getProjectName(), newProject);
     }
 
-    //TODO repair this
+    //TODO Maybe register detail show in another project.csv
 //    public void registerProject(String userID, String projectName) {
 //        List<String> OfficerList = new ArrayList<>();
 //        if (PROJECTS.containsKey(projectName)) {
@@ -74,7 +74,7 @@ public class Storage {
 
 
     /**
-     * Called when quitting this Application
+     * Called when quitting the Application
      */
     public void close(){
         storageController.writeUserFile(USERS);

@@ -10,7 +10,7 @@ import java.util.Date;
 public class Project {
     private final String projectName;
     private final String neighbourhood;
-    private long openingDate; //TODO maybe can use long instead
+    private long openingDate;
     private long closingDate;
     private final String createdBy;
     private HashMap<FlatType, Integer> units = new HashMap<>();; // key: flatType, value: number of units

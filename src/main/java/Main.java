@@ -85,9 +85,9 @@ public class Main{
                     currUser.setPassword(ui.inputString());
                     storage.updateUserData(currUser.getAllUserData());
                     break;
-//                case 5:
-//                    super.viewProject();
-//                    break;
+                case 5:
+                    ((Applicant)currUser).viewProject(storage);
+                    break;
                 case 6:
                     ((Applicant)currUser).viewEnquiries(storage);
                     break;

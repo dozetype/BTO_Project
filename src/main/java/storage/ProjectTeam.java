@@ -10,7 +10,7 @@ public class ProjectTeam {
     private final String Manager;
     private final int maxSlots;
     private String[] officers;
-    private String[] officerRegistration;
+    private String[] officerRegistration; //TODO maybe load this from using another project.csv
 
     public ProjectTeam(String hdbManager, String slots, String[] officers, String[] officerRegistration) {
         this.officers = officers;
