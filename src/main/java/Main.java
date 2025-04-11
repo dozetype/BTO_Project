@@ -23,11 +23,17 @@ public class Main{
         exit();
     }
 
+    /**
+     * Method used to Initialize
+     */
     private void initialize(){
         ui = new Ui();
         storage = new Storage();
     }
 
+    /**
+     * User login, and create the type of User
+     */
     private void loginIn(){
         while(!Objects.equals(ui.switchOff(), "0")) {
             Login login = new Login();
@@ -37,21 +43,18 @@ public class Main{
                     System.out.println("Invalid credentials!");
                 }
             }
-            if (loginUserData.get(5).equals("Manager")) {
-                currUser = new HDBManager(loginUserData);
-            } else if (loginUserData.get(5).equals("Officer")) {
-                currUser = new HDBOfficer(loginUserData);
-            } else {
-                currUser = new Applicant(loginUserData);
-            }
+
+            currUser = switch (loginUserData.get(5)){
+                case "Manager" -> new HDBManager(loginUserData);
+                case "Officer" -> new HDBOfficer(loginUserData);
+                default -> new Applicant(loginUserData);
+            };
 
             //MENU
+
             if(currUser instanceof HDBManager) {manageMenu();}
             else {normalMenu();}
 
-
-//            currUser.menu();
-//            ((Applicant)currUser).addEnquiry();
             loginUserData = null;//log out
         }
     }
@@ -97,21 +100,18 @@ public class Main{
                 case 9:
                     if(currUser instanceof HDBOfficer) {
                         ((HDBOfficer)currUser).registerToJoinProject(storage);
+                        break;
                     }
-                    break;
                 case 10:
                     if(currUser instanceof HDBOfficer) {
                         System.out.println("Your officer registration status: " + ((HDBOfficer) currUser).getRegistrationStatus());
+                        break;
                     }
-                    break;
                 case 11:
                     if(currUser instanceof HDBOfficer) {
                         ((HDBOfficer)currUser).replyToEnquiry(storage);
+                        break;
                     }
-                    break;
-                default:
-                    System.out.println("Invalid choice!");
-                    break;
             }
         }while(choice != 0);
     }

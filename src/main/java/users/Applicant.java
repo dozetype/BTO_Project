@@ -1,6 +1,6 @@
 package users;
 import storage.Enquiry;
-import storage.Storage;
+import storage.*;
 import ui.Messages;
 import ui.Ui;
 
@@ -14,47 +14,6 @@ public class Applicant extends User implements IApplicant {
         super(userData, "Applicant");
     }
 
-//    @Override
-//    public void menu(){
-//        int choice;
-//        do {
-//            System.out.println("Hello "+getName()+", "+getUserType()+"\n"+Messages.APPLICANT_MENU);
-//            choice = ui.inputInt();
-//            switch (choice) {
-//                case 1:
-//                    System.out.print("Enter filter to add: ");
-//                    setFilterList(ui.inputString());
-//                    break;
-//                case 2:
-//                    System.out.println("Current Filters: ");
-//                    getFilterList();
-//                    break;
-//                case 3:
-//                    System.out.println("Remove Filter");
-//                    getFilterList();
-//                    removeFilter(ui.inputInt());
-//                    break;
-//                case 4:
-//                    System.out.print("Enter New Password: ");
-//                    setPassword(ui.inputString());
-//                    storage.updateUserData(getAllUserData());
-//                    break;
-////                case 5:
-////                    viewProject();
-////                    break;
-//                case 6:
-//                    viewEnquiries();
-//                    break;
-//                case 7:
-//                    addEnquiry();
-//                    break;
-//                case 8:
-//                    removeEnquiry();
-//                    break;
-//            }
-//        }while(choice < 10);
-//    }
-
     //TODO repair this
     public void viewProject(){
 //        int count=1;
@@ -65,6 +24,9 @@ public class Applicant extends User implements IApplicant {
 //        System.out.println();
     }
 
+    /**
+     * @param storage DataBase
+     */
     public void viewEnquiries(Storage storage){
         for(Enquiry e : storage.getEnquiries().values()) {
             if(e.getAskerID().equals(getUserID())) {
@@ -73,12 +35,15 @@ public class Applicant extends User implements IApplicant {
         }
     }
 
+    /**
+     * @param storage DataBase
+     */
     public void addEnquiry(Storage storage){
         List<String> projectNames = new ArrayList<>();
         int count=1;
-        for(String s : storage.getProject().keySet()) {
-            projectNames.add(s);
-            System.out.println(count++ +") "+s);
+        for(Project p : storage.getProject()) {
+            projectNames.add(p.getProjectName());
+            System.out.println(count++ +") "+p.getProjectName());
         }
         try {
             System.out.print("Pick which Project you would like to add an Enquiry: ");
@@ -91,6 +56,9 @@ public class Applicant extends User implements IApplicant {
         }
     }
 
+    /**
+     * @param storage DataBase
+     */
     public void removeEnquiry(Storage storage){
         List<String> enquiryIDList = new ArrayList<>();
         int count=1;

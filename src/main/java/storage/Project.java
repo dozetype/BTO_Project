@@ -2,12 +2,8 @@ package storage;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.time.LocalDate;
 import java.util.List;
 
-import users.Applicant;
-import users.HDBManager;
-import users.HDBOfficer;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
@@ -17,38 +13,55 @@ public class Project {
     private long openingDate; //TODO maybe can use long instead
     private long closingDate;
     private final String createdBy;
-    private HashMap<String, Integer> units = new HashMap<>();; // key: flatType, value: number of units
-    private HashMap<String, Integer> prices = new HashMap<>();;
+    private HashMap<FlatType, Integer> units = new HashMap<>();; // key: flatType, value: number of units
+    private HashMap<FlatType, Integer> prices = new HashMap<>();;
     private ProjectTeam projectTeam;
-    private List<Enquiry> enquiries;
     private boolean projectVisibility;
 
     public Project(String[] data) {
         /*
         (0)Project Name,(1)Neighborhood,(2)Type 1,(3)Number of units for Type 1,(4)Selling price for Type 1,
         (5)Type 2,(6)Number of units for Type 2,(7)Selling price for Type 2,
-        (8)Application opening date,(9)Application closing date,(10)Manager,(11)Officer Slot,(12)Officer
+        (8)Application opening date,(9)Application closing date,(10)Manager,(11)Officer Slot,(12)Officer,
+        (13)Visibility
          */
-        this.projectName = data[0];
-        this.neighbourhood = data[1];
+        projectName = data[0];
+        neighbourhood = data[1];
         SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
         try {
-            this.openingDate = formatter.parse(data[8]).getTime();
-            this.closingDate = formatter.parse(data[9]).getTime();
-            System.out.println(this.openingDate + " " + this.closingDate + " " + formatter.format(new Date(this.openingDate)));
+            openingDate = formatter.parse(data[8]).getTime();
+            closingDate = formatter.parse(data[9]).getTime();
+//            System.out.println(openingDate + " " + closingDate + " " + formatter.format(new Date(openingDate)));
         }catch (Exception e){
             System.out.println(e.getMessage());
         }
-        this.createdBy = data[11];
-        this.units.put(data[2], Integer.valueOf(data[3])); this.prices.put(data[2], Integer.valueOf(data[4]));
-        this.units.put(data[5], Integer.valueOf(data[6])); this.prices.put(data[5], Integer.valueOf(data[7]));
-        String[] officers = data[12].replaceAll("\"", "").split(",");
-        this.projectTeam = new ProjectTeam(officers, data[11], data[10], null);
-        //TODO add enquries
-//        this.units = new HashMap<>();
-//        this.applicants = new ArrayList<>();
-//        this.HDBOfficers = new ArrayList<>();
-//        this.enquiries = new ArrayList<>();
+        createdBy = data[10];
+        units.put(FlatType.valueOf(data[2]), Integer.valueOf(data[3])); prices.put(FlatType.valueOf(data[2]), Integer.valueOf(data[4]));
+        units.put(FlatType.valueOf(data[5]), Integer.valueOf(data[6])); prices.put(FlatType.valueOf(data[5]), Integer.valueOf(data[7]));
+        String[] officers = data[12].replaceAll("\"", "").split("\\."); //remove "" and split "."
+        projectTeam = new ProjectTeam(data[10], data[11], officers, null);
+        projectVisibility = Boolean.parseBoolean(data[13]);
+    }
+
+    /**
+     * Used for turning all attribute in this to Strings
+     * @return List of Strings of each attribute
+     */
+    public List<String> getListOfStrings(){
+        SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
+        List<String> list = new ArrayList<>();
+        list.add(projectName);
+        list.add(neighbourhood);
+        for(FlatType key : units.keySet()){
+            list.add(String.valueOf(key));
+            list.add(String.valueOf(units.get(key)));
+            list.add(String.valueOf(prices.get(key)));
+        }
+        list.add(formatter.format(new Date(openingDate)));
+        list.add(formatter.format(new Date(closingDate)));
+        list.addAll(projectTeam.getListOfStrings());
+        list.add(projectVisibility ? "TRUE" : "FALSE");
+        return list;
     }
 
     public String getProjectName() { return projectName; }
@@ -56,19 +69,20 @@ public class Project {
     public long getOpeningDate() { return openingDate; }
     public long getClosingDate() { return closingDate; }
     public String getCreatedBy() { return createdBy; }
-    public HashMap<String, Integer> getUnits() { return units; }
-    public HashMap<String, Integer> getPrices() { return prices; }
+    public HashMap<FlatType, Integer> getUnits() { return units; }
+    public HashMap<FlatType, Integer> getPrices() { return prices; }
     public ProjectTeam getProjectTeam() { return projectTeam; }
-    public void setUnits(HashMap<String, Integer> units) {
-        this.units = units;
-    }
+//    public void setUnits(HashMap<String, Integer> units) {
+//        this.units = units;
+//    }
 
     // method to check flat availability
     public void updateFlatAvailability(String flatType, int numberOfUnits) {
-        this.units.put(flatType, numberOfUnits);
+        this.units.put(FlatType.valueOf(flatType), numberOfUnits);
     }
 
     public void toggleProjectVisibility() {
         projectVisibility = !projectVisibility;
     }
+    public boolean getProjectVisibility() {return projectVisibility;}
 }

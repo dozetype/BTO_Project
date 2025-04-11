@@ -9,9 +9,4 @@ public class HDBManager extends User{
     public HDBManager(List<String> userData) {
         super(userData, "Manager");
     }
-
-    @Override
-    public void menu() {
-        return;
-    }
 }

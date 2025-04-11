@@ -8,24 +8,40 @@ public class Storage {
     private Map<String, ArrayList<String>> USERS; //Main storage for user info, only creating one user at a time
     private Map<String, Project> PROJECTS;
     private Map<String, Enquiry> ENQUIRIES;
+    private Map<String, BTOApplication> BTOAPPLICATIONS;
 
     public Storage(){
         storageController = new StorageController();
         USERS = storageController.readUserFile();
         ENQUIRIES = storageController.readEnquiryFile();
         PROJECTS = storageController.readProjectFile();
+        BTOAPPLICATIONS = storageController.readBTOApplicationFile();
     }
 
+    /**
+     * @param userID Users NRIC
+     * @return The Users basic details
+     */
     public ArrayList<String> getUserData(String userID){
         return USERS.get(userID);
     }
+
+    /**
+     * Update basic detail of the User
+     * @param userData List of new basic details of User
+     */
     public void updateUserData(List<String> userData) { //update with new info
         USERS.replace(userData.get(1), (ArrayList<String>) userData);
     }
 
 
-    public Map<String, Project> getProject(){
-        return PROJECTS;
+    public List<Project> getProject(){
+        List<Project> projects = new ArrayList<>();
+        for(Project p : PROJECTS.values()){
+            if(p.getProjectVisibility())
+                projects.add(p);
+        }
+        return projects;
     }
     public void updateProject(List<String> projectData) {
     }
@@ -56,13 +72,14 @@ public class Storage {
         ENQUIRIES.remove(ID);
     }
 
-    /*
-    Call When closing Application
+
+    /**
+     * Called when quitting this Application
      */
     public void close(){
         storageController.writeUserFile(USERS);
-        //TODO repair this
-//        storageController.writeProjectFile(PROJECTS);
+        storageController.writeProjectFile(PROJECTS);
         storageController.writeEnquiryFile(ENQUIRIES);
+        storageController.writeBTOApplicationFile(BTOAPPLICATIONS);
     }
 }

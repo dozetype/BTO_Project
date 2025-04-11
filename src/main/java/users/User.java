@@ -21,14 +21,13 @@ public abstract class User implements IUser {
         this.userType = userType;
     }
 
-    public void menu(){ //overridden by children
-        return;
-    }
-
     public void changePassword(String newPassword) {
         this.password = newPassword;
     }
 
+    /**
+     * @param filter the filter user wants to add
+     */
     public void setFilterList(String filter){ //adds 1 filter
         this.filterList.add(filter);
     }

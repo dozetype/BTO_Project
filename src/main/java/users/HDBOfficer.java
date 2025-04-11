@@ -1,7 +1,7 @@
 package users;
 
 import storage.Enquiry;
-import storage.Storage;
+import storage.*;
 import ui.Messages;
 
 import java.util.ArrayList;
@@ -16,63 +16,17 @@ public class HDBOfficer extends Applicant {
         setUserType("Officer");
     }
 
-//    @Override
-//    public void menu() {
-//        int choice;
-//        do {
-//            System.out.println("Hello "+getName()+", "+getUserType()+"\n"+ Messages.OFFICER_MENU);
-//            choice = ui.inputInt();
-//            switch (choice) {
-//                case 1:
-//                    System.out.print("Enter filter to add: ");
-//                    setFilterList(ui.inputString());
-//                    break;
-//                case 2:
-//                    System.out.println("Current Filters: ");
-//                    getFilterList();
-//                    break;
-//                case 3:
-//                    System.out.println("Remove Filter");
-//                    getFilterList();
-//                    removeFilter(ui.inputInt());
-//                    break;
-//                case 4:
-//                    System.out.print("Enter New Password: ");
-//                    setPassword(ui.inputString());
-//                    storage.updateUserData(getAllUserData());
-//                    break;
-////                case 5:
-////                    super.viewProject();
-////                    break;
-//                case 6:
-//                    viewEnquiries();
-//                    break;
-//                case 7:
-//                    super.addEnquiry();
-//                    break;
-//                case 8:
-//                    super.removeEnquiry();
-//                    break;
-//                case 9:
-//                    registerToJoinProject();
-//                    break;
-//                case 10:
-//                    System.out.println("Your officer registration status: "+ getRegistrationStatus());
-//                    break;
-//                case 11:
-//                    replyToEnquiry();
-//
-//            }
-//        }while(choice < 12);
-//    }
 
+    /**
+     * @param storage DataBase
+     */
     public void registerToJoinProject(Storage storage) {
         if (getOfficerStatus().equals("NEITHER")) {
             List<String> projectNames = new ArrayList<>();
             int count = 1;
-            for (String s : storage.getProject().keySet()) {
-                projectNames.add(s);
-                System.out.println(count++ + ") " + s);
+            for (Project p : storage.getProject()) {
+                projectNames.add(p.getProjectName());
+                System.out.println(count++ + ") " + p.getProjectName());
             }
             try {
                 System.out.print("Pick which Project you would like to register as Officer: ");
@@ -87,6 +41,9 @@ public class HDBOfficer extends Applicant {
         }
     }
 
+    /**
+     * @param storage DataBase
+     */
     @Override
     public void viewEnquiries(Storage storage) {
         for(Enquiry e : storage.getEnquiries().values()) {
@@ -96,6 +53,9 @@ public class HDBOfficer extends Applicant {
         }
     }
 
+    /**
+     * @param storage DataBase
+     */
     public void replyToEnquiry(Storage storage) {
         //TODO only be able to view enq with unanswered qns
         viewEnquiries(storage);

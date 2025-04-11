@@ -1,6 +1,9 @@
 package users;
 
 public interface IUser {
-    void menu();
+
+    /**
+     * @param newPassword The new password that user wants to change to
+     */
     void changePassword(String newPassword);
 }
