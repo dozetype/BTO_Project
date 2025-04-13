@@ -46,6 +46,12 @@ public class Messages {
             
             11) Reply Enquiry\
             
+            12) Generate Receipt\
+            
+            13) Update Number of Flats\
+            
+            14) Change Application Status\
+            
             0) EXIT\
             
             """;

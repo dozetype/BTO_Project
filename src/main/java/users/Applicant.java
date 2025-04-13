@@ -14,13 +14,25 @@ public class Applicant extends User implements IApplicant {
         super(userData, "Applicant");
     }
 
-    public void viewProject(Storage st){
+    public void viewProject(Storage st, boolean Visible){
         int count=1;
-        for (Project p : st.getProject()) {
-            System.out.print(count++ +") ");
-            p.getListOfStrings().forEach(item -> System.out.print(item + " | ")); //TODO dk what shld be displayed
+        //might need to clean a bit
+        if (Visible) {
+            for (Project p : st.getProject()) {
+                if (p.getProjectVisibility()) {
+                    System.out.print(count++ + ") ");
+                    p.getListOfStrings().forEach(item -> System.out.print(item + " | ")); //TODO dk what shld be displayed
+                    System.out.println();
+                }
+            }
         }
-        System.out.println();
+        else {
+            for (Project p : st.getProject()) {
+                System.out.print(count++ + ") ");
+                p.getListOfStrings().forEach(item -> System.out.print(item + " | ")); //TODO dk what shld be displayed
+                System.out.println();
+            }
+        }
     }
 
     /**

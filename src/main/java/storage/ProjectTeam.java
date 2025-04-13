@@ -17,7 +17,6 @@ public class ProjectTeam {
         this.maxSlots = Integer.parseInt(slots);
         this.officers = List.of(officers);
         this.officersApplying = List.of(officersApplying);
-        System.out.println("Officer Applying " + this.officersApplying);
     }
 
     public List<String> getListOfStrings() {
@@ -34,7 +33,9 @@ public class ProjectTeam {
     public List<String> getOfficers() {
         return officers;
     }
-
+    public List<String> getOfficersApplying() {
+        return officersApplying;
+    }
     /**
      * @return NRIC of Manager
      */

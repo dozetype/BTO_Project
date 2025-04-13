@@ -63,7 +63,10 @@ public class Main{
         int choice;
         do {
             System.out.println("Hello "+currUser.getName()+", "+currUser.getUserType());
-            if (currUser instanceof HDBOfficer) {System.out.println(Messages.OFFICER_MENU);}
+            if (currUser instanceof HDBOfficer) {
+                System.out.println(Messages.OFFICER_MENU);
+                ((HDBOfficer)currUser).checkProjectAllocated(storage);
+            }
             else  {System.out.println(Messages.APPLICANT_MENU);}
             choice = ui.inputInt();
             switch (choice) {
@@ -86,7 +89,14 @@ public class Main{
                     storage.updateUserData(currUser.getAllUserData());
                     break;
                 case 5:
-                    ((Applicant)currUser).viewProject(storage);
+                    if(currUser instanceof HDBOfficer) {
+                        ((Applicant)currUser).viewProject(storage, false);
+                        break;
+                    }
+                    else {
+                        ((Applicant)currUser).viewProject(storage, true);
+                    }
+
                     break;
                 case 6:
                     ((Applicant)currUser).viewEnquiries(storage);
@@ -110,6 +120,21 @@ public class Main{
                 case 11:
                     if(currUser instanceof HDBOfficer) {
                         ((HDBOfficer)currUser).replyToEnquiry(storage);
+                        break;
+                    }
+                case 12:
+                    if(currUser instanceof HDBOfficer) {
+                        System.out.println(((HDBOfficer)currUser).generateReceipt(storage));
+                        break;
+                    }
+                case 13:
+                    if(currUser instanceof HDBOfficer) {
+                        ((HDBOfficer)currUser).updateNumOfFlats(storage);
+                        break;
+                    }
+                case 14:
+                    if(currUser instanceof HDBOfficer) {
+                        ((HDBOfficer)currUser).changeApplicationStatus(storage);
                         break;
                     }
             }

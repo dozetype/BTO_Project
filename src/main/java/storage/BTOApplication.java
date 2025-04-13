@@ -25,4 +25,18 @@ public class BTOApplication {
     public String getOfficerInCharge() { return officerInCharge; }
     public FlatType getFlatType() { return flatType; }
     public RegistrationStatus getApplicationStatus() { return applicationStatus; }
+
+    public void setApplicationStatus(RegistrationStatus status) {
+        this.applicationStatus = status;
+    }
+    public String toString() {
+        return "BTOApplication{" +
+                "applicantID='" + applicantID + '\'' +
+                ", projectName='" + projectName + '\'' +
+                ", price='" + price + '\'' +
+                ", officerInCharge='" + officerInCharge + '\'' +
+                ", flatType=" + flatType +
+                ", applicationStatus=" + applicationStatus +
+                '}';
+    }
 }
