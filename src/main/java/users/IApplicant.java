@@ -4,7 +4,7 @@ import storage.Project;
 import storage.Storage;
 
 public interface IApplicant {
-    void viewProject(Storage st);
+    void viewProject(Storage st, boolean Visible);
 //    void applyProject();
 //    void viewApplication();
 //    void bookFlat();

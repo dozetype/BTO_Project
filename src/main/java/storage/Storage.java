@@ -36,11 +36,7 @@ public class Storage {
 
 
     public List<Project> getProject(){
-        List<Project> projects = new ArrayList<>();
-        for(Project p : PROJECTS.values()){
-            if(p.getProjectVisibility())
-                projects.add(p);
-        }
+        List<Project> projects = new ArrayList<>(PROJECTS.values());
         return projects;
     }
     public void updateProject(List<String> projectData) {
@@ -71,7 +67,7 @@ public class Storage {
     public void removeEnquiries(String ID) {
         ENQUIRIES.remove(ID);
     }
-
+    public Map<String, BTOApplication> getBTOApplications(){ return BTOAPPLICATIONS; }
 
     /**
      * Called when quitting the Application
