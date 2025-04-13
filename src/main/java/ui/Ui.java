@@ -50,7 +50,7 @@ public class Ui {
     }
 
     public String switchOff(){
-        System.out.print ("Press any key to Login, 0 to Quit: ");
+        System.out.print ("Press ENTER to Login, 0 to Quit: ");
         return scanner.nextLine();
     }
 }

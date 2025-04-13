@@ -15,7 +15,7 @@ public class HDBOfficer extends Applicant {
 
     public HDBOfficer(List<String> userData) {
         super(userData);
-        setUserType("Officer");
+        setUserType("Officer"); //Override "Applicant"
         this.officerStatus=OfficerStatus.OFFICER;
         this.registrationStatus=RegistrationStatus.NOT_REGISTERED;
     }
@@ -28,20 +28,23 @@ public class HDBOfficer extends Applicant {
         if (getOfficerStatus().equals("NEITHER")) {
             List<String> projectNames = new ArrayList<>();
             int count = 1;
-            for (Project p : storage.getProject()) {
+            for (Project p : storage.getProject().values()) {
                 projectNames.add(p.getProjectName());
                 System.out.println(count++ + ") " + p.getProjectName());
             }
             try {
                 System.out.print("Pick which Project you would like to register as Officer: ");
                 String projectName = projectNames.get(ui.inputInt() - 1);
-//                storage.registerProject(getUserID(), projectName);
+                storage.registerProject(getUserID(), projectName);
                 System.out.println("Please wait for the result. You are applying as Officer in "+projectName);
                 setRegistrationStatus(RegistrationStatus.PENDING);
                 System.out.println(storage.getProject());
             } catch (Exception e) {
-                System.out.println(e.getMessage());
+                System.out.println(e.getMessage() + " " + e.getCause());
             }
+        }
+        else{
+            System.out.println("Officer already registered");
         }
     }
 
@@ -119,15 +122,16 @@ public class HDBOfficer extends Applicant {
     }
 
     public void checkProjectAllocated(Storage storage) {
-        for (Project p : storage.getProject()) {
+        for (Project p : storage.getProject().values()) {
             if(p.getProjectTeam().getOfficers().contains(getUserID())) {
                 setProjectAllocated(p.getProjectName());
                 setRegistrationStatus(RegistrationStatus.SUCCESSFUL);
                 setOfficerStatus(OfficerStatus.OFFICER);
-                break;
+                return;
             }
             else if(p.getProjectTeam().getOfficersApplying().contains(getUserID())) {
                 setRegistrationStatus(RegistrationStatus.PENDING);
+                return;
             }
         }
         setRegistrationStatus(RegistrationStatus.NOT_REGISTERED);
@@ -135,7 +139,7 @@ public class HDBOfficer extends Applicant {
     }
 
     public void updateNumOfFlats(Storage storage){
-        for (Project p : storage.getProject()) {
+        for (Project p : storage.getProject().values()) {
             if (p.getProjectName().equals(ProjectAllocated)) {
                 System.out.println(p); // too long, need to change
                 System.out.println(p.getUnits());
@@ -169,9 +173,9 @@ public class HDBOfficer extends Applicant {
 
         for (BTOApplication app : storage.getBTOApplications().values()) {
             if(app.getApplicantID().contains(ApplicantID)) {
-                List<RegistrationStatus> registrationStatusList = new ArrayList<>();
+                List<ApplicationStatus> registrationStatusList = new ArrayList<>();
                 int count=1;
-                for (RegistrationStatus status : RegistrationStatus.values()) {
+                for (ApplicationStatus status : ApplicationStatus.values()) {
                     System.out.println(count+") "+status);
                     count++;
                     registrationStatusList.add(status);
@@ -199,6 +203,7 @@ public class HDBOfficer extends Applicant {
         this.registrationStatus=status;
     }
 
+    public String getProjectAllocated() { return this.ProjectAllocated; }
     public void setProjectAllocated(String ProjectName){
         this.ProjectAllocated=ProjectName;
     }

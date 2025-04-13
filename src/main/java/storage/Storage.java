@@ -6,9 +6,9 @@ public class Storage {
     StorageController storageController;
     //NAME, USER_ID, AGE, MARITAL, PASSWORD, TYPE
     private Map<String, ArrayList<String>> USERS; //Main storage for user info, only creating one user at a time
-    private Map<String, Project> PROJECTS;
-    private Map<String, Enquiry> ENQUIRIES;
-    private Map<String, BTOApplication> BTOAPPLICATIONS;
+    private Map<String, Project> PROJECTS; //Key: Project Name, Value: Project
+    private Map<String, Enquiry> ENQUIRIES; //Key: ID, Value: Enquiry
+    private Map<String, BTOApplication> BTOAPPLICATIONS; //Key: UserID, Value: BTOApplication
 
     public Storage(){
         storageController = new StorageController();
@@ -35,9 +35,8 @@ public class Storage {
     }
 
 
-    public List<Project> getProject(){
-        List<Project> projects = new ArrayList<>(PROJECTS.values());
-        return projects;
+    public Map<String, Project> getProject(){;
+        return PROJECTS;
     }
     public void updateProject(List<String> projectData) {
     }
@@ -45,14 +44,9 @@ public class Storage {
         PROJECTS.put(newProject.getProjectName(), newProject);
     }
 
-    //TODO Maybe register detail show in another project.csv
-//    public void registerProject(String userID, String projectName) {
-//        List<String> OfficerList = new ArrayList<>();
-//        if (PROJECTS.containsKey(projectName)) {
-//            Project projectInfo = PROJECTS.get(projectName);
-//            projectInfo.add(userID);
-//        }
-//    }
+    public void registerProject(String userID, String projectName) {
+        PROJECTS.get(projectName).getProjectTeam().addOfficerApplying(userID);
+    }
 
 
     public Map<String, Enquiry> getEnquiries(){
@@ -67,7 +61,12 @@ public class Storage {
     public void removeEnquiries(String ID) {
         ENQUIRIES.remove(ID);
     }
+
+
     public Map<String, BTOApplication> getBTOApplications(){ return BTOAPPLICATIONS; }
+    public void addBTOApplication(String userID, String projectName, String price, String type) {
+        BTOAPPLICATIONS.put(userID, new BTOApplication(userID, projectName, price, "NULL", type, "PENDING"));
+    }
 
     /**
      * Called when quitting the Application

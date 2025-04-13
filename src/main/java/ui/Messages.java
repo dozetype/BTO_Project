@@ -3,75 +3,79 @@ package ui;
 public class Messages {
     public static final String APPLICATION_NAME = "BTO Management System";
     public static final String APPLICANT_MENU = """
-            1) Add Filter\
+            1 ) Add Filter\
 
-            2) View Filters\
+            2 ) View Filters\
             
-            3) Remove Filter\
+            3 ) Remove Filter\
             
-            4) Change Password\
+            4 ) Change Password\
             
-            5) View Projects\
+            5 ) View Projects\
             
-            6) View Enquiries\
+            6 ) Apply Project\
             
-            7) Add Enquiries\
+            7 ) View Enquiries\
             
-            8) Remove Enquiries\
+            8 ) Add Enquiries\
             
-            0) EXIT\
+            9 ) Remove Enquiries\
+            
+            0 ) EXIT\
             
             """;
 
     public static final String OFFICER_MENU = """
-            1) Add Filter\
+            1 ) Add Filter\
 
-            2) View Filters\
+            2 ) View Filters\
             
-            3) Remove Filter\
+            3 ) Remove Filter\
             
-            4) Change Password\
+            4 ) Change Password\
             
-            5) View Projects\
+            5 ) View Projects\
             
-            6) View Enquiries\
+            6 ) Apply Project\
             
-            7) Add Enquiries\
+            7 ) View Enquiries\
             
-            8) Remove Enquiries\
+            8 ) Add Enquiries\
             
-            9) Register as Officer to a Project\
+            9 ) Remove Enquiries\
             
-            10) View Registration Status\
+            10 ) Register as Officer to a Project\
             
-            11) Reply Enquiry\
+            11) View Registration Status\
             
-            12) Generate Receipt\
+            12) Reply Enquiry\
             
-            13) Update Number of Flats\
+            13) Generate Receipt\
             
-            14) Change Application Status\
+            14) Update Number of Flats\
             
-            0) EXIT\
+            15) Change Application Status\
+            
+            0 ) EXIT\
             
             """;
 
     public static final String MANAGER_MENU = """
-            1) Add Filter\
+            1 ) Add Filter\
 
-            2) View Filters\
+            2 ) View Filters\
             
-            3) Remove Filter\
+            3 ) Remove Filter\
             
-            4) Change Password\
+            4 ) Change Password\
             
-            5) View Projects\
+            5 ) View Projects\
             
-            6) View Enquiries\
+            6 ) View Enquiries\
             
-            7) Add Enquiries\
+            7 ) Add Enquiries\
             
-            8) Remove Enquiries\
+            8 ) Remove Enquiries\
             
             """;
 }

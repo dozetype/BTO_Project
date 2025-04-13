@@ -4,7 +4,9 @@ import storage.*;
 import ui.Messages;
 import ui.Ui;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 public class Applicant extends User implements IApplicant {
@@ -14,26 +16,71 @@ public class Applicant extends User implements IApplicant {
         super(userData, "Applicant");
     }
 
-    public void viewProject(Storage st, boolean Visible){
-        int count=1;
-        //might need to clean a bit
-        if (Visible) {
-            for (Project p : st.getProject()) {
-                if (p.getProjectVisibility()) {
-                    System.out.print(count++ + ") ");
-                    p.getListOfStrings().forEach(item -> System.out.print(item + " | ")); //TODO dk what shld be displayed
-                    System.out.println();
+    public void viewProject(Storage st){
+        long currentTime = System.currentTimeMillis();
+        //check time, check marital status, check visibility
+        System.out.println("Viewing Open Projects:");
+        for(Project p : st.getProject().values()){
+            if(p.getProjectVisibility() && p.getOpeningDate()<currentTime && p.getClosingDate()>currentTime){
+                if((getMaritalStatus()==MaritalStatus.SINGLE && getAge()>=35) || (getMaritalStatus()==MaritalStatus.MARRIED && getAge()>=21)){
+                    System.out.println(p.getProjectName()+" 2 ROOMS, Price: "+p.getPrices().get(FlatType.TWO_ROOM)+", Available units: "+ p.getUnits().get(FlatType.TWO_ROOM));
                 }
-            }
-        }
-        else {
-            for (Project p : st.getProject()) {
-                System.out.print(count++ + ") ");
-                p.getListOfStrings().forEach(item -> System.out.print(item + " | ")); //TODO dk what shld be displayed
-                System.out.println();
+                else
+                    System.out.println(p.getProjectName()+": Not able to view 2 ROOMS");
+                if(getMaritalStatus()==MaritalStatus.MARRIED && getAge()>=21){
+                    System.out.println(p.getProjectName()+" 3 ROOMS, Price: "+p.getPrices().get(FlatType.THREE_ROOM)+", Available units: "+ p.getUnits().get(FlatType.THREE_ROOM));
+                }
+                else
+                    System.out.println(p.getProjectName()+": Not able to view 3 ROOMS");
             }
         }
     }
+
+    public void applyProject(Storage st) {
+        //need check if officer?
+        for(BTOApplication application : st.getBTOApplications().values()){
+            if(application.getApplicantID().equals(getUserID())){
+                System.out.println("You have already applied for a Project.");
+                return;
+            }
+        }
+        long currentTime = System.currentTimeMillis();
+        int count=1;
+        //check time, check marital status, check visibility
+        List<List<String>> applicableUnits = new ArrayList<>(); //store data of options
+        List<String> unit =  new ArrayList<>();
+        System.out.println("Which Project would you like to apply?");
+        for(Project p : st.getProject().values()){
+            if(p.getProjectVisibility() && p.getOpeningDate()<currentTime && p.getClosingDate()>currentTime){ //if visible and within timeframe
+                if((getMaritalStatus()==MaritalStatus.SINGLE && getAge()>=35) || (getMaritalStatus()==MaritalStatus.MARRIED && getAge()>=21)){
+                    System.out.println(count+")"+p.getProjectName()+" 2 ROOMS, Price: "+p.getPrices().get(FlatType.TWO_ROOM)+", Available units: "+ p.getUnits().get(FlatType.TWO_ROOM));
+                    unit.add(p.getProjectName());
+                    unit.add(String.valueOf(p.getPrices().get(FlatType.TWO_ROOM)));
+                    unit.add("TWO_ROOM");
+                    applicableUnits.add(unit);
+                    count++;
+                    unit =  new ArrayList<>(); //clear
+                }
+                if(getMaritalStatus()==MaritalStatus.MARRIED && getAge()>=21){
+                    System.out.println(p.getProjectName()+" 3 ROOMS, Price: "+p.getPrices().get(FlatType.THREE_ROOM)+", Available units: "+ p.getUnits().get(FlatType.THREE_ROOM));
+                    unit.add(p.getProjectName());
+                    unit.add(String.valueOf(p.getPrices().get(FlatType.THREE_ROOM)));
+                    unit.add("THREE_ROOM");
+                    applicableUnits.add(unit);
+                    count++;
+                    unit =  new ArrayList<>(); //clear
+                }
+            }
+        }
+        try{
+            unit = applicableUnits.get(ui.inputInt()-1);
+            st.addBTOApplication(getUserID(), unit.get(0), unit.get(1), unit.get(2));
+        } catch(Exception e){ //out of index
+            System.out.println(e.getMessage());
+        }
+    }
+
+    public void viewApplication(Storage st) {}
 
     /**
      * @param storage DataBase
@@ -52,7 +99,7 @@ public class Applicant extends User implements IApplicant {
     public void addEnquiry(Storage storage){
         List<String> projectNames = new ArrayList<>();
         int count=1;
-        for(Project p : storage.getProject()) {
+        for(Project p : storage.getProject().values()) {
             projectNames.add(p.getProjectName());
             System.out.println(count++ +") "+p.getProjectName());
         }

@@ -6,7 +6,7 @@ import java.util.List;
 public abstract class User implements IUser {
     private final String name; //0
     private final String userID; //1
-    private final String age; //2
+    private final int age; //2
     private final MaritalStatus maritalStatus; //3
     private String password; //4
     private String userType;
@@ -15,7 +15,7 @@ public abstract class User implements IUser {
     public User(List<String> userData, String userType) {
         this.name = userData.get(0);
         this.userID = userData.get(1);
-        this.age = userData.get(2);
+        this.age = Integer.parseInt(userData.get(2));
         this.maritalStatus = MaritalStatus.valueOf(userData.get(3).toUpperCase());
         this.password = userData.get(4);
         this.userType = userType;
@@ -49,7 +49,7 @@ public abstract class User implements IUser {
     //Accessor and Mutators
     public String getName(){ return this.name; }
     public String getUserID(){ return this.userID; }
-    public String getAge(){ return this.age; }
+    public int getAge(){ return this.age; }
     public MaritalStatus getMaritalStatus(){ return this.maritalStatus; }
     public String getPassword(){ return this.password; }
     public String getUserType(){ return this.userType; }
@@ -57,7 +57,7 @@ public abstract class User implements IUser {
         List<String> list = new ArrayList<>();
         list.add(name);
         list.add(userID);
-        list.add(age);
+        list.add(String.valueOf(age));
         list.add(maritalStatus.toString());
         list.add(password);
         list.add(userType);

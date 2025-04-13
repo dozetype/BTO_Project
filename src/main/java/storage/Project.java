@@ -13,8 +13,8 @@ public class Project {
     private long openingDate;
     private long closingDate;
     private final String createdBy;
-    private HashMap<FlatType, Integer> units = new HashMap<>();; // key: flatType, value: number of units
-    private HashMap<FlatType, Integer> prices = new HashMap<>();;
+    private HashMap<FlatType, Integer> units = new HashMap<>(); // key: flatType, value: number of units
+    private HashMap<FlatType, Integer> prices = new HashMap<>();
     private ProjectTeam projectTeam;
     private boolean projectVisibility;
 
