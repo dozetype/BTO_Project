@@ -73,6 +73,7 @@ public class Main{
         if (currUser instanceof HDBOfficer) {System.out.println(Messages.OFFICER_MENU);}
         else  {System.out.println(Messages.APPLICANT_MENU);}
         do {
+            System.out.print("Menu ");
             choice = ui.inputInt();
             switch (choice) {
                 case 1:
@@ -98,6 +99,7 @@ public class Main{
                     break;
                 case 6:
                     ((Applicant)currUser).applyProject(storage);
+                    break;
                 case 7:
                     ((Applicant)currUser).viewEnquiries(storage);
                     break;

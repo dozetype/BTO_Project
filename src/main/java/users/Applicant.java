@@ -49,7 +49,7 @@ public class Applicant extends User implements IApplicant {
         //check time, check marital status, check visibility
         List<List<String>> applicableUnits = new ArrayList<>(); //store data of options
         List<String> unit =  new ArrayList<>();
-        System.out.println("Which Project would you like to apply?");
+        System.out.println("Which Project would you like to apply? (0 to quit)");
         for(Project p : st.getProject().values()){
             if(p.getProjectVisibility() && p.getOpeningDate()<currentTime && p.getClosingDate()>currentTime){ //if visible and within timeframe
                 if((getMaritalStatus()==MaritalStatus.SINGLE && getAge()>=35) || (getMaritalStatus()==MaritalStatus.MARRIED && getAge()>=21)){
@@ -73,8 +73,13 @@ public class Applicant extends User implements IApplicant {
             }
         }
         try{
-            unit = applicableUnits.get(ui.inputInt()-1);
-            st.addBTOApplication(getUserID(), unit.get(0), unit.get(1), unit.get(2));
+            if(!applicableUnits.isEmpty()){
+                unit = applicableUnits.get(ui.inputInt()-1);
+                st.addBTOApplication(getUserID(), unit.get(0), unit.get(1), unit.get(2));
+            }
+            else{
+                System.out.println("No applicable units found");
+            }
         } catch(Exception e){ //out of index
             System.out.println(e.getMessage());
         }
