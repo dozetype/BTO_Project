@@ -38,16 +38,53 @@ public class Storage {
     public Map<String, Project> getProject(){;
         return PROJECTS;
     }
-    public void updateProject(List<String> projectData) {
+    public void updateProject(List<String> projectData) 
+    {
+    	String originalProjectName = projectData.get(0);
+        Project updatedProject = new Project(projectData.toArray(new String[0]));
+        PROJECTS.put(originalProjectName, updatedProject);
     }
     public void addProject(Project newProject) {
         PROJECTS.put(newProject.getProjectName(), newProject);
     }
+    public void removeProject(String projectName) 
+    {PROJECTS.remove(projectName);}
 
     public void registerProject(String userID, String projectName) {
         PROJECTS.get(projectName).getProjectTeam().addOfficerApplying(userID);
     }
-
+    
+    public Project getProjectByName(String name) 
+    {
+        for (Project p : getProject().values()) 
+        {
+            if (p.getProjectName().equalsIgnoreCase(name)) 
+            {return p;}
+        }
+        return null;
+    }
+    public BTOApplication getApplicantApplicationByID(String name) 
+    {
+        for (BTOApplication app : getBTOApplications().values()) 
+        {
+            if (app.getApplicantID().equalsIgnoreCase(name)) 
+            {return app;}
+        }
+        return null;
+    }
+    public List<Project> getAllProjects() 
+    {return new ArrayList<>(PROJECTS.values());}
+    
+    public List<Project> getProjectsByManager(String managerID) 
+    {
+        List<Project> result = new ArrayList<>();
+        for (Project project : PROJECTS.values()) 
+        {
+            List<String> data = project.getListOfStrings(); 
+            if (data.get(10).equalsIgnoreCase(managerID)) {result.add(project);}
+        }
+        return result;
+    }
 
     public Map<String, Enquiry> getEnquiries(){
         return ENQUIRIES;

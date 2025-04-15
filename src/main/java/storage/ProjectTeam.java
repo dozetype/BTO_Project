@@ -5,7 +5,7 @@ import java.util.List;
 
 public class ProjectTeam {
     private final String manager;
-    private final int maxSlots;
+    private int maxSlots;
     private List<String> officers;
     private List<String> officersApplying;
 
@@ -53,6 +53,13 @@ public class ProjectTeam {
     public void addOfficerApplying(String officerID) {
         officersApplying.add(officerID);
         System.out.println(officersApplying);
+    }
+    public int getSlots() {
+        return maxSlots;
+    }
+    
+    public void setSlots(int newSlots) {
+        this.maxSlots = newSlots;
     }
     /**
      * @return NRIC of Manager
