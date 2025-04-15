@@ -16,8 +16,6 @@ public class HDBOfficer extends Applicant {
     public HDBOfficer(List<String> userData) {
         super(userData);
         setUserType("Officer"); //Override "Applicant"
-        this.officerStatus=OfficerStatus.OFFICER;
-        this.registrationStatus=RegistrationStatus.NOT_REGISTERED;
     }
 
 
@@ -25,26 +23,33 @@ public class HDBOfficer extends Applicant {
      * @param storage DataBase
      */
     public void registerToJoinProject(Storage storage) {
-        if (getOfficerStatus().equals("NEITHER")) {
-            List<String> projectNames = new ArrayList<>();
-            int count = 1;
-            for (Project p : storage.getProject().values()) {
-                projectNames.add(p.getProjectName());
-                System.out.println(count++ + ") " + p.getProjectName());
-            }
-            try {
-                System.out.print("Pick which Project you would like to register as Officer: ");
-                String projectName = projectNames.get(ui.inputInt() - 1);
-                storage.registerProject(getUserID(), projectName);
-                System.out.println("Please wait for the result. You are applying as Officer in "+projectName);
-                setRegistrationStatus(RegistrationStatus.PENDING);
-                System.out.println(storage.getProject());
-            } catch (Exception e) {
-                System.out.println(e.getMessage() + " " + e.getCause());
+        for (Project p : storage.getProject().values()) {
+            if (p.getProjectTeam().getOfficers().contains(getUserID())) {
+                System.out.println("Cannot apply. You are an Officer in " + p.getProjectName());
+                return;
             }
         }
-        else{
-            System.out.println("Officer already registered");
+        List<String> projectNames = new ArrayList<>();
+        int count = 1;
+        for (Project p : storage.getProject().values()) {
+            projectNames.add(p.getProjectName());
+            System.out.println(count++ + ") " + p.getProjectName());
+        }
+        try {
+            System.out.print("Pick which Project you would like to register as Officer: ");
+            String projectName = projectNames.get(ui.inputInt() - 1);
+            for(BTOApplication application : storage.getBTOApplications().values()) {
+                if (application.getApplicantID().equals(getUserID()) && application.getProjectName().equals(projectName)) {
+                    System.out.println("You have already applied for this project as Applicant.");
+                    return;
+                }
+            }
+            storage.registerProject(getUserID(), projectName);
+            System.out.println("Please wait for the result. You are applying as Officer in "+projectName);
+            setRegistrationStatus(RegistrationStatus.PENDING);
+            System.out.println(storage.getProject());
+        } catch (Exception e) {
+            System.out.println(e.getMessage() + " " + e.getCause());
         }
     }
 
@@ -131,6 +136,7 @@ public class HDBOfficer extends Applicant {
             }
             else if(p.getProjectTeam().getOfficersApplying().contains(getUserID())) {
                 setRegistrationStatus(RegistrationStatus.PENDING);
+                setOfficerStatus(OfficerStatus.NEITHER);
                 return;
             }
         }
@@ -162,6 +168,9 @@ public class HDBOfficer extends Applicant {
                 System.out.println("Successfully changed the number of flats!");
                 System.out.println(p); // too long, need to change
                 break;
+            }
+            else {
+                System.out.println("No current project handled. Please register.");
             }
         }
     }

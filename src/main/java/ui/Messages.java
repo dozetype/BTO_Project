@@ -44,7 +44,7 @@ public class Messages {
             
             9 ) Remove Enquiries\
             
-            10 ) Register as Officer to a Project\
+            10) Register as Officer to a Project\
             
             11) View Registration Status\
             

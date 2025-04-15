@@ -37,7 +37,6 @@ public class Applicant extends User implements IApplicant {
     }
 
     public void applyProject(Storage st) {
-        //need check if officer?
         for(BTOApplication application : st.getBTOApplications().values()){
             if(application.getApplicantID().equals(getUserID())){
                 System.out.println("You have already applied for a Project.");
@@ -51,6 +50,9 @@ public class Applicant extends User implements IApplicant {
         List<String> unit =  new ArrayList<>();
         System.out.println("Which Project would you like to apply? (0 to quit)");
         for(Project p : st.getProject().values()){
+            if(p.getProjectTeam().getOfficers().contains(getUserID())){
+                continue; //check if he is an officer
+            }
             if(p.getProjectVisibility() && p.getOpeningDate()<currentTime && p.getClosingDate()>currentTime){ //if visible and within timeframe
                 if((getMaritalStatus()==MaritalStatus.SINGLE && getAge()>=35) || (getMaritalStatus()==MaritalStatus.MARRIED && getAge()>=21)){
                     System.out.println(count+")"+p.getProjectName()+" 2 ROOMS, Price: "+p.getPrices().get(FlatType.TWO_ROOM)+", Available units: "+ p.getUnits().get(FlatType.TWO_ROOM));
@@ -62,7 +64,7 @@ public class Applicant extends User implements IApplicant {
                     unit =  new ArrayList<>(); //clear
                 }
                 if(getMaritalStatus()==MaritalStatus.MARRIED && getAge()>=21){
-                    System.out.println(p.getProjectName()+" 3 ROOMS, Price: "+p.getPrices().get(FlatType.THREE_ROOM)+", Available units: "+ p.getUnits().get(FlatType.THREE_ROOM));
+                    System.out.println(count+")"+p.getProjectName()+" 3 ROOMS, Price: "+p.getPrices().get(FlatType.THREE_ROOM)+", Available units: "+ p.getUnits().get(FlatType.THREE_ROOM));
                     unit.add(p.getProjectName());
                     unit.add(String.valueOf(p.getPrices().get(FlatType.THREE_ROOM)));
                     unit.add("THREE_ROOM");
@@ -76,6 +78,7 @@ public class Applicant extends User implements IApplicant {
             if(!applicableUnits.isEmpty()){
                 unit = applicableUnits.get(ui.inputInt()-1);
                 st.addBTOApplication(getUserID(), unit.get(0), unit.get(1), unit.get(2));
+                System.out.println("Thank you! you are applying for: "+unit.get(0));
             }
             else{
                 System.out.println("No applicable units found");
