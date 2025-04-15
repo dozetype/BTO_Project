@@ -1,9 +1,6 @@
 package users;
 
-import storage.Enquiry;
-import storage.BTOApplication;
 import storage.*;
-import ui.Messages;
 
 import java.text.SimpleDateFormat;
 import java.util.*;
@@ -11,7 +8,7 @@ import java.util.*;
 public class HDBOfficer extends Applicant {
     private OfficerStatus officerStatus;
     private RegistrationStatus registrationStatus;
-    private String ProjectAllocated; //find out Project allocated and Registration from ProjectTeam
+    private List<String> projectsAllocated = new ArrayList<>(); //find out Project allocated and Registration from ProjectTeam
 
     public HDBOfficer(List<String> userData) {
         super(userData);
@@ -20,6 +17,9 @@ public class HDBOfficer extends Applicant {
 
 
     /**
+     * Register to join a project team
+     * -Officer can join as many different projects as they want, as long as the projects they are
+     *  currently inside are all closed for BTO Application
      * @param storage DataBase
      */
     public void registerToJoinProject(Storage storage) {
@@ -58,40 +58,61 @@ public class HDBOfficer extends Applicant {
      */
     @Override
     public void viewEnquiries(Storage storage) {
-        for(Enquiry e : storage.getEnquiries().values()) {
-            if(e.getProjectName().equals(ProjectAllocated)) {
-                System.out.println(e);
+        for(String partOfProject : projectsAllocated) {
+            for(Enquiry e : storage.getEnquiries().values()) {
+                if(e.getProjectName().equals(partOfProject)) {
+                    System.out.println(e);
+                }
             }
         }
     }
 
     /**
+     * Only able to view and reply to UNANSWERED Enquiries
      * @param storage DataBase
      */
     public void replyToEnquiry(Storage storage) {
         //TODO only be able to view enq with unanswered qns
-        viewEnquiries(storage);
-        System.out.println("Please choose the Enquiries ID: ");
-        String enquiryID = ui.inputString();
+        Map<String, Enquiry> availableEnquiries = new HashMap<>(); //Used to store unanswered relavant
         for(Enquiry e : storage.getEnquiries().values()) {
-            if (e.getID().equals(enquiryID)&&e.getReply().equals("NULL")) {
+            for(String partOfProject : projectsAllocated) {
+                if(e.getProjectName().equals(partOfProject) && e.getReply().equals("NULL")) {
+                    availableEnquiries.put(e.getID(), e);
+                    System.out.println(e);
+                }
+            }
+        }
+        if(!availableEnquiries.isEmpty()){
+            System.out.println("Please choose the Enquiries ID: ");
+            Enquiry toBeReplied = availableEnquiries.get(ui.inputString());
+            if(toBeReplied != null) {
                 System.out.println("Please write your reply: ");
-                String reply = ui.inputString();
-                e.setReply(reply);
+                toBeReplied.setReply(ui.inputString());
                 System.out.println("Thank you for your reply!");
+            }
+            else{
+                System.out.println("Entered ID does not exist. Exiting.");
             }
         }
     }
 
-    public void viewApplication(Storage storage) {
+
+    /**
+     * View BTO Applications of all project Officer is in
+     * @param storage
+     */
+    public void viewProjectsBTOApplication(Storage storage) {
         for(BTOApplication app : storage.getBTOApplications().values()) {
-            if (app.getProjectName().equals(ProjectAllocated)) {
-                System.out.println(app);
+            for(String partOfProject : projectsAllocated) {
+                if (app.getProjectName().equals(partOfProject)) {
+                    System.out.println(app);
+                }
             }
         }
     }
+
     public String generateReceipt(Storage storage) {
-        viewApplication(storage);
+        viewProjectsBTOApplication(storage);
         System.out.print("Please choose the Applicant ID: ");
         String ApplicantID = ui.inputString();
 
@@ -129,54 +150,55 @@ public class HDBOfficer extends Applicant {
     public void checkProjectAllocated(Storage storage) {
         for (Project p : storage.getProject().values()) {
             if(p.getProjectTeam().getOfficers().contains(getUserID())) {
-                setProjectAllocated(p.getProjectName());
+                setProjectsAllocated(p.getProjectName());
                 setRegistrationStatus(RegistrationStatus.SUCCESSFUL);
                 setOfficerStatus(OfficerStatus.OFFICER);
-                return;
             }
-            else if(p.getProjectTeam().getOfficersApplying().contains(getUserID())) {
+            else if(p.getProjectTeam().getOfficersApplying().contains(getUserID()) && projectsAllocated.isEmpty()) {
                 setRegistrationStatus(RegistrationStatus.PENDING);
                 setOfficerStatus(OfficerStatus.NEITHER);
-                return;
             }
         }
-        setRegistrationStatus(RegistrationStatus.NOT_REGISTERED);
-        setOfficerStatus(OfficerStatus.NEITHER);
-    }
-
-    public void updateNumOfFlats(Storage storage){
-        for (Project p : storage.getProject().values()) {
-            if (p.getProjectName().equals(ProjectAllocated)) {
-                System.out.println(p); // too long, need to change
-                System.out.println(p.getUnits());
-                int count=1;
-                List<String> flatTypesList = new ArrayList<>();
-                for (Map.Entry<FlatType, Integer> flatTypes : p.getUnits().entrySet()){
-                    System.out.printf("%d) %-10s (Current value: %d)%n",
-                            count++,
-                            flatTypes.getKey(),
-                            flatTypes.getValue());
-                    flatTypesList.add(flatTypes.getKey().toString());
-                }
-
-                System.out.print("Please choose the Flat Type: ");
-                int flatType = ui.inputInt();
-                System.out.print("Please type the new Number of Flat: ");
-                int flatnum = ui.inputInt();
-
-                p.updateFlatAvailability(flatTypesList.get((flatType-1)), flatnum);
-                System.out.println("Successfully changed the number of flats!");
-                System.out.println(p); // too long, need to change
-                break;
-            }
-            else {
-                System.out.println("No current project handled. Please register.");
-            }
+        if(projectsAllocated.isEmpty()) {
+            setRegistrationStatus(RegistrationStatus.NOT_REGISTERED);
+            setOfficerStatus(OfficerStatus.NEITHER);
         }
     }
+
+    //TODO Changed projectAllocated
+//    public void updateNumOfFlats(Storage storage){
+//        for (Project p : storage.getProject().values()) {
+//            if (p.getProjectName().equals(projectsAllocated)) {
+//                System.out.println(p); // too long, need to change
+//                System.out.println(p.getUnits());
+//                int count=1;
+//                List<String> flatTypesList = new ArrayList<>();
+//                for (Map.Entry<FlatType, Integer> flatTypes : p.getUnits().entrySet()){
+//                    System.out.printf("%d) %-10s (Current value: %d)%n",
+//                            count++,
+//                            flatTypes.getKey(),
+//                            flatTypes.getValue());
+//                    flatTypesList.add(flatTypes.getKey().toString());
+//                }
+//
+//                System.out.print("Please choose the Flat Type: ");
+//                int flatType = ui.inputInt();
+//                System.out.print("Please type the new Number of Flat: ");
+//                int flatNum = ui.inputInt();
+//
+//                p.updateFlatAvailability(flatTypesList.get((flatType-1)), flatNum);
+//                System.out.println("Successfully changed the number of flats!");
+//                System.out.println(p); // too long, need to change
+//                break;
+//            }
+//            else {
+//                System.out.println("No current project handled. Please register.");
+//            }
+//        }
+//    }
 
     public void changeApplicationStatus(Storage storage) {
-        viewApplication(storage);
+        viewProjectsBTOApplication(storage);
         System.out.print("Please type the Applicant ID: ");
         String ApplicantID = ui.inputString();
 
@@ -212,9 +234,9 @@ public class HDBOfficer extends Applicant {
         this.registrationStatus=status;
     }
 
-    public String getProjectAllocated() { return this.ProjectAllocated; }
-    public void setProjectAllocated(String ProjectName){
-        this.ProjectAllocated=ProjectName;
+    public List<String> getProjectsAllocated() { return this.projectsAllocated; }
+    public void setProjectsAllocated(String projectName){
+        this.projectsAllocated.add(projectName);
     }
     public void setOfficerStatus(OfficerStatus offStatus){
         this.officerStatus=offStatus;

@@ -117,7 +117,7 @@ public class Main{
                 case 11:
                     if(currUser instanceof HDBOfficer) {
                         System.out.println("Your officer registration status: " + ((HDBOfficer) currUser).getRegistrationStatus());
-                        System.out.println("Project: " + ((HDBOfficer) currUser).getProjectAllocated());
+                        System.out.println("Project: " + ((HDBOfficer) currUser).getProjectsAllocated());
                         break;
                     }
                 case 12:
@@ -130,11 +130,11 @@ public class Main{
                         System.out.println(((HDBOfficer)currUser).generateReceipt(storage));
                         break;
                     }
-                case 14:
-                    if(currUser instanceof HDBOfficer) {
-                        ((HDBOfficer)currUser).updateNumOfFlats(storage);
-                        break;
-                    }
+//                case 14:
+//                    if(currUser instanceof HDBOfficer) {
+//                        ((HDBOfficer)currUser).updateNumOfFlats(storage);
+//                        break;
+//                    }
                 case 15:
                     if(currUser instanceof HDBOfficer) {
                         ((HDBOfficer)currUser).changeApplicationStatus(storage);
