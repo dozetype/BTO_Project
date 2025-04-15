@@ -22,7 +22,6 @@ public class Messages {
             9 ) Remove Enquiries\
             
             0 ) EXIT\
-            
             """;
 
     public static final String OFFICER_MENU = """
@@ -57,7 +56,6 @@ public class Messages {
             15) Change Application Status\
             
             0 ) EXIT\
-            
             """;
 
     public static final String MANAGER_MENU = """
@@ -76,6 +74,5 @@ public class Messages {
             7 ) Add Enquiries\
             
             8 ) Remove Enquiries\
-            
             """;
 }

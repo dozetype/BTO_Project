@@ -1,12 +1,9 @@
 package users;
 import storage.Enquiry;
 import storage.*;
-import ui.Messages;
-import ui.Ui;
+import ui.*;
 
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 public class Applicant extends User implements IApplicant {
@@ -16,12 +13,11 @@ public class Applicant extends User implements IApplicant {
         super(userData, "Applicant");
     }
 
-    public void viewProject(Storage st){
-        long currentTime = System.currentTimeMillis();
+    public void viewBTOProject(Storage st){
         //check time, check marital status, check visibility
         System.out.println("Viewing Open Projects:");
         for(Project p : st.getProject().values()){
-            if(p.getProjectVisibility() && p.getOpeningDate()<currentTime && p.getClosingDate()>currentTime){
+            if(p.getProjectVisibility() && p.currentlyOpenOrClosed()){
                 if((getMaritalStatus()==MaritalStatus.SINGLE && getAge()>=35) || (getMaritalStatus()==MaritalStatus.MARRIED && getAge()>=21)){
                     System.out.println(p.getProjectName()+" 2 ROOMS, Price: "+p.getPrices().get(FlatType.TWO_ROOM)+", Available units: "+ p.getUnits().get(FlatType.TWO_ROOM));
                 }
@@ -36,7 +32,7 @@ public class Applicant extends User implements IApplicant {
         }
     }
 
-    public void applyProject(Storage st) {
+    public void applyBTOProject(Storage st) {
         for(BTOApplication application : st.getBTOApplications().values()){
             if(application.getApplicantID().equals(getUserID())){
                 System.out.println("You have already applied for a Project.");
@@ -45,7 +41,7 @@ public class Applicant extends User implements IApplicant {
         }
         long currentTime = System.currentTimeMillis();
         int count=1;
-        //check time, check marital status, check visibility
+        //check time, check marital status, check visibility, check if officer is in project
         List<List<String>> applicableUnits = new ArrayList<>(); //store data of options
         List<String> unit =  new ArrayList<>();
         System.out.println("Which Project would you like to apply? (0 to quit)");
@@ -53,7 +49,7 @@ public class Applicant extends User implements IApplicant {
             if(p.getProjectTeam().getOfficers().contains(getUserID())){
                 continue; //check if he is an officer
             }
-            if(p.getProjectVisibility() && p.getOpeningDate()<currentTime && p.getClosingDate()>currentTime){ //if visible and within timeframe
+            if(p.getProjectVisibility() && p.currentlyOpenOrClosed()){ //if visible and within timeframe
                 if((getMaritalStatus()==MaritalStatus.SINGLE && getAge()>=35) || (getMaritalStatus()==MaritalStatus.MARRIED && getAge()>=21)){
                     System.out.println(count+")"+p.getProjectName()+" 2 ROOMS, Price: "+p.getPrices().get(FlatType.TWO_ROOM)+", Available units: "+ p.getUnits().get(FlatType.TWO_ROOM));
                     unit.add(p.getProjectName());
@@ -88,7 +84,17 @@ public class Applicant extends User implements IApplicant {
         }
     }
 
-    public void viewApplication(Storage st) {}
+    /**
+     *View All BTO Applications made by user throughout all Projects
+     * @param st DataBase
+     */
+    public void viewApplication(Storage st) {
+        for(BTOApplication application : st.getBTOApplications().values()){
+            if(application.getApplicantID().equals(getUserID())){
+                System.out.println(application); //TODO may need to change the UX
+            }
+        }
+    }
 
     /**
      * @param storage DataBase

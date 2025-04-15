@@ -1,11 +1,10 @@
 package users;
 
-import storage.Project;
 import storage.Storage;
 
 public interface IApplicant {
-    void viewProject(Storage st);
-    void applyProject(Storage st);
+    void viewBTOProject(Storage st);
+    void applyBTOProject(Storage st);
     void viewApplication(Storage st);
 //    void bookFlat(Storage st);
 //    void withdrawApplication(Storage st);

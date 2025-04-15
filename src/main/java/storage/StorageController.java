@@ -5,6 +5,7 @@ import java.util.*;
 
 public class StorageController implements IStorageController {
     int nextEnquiryID;
+    int nextBTOApplicationID;
 
 
     public List<String[]> readCSV(String filePath) {
@@ -64,16 +65,15 @@ public class StorageController implements IStorageController {
         Map<String, Enquiry> ENQUIRIES = new HashMap<>();
         readCSV("src/main/database/Enquiry.csv").stream().skip(1)
                 .forEach(line -> ENQUIRIES.put(line[0], new Enquiry(line[0], line[1], line[2], line[3], line[4])));
-        for (String e : ENQUIRIES.keySet())
+        for (String e : ENQUIRIES.keySet()) //Go through the EnquiryID and take the Largest
             nextEnquiryID = Math.max(nextEnquiryID, Integer.parseInt(e)) + 1;
         return ENQUIRIES;
     }
 
-    public Map<String, Enquiry> addEnquiry(String askerID, String projectName, String question, Map<String, Enquiry> ENQUIRIES) {
+    public void addEnquiry(String askerID, String projectName, String question, Map<String, Enquiry> ENQUIRIES) {
         String ID = Integer.toString(nextEnquiryID);
         ENQUIRIES.put(ID, new Enquiry(ID, askerID, projectName, question, "NULL"));
         nextEnquiryID++;
-        return ENQUIRIES;
     }
 
     public void writeEnquiryFile(Map<String, Enquiry> ENQUIRY){ //WRITES using ENQUIRY in Storage
@@ -91,15 +91,23 @@ public class StorageController implements IStorageController {
     public Map<String, BTOApplication> readBTOApplicationFile(){
         Map<String, BTOApplication> BTOAPPLICATIONS = new HashMap<>();
         readCSV("src/main/database/BTOApplication.csv").stream().skip(1)
-                .forEach(line -> BTOAPPLICATIONS.put(line[0], new BTOApplication(line[0], line[1], line[2], line[3], line[4], line[5])));
+                .forEach(line -> BTOAPPLICATIONS.put(line[0], new BTOApplication(line[0], line[1], line[2], line[3], line[4], line[5], line[6])));
+        for (String a : BTOAPPLICATIONS.keySet()) //Go through the ID and take the Largest
+            nextBTOApplicationID = Math.max(nextBTOApplicationID, Integer.parseInt(a)) + 1;
         return BTOAPPLICATIONS;
+    }
+
+    public void addBTOApplication(String userID, String projectName, String price, String type, Map<String, BTOApplication> BTOAPPLICATIONS) {
+        String ID = Integer.toString(nextBTOApplicationID);
+        BTOAPPLICATIONS.put(ID, new BTOApplication(ID, userID, projectName, price, "NULL", type, "PENDING"));
+        nextBTOApplicationID++;
     }
 
     public void writeBTOApplicationFile(Map<String, BTOApplication> BTOAPPLICATIONS){
         try(BufferedWriter bw = new BufferedWriter(new FileWriter("src/main/database/BTOApplication.csv"))){
-            bw.write("ApplicantID,ProjectName,Price,OfficerID,FLAT TYPE,STATUS\n");
+            bw.write("BTOApplicationID,ApplicantID,ProjectName,Price,OfficerID,FLAT TYPE,STATUS\n");
             for (BTOApplication a : BTOAPPLICATIONS.values())  //using info in USERS to write file
-                bw.write(a.getApplicantID()+","+a.getProjectName()+","+a.getPrice()+","+a.getOfficerInCharge()+","+a.getFlatType()+","+a.getApplicationStatus()+"\n");
+                bw.write(a.getID()+","+a.getApplicantID()+","+a.getProjectName()+","+a.getPrice()+","+a.getOfficerInCharge()+","+a.getFlatType()+","+a.getApplicationStatus()+"\n");
         }
         catch(Exception e){
             System.out.println(e.getMessage());

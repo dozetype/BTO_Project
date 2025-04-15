@@ -56,7 +56,7 @@ public class Storage {
         ENQUIRIES.put(ID, newEnquiry);
     }
     public void addEnquiries(String askerID, String projectName, String question) {
-        ENQUIRIES = storageController.addEnquiry(askerID, projectName, question, ENQUIRIES);
+        storageController.addEnquiry(askerID, projectName, question, ENQUIRIES);
     }
     public void removeEnquiries(String ID) {
         ENQUIRIES.remove(ID);
@@ -65,7 +65,7 @@ public class Storage {
 
     public Map<String, BTOApplication> getBTOApplications(){ return BTOAPPLICATIONS; }
     public void addBTOApplication(String userID, String projectName, String price, String type) {
-        BTOAPPLICATIONS.put(userID, new BTOApplication(userID, projectName, price, "NULL", type, "PENDING"));
+        storageController.addBTOApplication(userID, projectName, price, type, BTOAPPLICATIONS);
     }
 
     /**

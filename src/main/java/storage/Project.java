@@ -85,6 +85,16 @@ public class Project {
     public void toggleProjectVisibility() {
         projectVisibility = !projectVisibility;
     }
+
+    /**
+     * Check if this Project is open for BTO Applications
+     * @return true if open, false if closed
+     */
+    public boolean currentlyOpenOrClosed(){
+        long currentTime = System.currentTimeMillis();
+        return currentTime > openingDate && currentTime < closingDate;
+    }
+
     public boolean getProjectVisibility() {return projectVisibility;}
 
     public String toString() {
