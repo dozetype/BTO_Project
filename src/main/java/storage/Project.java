@@ -79,8 +79,8 @@ public class Project {
 //    }
 
     // method to check flat availability
-    public void updateFlatAvailability(String flatType, int numberOfUnits) {
-        this.units.put(FlatType.valueOf(flatType), numberOfUnits);
+    public void updateFlatAvailability(FlatType flatType, int numberOfUnits) {
+        this.units.put(flatType, numberOfUnits);
     }
 
     public void toggleProjectVisibility() {
