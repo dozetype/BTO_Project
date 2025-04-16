@@ -11,7 +11,11 @@ import storage.ProjectTeam;
 import ui.Ui;
 import java.util.List;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.HashMap;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 public class HDBManager extends User 
 {
@@ -23,6 +27,10 @@ public class HDBManager extends User
         super(userData, "Manager");
     }
     
+    /*
+     * MISC THINGS TO NOTE: officersApplying (constructor): [] appears sometimes when testing
+     * ui.inputInt adds a "enter Number:" on top of the existing message
+     */
     /*
      * Can only be handling one project within an application period (from
 application opening date, inclusive, to application closing date,
@@ -52,15 +60,107 @@ inclusive)
         System.out.print("Enter Selling Price for " + flatType2 + ": ");
         int sellingPrice2 = ui.inputInt();
         
-        System.out.print("Enter Application Opening Date (dd/MM/yyyy): ");
-        String openingDate = ui.inputString();
+        SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy"); //checks that entry follows xx/xx/xxxx
+        sdf.setLenient(false); //makes sure the date is a valid date too (so that cant be like 10/30/2020)
+        Long openingDate = 0L;
+        Long closingDate = 0L;
+        int currentYear = Calendar.getInstance().get(Calendar.YEAR);
+        int minYear = currentYear - 40; //can adjust to any number 
+        int maxYear = currentYear + 40;
+        String openingDateStr = "";
+        String closingDateStr = "";
+        List<Project> existingProjects = storage.getProjectsByManager(getUserID());
+        boolean validDates = false;
+
+        while (!validDates) 
+        {
         
-        System.out.print("Enter Application Closing Date (dd/MM/yyyy): ");
-        String closingDate = ui.inputString();
+	        while (true) 
+	        {
+	            System.out.print("Enter Application Opening Date (dd/MM/yyyy): ");
+	            openingDateStr = ui.inputString();
+	
+	            try 
+	            {
+	                Date opencheck = sdf.parse(openingDateStr);  
+	                openingDate = opencheck.getTime();
+	                Calendar cal = Calendar.getInstance();
+	                cal.setTime(opencheck);
+	                int openYear = cal.get(Calendar.YEAR);
+	
+	                if (openYear < minYear || openYear > maxYear)  //check date recency
+	                {System.out.println("Opening year must be between " + minYear + " and " + maxYear + ".");} 
+	                else {break;}
+	            } catch (ParseException e) {System.out.println("Invalid date format. Please enter in dd/MM/yyyy format.");}
+	        }
+	        
+	        while (true) 
+	        {
+	            System.out.print("Enter Application Closing Date (dd/MM/yyyy): ");
+	            
+	            closingDateStr = ui.inputString();
+	
+	            try 
+	            {
+	                Date closecheck = sdf.parse(closingDateStr);  
+	                closingDate = closecheck.getTime();
+	                Calendar cal = Calendar.getInstance();
+	                cal.setTime(closecheck);
+	                int closeYear = cal.get(Calendar.YEAR);
+	
+	                if (closeYear < minYear || closeYear > maxYear) //check date recency
+	                {System.out.println("Closing date must be between " + minYear + " and " + maxYear + ".");} 
+	                else if (closingDate <= openingDate) //check that closes after the open
+	                {System.out.println("Closing date must be after the opening date.");}
+	                else 
+	                {
+	                	boolean overlapFound = false;
+	                    for (Project project : existingProjects) 
+	                    {
+	                        Long existingOpeningDate = project.getOpeningDate();
+	                        Long existingClosingDate = project.getClosingDate();
+
+	                        if ((openingDate < existingClosingDate) && (closingDate > existingOpeningDate)) 
+	                        {
+	                            System.out.println("The project overlaps with an existing project. Please reenter the dates.");
+	                            overlapFound = true;
+	                            break;
+	                        }
+	                    }
+
+	                    if (!overlapFound) 
+	                    {
+	                        validDates = true; // If no overlap, break out of big loop
+	                        break;
+	                    }
+	                }
+
+	            } catch (ParseException e) {System.out.println("Invalid date format. Please enter in dd/MM/yyyy format.");}
+	        }
+	        
+        }
         
-        System.out.print("Enter Visibility (0 for Not visible, 1 for Visible): ");
-        int visibilityInput = ui.inputInt();
+        int visibilityInput;
+        while (true) 
+        {
+            System.out.print("Enter Visibility (0 for Not visible, 1 for Visible): ");
+            visibilityInput = ui.inputInt();
+
+            if (visibilityInput == 0 || visibilityInput == 1) {break;} 
+            else {System.out.println("Please enter 0 or 1");}
+        }
         boolean visibility = (visibilityInput == 1);
+        
+        int officerSlots;
+        while (true) 
+        {
+            System.out.print("Enter Maximum number of Officer Slots: ");
+            officerSlots = ui.inputInt();
+
+            if (officerSlots <11) {break;} 
+            else {System.out.println("Maximum number of officers is 10");}
+        }
+        
 
         String[] project = new String[] 
         {
@@ -72,13 +172,13 @@ inclusive)
             flatType2, 
             String.valueOf(numUnits2), 
             String.valueOf(sellingPrice2), 
-            openingDate, 
-            closingDate, 
+            String.valueOf(openingDate), 
+            String.valueOf(closingDate), 
             getUserID(), 
-            "10", 
+            String.valueOf(officerSlots), 
             "", 
             "",
-			"",
+            "", 
             String.valueOf(visibility)
         };
         
@@ -88,28 +188,72 @@ inclusive)
     }
 
 
+    public List<String> showProjectslist(Storage storage){
+        List<String> projectNames = new ArrayList<>();
+        int count = 1;
+
+        for (Project p : storage.getProject().values()) {
+            projectNames.add(p.getProjectName());
+            System.out.println(count++ + ") " + p.getProjectName());
+        }
+
+        if (projectNames == null || projectNames.isEmpty()) 
+        {
+            System.out.println("No projects found.");
+            return projectNames;
+        }
+        return projectNames;
+    }
+    
+    public List<String> showManagedProjectslist(Storage storage)
+    {
+        List<String> projectNames = new ArrayList<>();
+        int count = 1;
+        String currentUserID = getUserID();
+        
+        for (Project p : storage.getProject().values()) 
+        {
+            String projectManagerID = p.getCreatedBy(); 
+
+            if (currentUserID.equalsIgnoreCase(projectManagerID)) {
+                projectNames.add(p.getProjectName());
+                System.out.println(count++ + ") " + p.getProjectName());
+            }
+        }
+        if (projectNames.isEmpty()) {
+            System.out.println("No Projects Found");
+        }
+        
+        return projectNames;
+    }
+    
     public void editProject(Storage storage) 
     {
-        System.out.println("Enter Project Name to edit project: ");
-        String projectName = ui.inputString(); 
+    	List<String> projectNames = showProjectslist(storage);
+    	if (projectNames.isEmpty()) {return;}
+        System.out.println("Enter the number of the project to edit: ");
+        String projectName = projectNames.get(ui.inputInt() - 1);
         Project project = storage.getProjectByName(projectName);
         
         if (project != null) 
-        {
+        {	/*
+        	* was wondering if should comment out 1, 2, 9, 11, 12? not sure if those would change but just wanted to give option in case
+        	* plus i didnt add officers rejected in for the same reason, but lmk if need add
+        	*/
             System.out.println("Editing Project: " + project.getProjectName());
             System.out.println("Which category would you like to edit?");
-            System.out.println("1) Project Name");
-            System.out.println("2) Neighborhood");
-            System.out.println("3) Number of Units for Type 1");
-            System.out.println("4) Selling Price for Type 1");
-            System.out.println("5) Number of Units for Type 2");
-            System.out.println("6) Selling Price for Type 2");
-            System.out.println("7) Application Opening Date");
-            System.out.println("8) Application Closing Date");
-            System.out.println("9) Manager");
-            System.out.println("10) Number of Officer Slots");
-            System.out.println("11) Officers");
-            System.out.println("12) Officers Applying");
+            //System.out.println("1) Project Name");
+            //System.out.println("2) Neighbourhood");
+            System.out.println("1) Number of Units for Type 1");
+            System.out.println("2) Selling Price for Type 1");
+            System.out.println("3) Number of Units for Type 2");
+            System.out.println("4) Selling Price for Type 2");
+            System.out.println("5) Application Opening Date");
+            System.out.println("6) Application Closing Date");
+            //System.out.println("9) Manager");
+            System.out.println("7) Number of Officer Slots");
+            //System.out.println("11) Officers");
+            //System.out.println("12) Officers Applying"); 
             System.out.println("Note: Select Toggle Visibility to Change Visibility");
 
             int choice = ui.inputInt();
@@ -117,54 +261,90 @@ inclusive)
 
             switch (choice) 
             {
-                case 1:
+                /*case 1:
                     System.out.print("Enter new Project Name: ");
                     updatedData.set(0, ui.inputString()); 
                     break;
                 case 2:
                     System.out.print("Enter new Neighborhood: ");
                     updatedData.set(1, ui.inputString());  
-                    break;
-                case 3:
+                    break; */
+                case 1:
                     System.out.print("Enter new Number of Units for Type 1: ");
                     updatedData.set(3, ui.inputString());  
                     break;
-                case 4:
+                case 2:
                     System.out.print("Enter new Selling Price for Type 1: ");
                     updatedData.set(4, ui.inputString());  
                     break;
-                case 5:
+                case 3:
                     System.out.print("Enter new Number of Units for Type 2: ");
                     updatedData.set(6, ui.inputString());  
                     break;
-                case 6:
+                case 4:
                     System.out.print("Enter new Selling Price for Type 2: ");
                     updatedData.set(7, ui.inputString());  
                     break;
-                case 7:
-                    System.out.print("Enter new Application Opening Date (dd/MM/yyyy): ");
-                    updatedData.set(8, ui.inputString());  
+                case 5:
+                    
+                    SimpleDateFormat sdfo = new SimpleDateFormat("dd/MM/yyyy"); //checks that entry follows xx/xx/xxxx
+                    sdfo.setLenient(false); //makes sure the date is a valid date too (so that cant be like 10/30/2020)
+                    while (true) 
+                    {
+                        System.out.print("Enter Application Opening Date (dd/MM/yyyy): ");
+                        String inputDate = ui.inputString();
+                        
+
+                        try {
+                            Date opencheck = sdfo.parse(inputDate);  
+                            Long openingDate = opencheck.getTime();
+                            updatedData.set(8, String.valueOf(openingDate));  
+                            break;  
+                        } catch (ParseException e) {
+                            System.out.println("Invalid date format. Please enter in dd/MM/yyyy format.");
+                        }
+                    }
+                    
+                    
                     break;
-                case 8:
-                    System.out.print("Enter new Application Closing Date (dd/MM/yyyy): ");
-                    updatedData.set(9, ui.inputString());  
+                case 6:
+
+                    SimpleDateFormat sdfc = new SimpleDateFormat("dd/MM/yyyy"); //checks that entry follows xx/xx/xxxx
+                    sdfc.setLenient(false); //makes sure the date is a valid date too (so that cant be like 10/30/2020)
+                    
+                    
+                    while (true) 
+                    {
+                        System.out.print("Enter Application Closing Date (dd/MM/yyyy): ");
+                        String inputDate = ui.inputString();  
+
+                        try {
+                            Date closecheck = sdfc.parse(inputDate);  
+                            Long closingDate = closecheck.getTime();
+                            updatedData.set(9, String.valueOf(closingDate));  
+                            break;  
+                        } catch (ParseException e) {
+                            System.out.println("Invalid date format. Please enter in dd/MM/yyyy format.");
+                        }
+                    }
+                    
                     break;
-                case 9:
+                /*case 9:
                     System.out.print("Enter new Manager: ");
                     updatedData.set(10, ui.inputString());  
-                    break;
-                case 10:
-                    System.out.print("Enter new Number of Officer Slsot: ");
+                    break;*/
+                case 7:
+                    System.out.print("Enter new Number of Officer Slots: ");
                     updatedData.set(11, ui.inputString()); 
                     break;
-                case 11:
+                /*case 11:
                     System.out.print("Enter new Officers: ");
                     updatedData.set(12, ui.inputString()); 
                     break;
                 case 12:
                     System.out.print("Enter new Officer Applying: ");
                     updatedData.set(13, ui.inputString());  
-                    break;
+                    break;*/
                 default:
                     System.out.println("Please select a valid category");
                     break;
@@ -181,8 +361,10 @@ inclusive)
     
     public void deleteProject(Storage storage) 
     {
-        System.out.println("Enter Project Name to delete project: ");
-        String projectName = ui.inputString();
+    	List<String> projectNames = showProjectslist(storage);
+    	if (projectNames.isEmpty()) {return;}
+        System.out.println("Enter the number of the project to delete: ");
+        String projectName = projectNames.get(ui.inputInt() - 1);
         Project project = storage.getProjectByName(projectName);
         if (project != null) 
         {
@@ -198,6 +380,7 @@ inclusive)
         List<Project> projects = storage.getAllProjects();
         for (Project project : projects) {System.out.println(project);}
     }
+    
     
     /*
      * Able to filter and view the list of projects that they have created only.
@@ -216,14 +399,17 @@ inclusive)
     	 * not sure if they want toggled as in like a yes/no switch but i thought being able to 
     	 * choose which wld be easier? like so u dont toggle wrong way
     	 */
-        System.out.println("Enter Project Name for project which you would like to toggle visibility for: ");
-        String projectName = ui.inputString(); 
+    	
+    	List<String> projectNames = showProjectslist(storage);
+    	if (projectNames.isEmpty()) {return;}
+        System.out.println("Enter the number of the project to toggle visibility: ");
+        String projectName = projectNames.get(ui.inputInt() - 1);
         Project project = storage.getProjectByName(projectName);
 
         if (project != null) 
         {
             List<String> updatedData = new ArrayList<>(project.getListOfStrings());
-            System.out.print("Enter Visibility (0 for Not visbile, 1 for Visible): ");
+            System.out.print("Enter Visibility (0 for Not visible, 1 for Visible): ");
             int visibilityInput = ui.inputInt();
             updatedData.set(15, visibilityInput == 1 ? "TRUE" : "FALSE");
             storage.updateProject(updatedData);
@@ -238,8 +424,10 @@ inclusive)
 	public void viewHDBOfficerRegistration(Storage storage) 
 	{
 		
-		System.out.println("Enter Project Name to view officers registered and applying: ");
-		String projectName = ui.inputString();
+		List<String> projectNames = showProjectslist(storage);
+		if (projectNames.isEmpty()) {return;}
+        System.out.println("Enter the number of the project to view officer registration: ");
+        String projectName = projectNames.get(ui.inputInt() - 1);
 		Project project = storage.getProjectByName(projectName);
 		if (project != null) 
         {
@@ -248,11 +436,12 @@ inclusive)
 
         } else {System.out.println("Project not found");}
 	}
-	
+	/*
 	public void approveHDBOfficerRegistration(Storage storage) 
 	{
-	    System.out.println("Enter Project Name for officer registration approval: ");
-	    String projectName = ui.inputString();
+		List<String> projectNames = showManagedProjectslist(storage);
+        System.out.println("Enter the number of the project to approve officer registration: ");
+        String projectName = projectNames.get(ui.inputInt() - 1);
 	    Project project = storage.getProjectByName(projectName);
 	    
 	    if (project != null && project.getCreatedBy().equals(getUserID())) 
@@ -265,16 +454,32 @@ inclusive)
 	        {
 	            team.getOfficers().add(officerID);
 	            team.getOfficersApplying().remove(officerID);
-	            team.setSlots(team.getSlots() - 1);
 	            System.out.println("Officer approved");
 	        } else {System.out.println("No pending application");}
 	    } else {System.out.println("Project not accessible"); }
 	}
+	*/
+	public void decideOfficerApplication(Storage storage) 
+	{
+		List<String> projectNames = showManagedProjectslist(storage);
+		if (projectNames.isEmpty()) {return;}
+        System.out.println("Enter the number of the project to decide officer registration: ");
+        String projectName = projectNames.get(ui.inputInt() - 1);
+	    if (projectName == null) return;
+	    Project project = storage.getProjectByName(projectName);
+	    if (project == null || !project.getCreatedBy().equals(getUserID())) {
+	        System.out.println("Project not accessible or you’re not the manager.");
+	        return;
+	    }
+	    project.getProjectTeam().decideOfficerApplication();
+	}
 	
+	/*
 	public void rejectHDBOfficerRegistration(Storage storage) 
 	{
-	    System.out.println("Enter Project Name for officer registration rejection: ");
-	    String projectName = ui.inputString();
+		List<String> projectNames = showManagedProjectslist(storage);
+        System.out.println("Enter the number of the project to reject officer registration: ");
+        String projectName = projectNames.get(ui.inputInt() - 1);
 	    Project project = storage.getProjectByName(projectName);
 	    
 	    if (project != null && project.getCreatedBy().equals(getUserID())) 
@@ -289,7 +494,7 @@ inclusive)
 	            System.out.println("Officer rejected.");
 	        } else {System.out.println("No pending application");}
 	    } else {System.out.println("Project not accessible");}
-	}
+	}*/
 	
 	/*
 	 * i assumed applicant stuff is only for their own projects
@@ -298,8 +503,10 @@ inclusive)
 	
 	public void approveApplicantApplication(Storage storage) 
 	{
-	    System.out.println("Enter Project Name for application approval: ");
-	    String projectName = ui.inputString();
+		List<String> projectNames = showManagedProjectslist(storage);
+		if (projectNames.isEmpty()) {return;}
+        System.out.println("Enter the number of the project to approve applicant's application: ");
+        String projectName = projectNames.get(ui.inputInt() - 1);
 	    Project project = storage.getProjectByName(projectName);
 	    
 	    if (project != null && project.getCreatedBy().equals(getUserID())) 
@@ -307,6 +514,10 @@ inclusive)
 	        System.out.println("Enter Applicant ID to approve: ");
 	        String applicantID = ui.inputString();
 	        BTOApplication application = storage.getApplicantApplicationByID(applicantID);
+	        if (application == null) {
+	            System.out.println("No application found for Applicant ID: " + applicantID);
+	            return; 
+	        }
 	        FlatType targetType = application.getFlatType(); 
 	        HashMap<FlatType, Integer> units = project.getUnits();
 	        Integer availableUnits = units.get(targetType);
@@ -328,8 +539,10 @@ inclusive)
 	
 	public void rejectApplicantApplication(Storage storage) 
 	{
-	    System.out.println("Enter Project Name for application rejection: ");
-	    String projectName = ui.inputString();
+		List<String> projectNames = showManagedProjectslist(storage);
+		if (projectNames.isEmpty()) {return;}
+        System.out.println("Enter the number of the project to reject applicant's application: ");
+        String projectName = projectNames.get(ui.inputInt() - 1);
 	    Project project = storage.getProjectByName(projectName);
 	    
 	    if (project != null && project.getCreatedBy().equals(getUserID())) 
@@ -337,7 +550,10 @@ inclusive)
 	        System.out.println("Enter Applicant ID to reject: ");
 	        String applicantID = ui.inputString();
 	        BTOApplication application = storage.getApplicantApplicationByID(applicantID);
-	        
+	        if (application == null) {
+	            System.out.println("No application found for Applicant ID: " + applicantID);
+	            return; 
+	        }
 	        if (application.getApplicationStatus()==ApplicationStatus.PENDING) 
 	        {
 	        	application.setApplicationStatus(ApplicationStatus.UNSUCCESSFUL);
@@ -354,8 +570,10 @@ inclusive)
 	
 	public void approveWithdrawalRequest(Storage storage) 
 	{
-	    System.out.println("Enter Project Name for withdrawal approval: ");
-	    String projectName = ui.inputString();
+		List<String> projectNames = showManagedProjectslist(storage);
+		if (projectNames.isEmpty()) {return;}
+        System.out.println("Enter the number of the project to approve applicant's withdrawal request: ");
+        String projectName = projectNames.get(ui.inputInt() - 1);
 	    Project project = storage.getProjectByName(projectName);
 	    
 	    if (project != null && project.getCreatedBy().equals(getUserID())) 
@@ -374,8 +592,10 @@ inclusive)
 	
 	public void rejectWithdrawalRequest(Storage storage) 
 	{
-	    System.out.println("Enter Project Name for withdrawal approval: ");
-	    String projectName = ui.inputString();
+		List<String> projectNames = showManagedProjectslist(storage);
+		if (projectNames.isEmpty()) {return;}
+        System.out.println("Enter the number of the project to reject applicant's withdrawal request: ");
+        String projectName = projectNames.get(ui.inputInt() - 1);
 	    Project project = storage.getProjectByName(projectName);
 	    
 	    if (project != null && project.getCreatedBy().equals(getUserID())) 
@@ -397,16 +617,25 @@ inclusive)
 	 */
 	public void generateApplicantReport(Storage storage)
 	{
-	    System.out.println("Enter Project Name to generate report: ");
-	    String projectName = ui.inputString();
+		List<String> projectNames = showProjectslist(storage);
+		if (projectNames.isEmpty()) {return;}
+        System.out.println("Enter the number of the project to generate applicant report: ");
+        String projectName = projectNames.get(ui.inputInt() - 1);
 	    Project project = storage.getProjectByName(projectName);
 	    
 	    if (project != null) 
 	    {
+	    	String flatTypeFilter = getFilter("FLAT_TYPE");
 	    	for (BTOApplication app : storage.getBTOApplications().values()) 
 	    	{
 	    		if(app.getProjectName().equals(projectName)) 
 	    		{
+	    			
+	    			boolean isValid = true;
+	                if (flatTypeFilter != null && !app.getFlatType().toString().equals(flatTypeFilter)) {isValid = false;}
+
+	                if (isValid) 
+	                {
 	    			String applicantID = app.getApplicantID();
 	    			ArrayList<String> userData = storage.getUserData(applicantID);
 	    			System.out.println("Application for: " + projectName);
@@ -417,6 +646,7 @@ inclusive)
 			        System.out.println("Flat Type        : " + app.getFlatType());
 			        System.out.println("Application Status: " + app.getApplicationStatus());
 			        System.out.println("");
+	                }   
 	    		}    
 			        
 		    }
@@ -426,8 +656,10 @@ inclusive)
 
 	public void viewEnquiries(Storage storage) 
 	{
-	    System.out.println("Enter Project Name to view enquiries: ");
-	    String projectName = ui.inputString();
+		List<String> projectNames = showProjectslist(storage);
+		
+        System.out.println("Enter the number of the project to view enquiries: ");
+        String projectName = projectNames.get(ui.inputInt() - 1);
 	    Project project = storage.getProjectByName(projectName);
 
 	    
@@ -445,7 +677,7 @@ inclusive)
 	public void replyToEnquiry(Storage storage) 
 	{
 	    viewEnquiries(storage);
-	    System.out.println("Please choose the Enquiries ID: ");
+	    System.out.println("Please choose the Enquiries ID to reply: ");
 	    String enquiryID = ui.inputString();
 	    for(Enquiry e : storage.getEnquiries().values()) 
 	    {	
@@ -473,4 +705,5 @@ inclusive)
 
 	
 	
+
 	  
