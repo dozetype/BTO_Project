@@ -4,7 +4,7 @@ public class Enquiry {
     private final String ID;
     private final String askerID; //name of asker
     private final String projectName;
-    private final String question; //the question itself
+    private String question; //the question itself
     private String reply;
 
     public Enquiry(String ID, String userID, String projectName, String question, String reply) {
@@ -20,9 +20,7 @@ public class Enquiry {
     public String getAskerID(){
         return askerID;
     }
-    public String getProjectName(){
-        return projectName;
-    }
+    public String getProjectName(){ return projectName; }
     public String getQuestion(){
         return question;
     }
@@ -33,6 +31,7 @@ public class Enquiry {
     public void setReply(String reply) {
         this.reply = reply;
     }
+    public void setQuestion(String question) { this.question = question; }
 
     public String toString() {
         return "Enquiry{" +

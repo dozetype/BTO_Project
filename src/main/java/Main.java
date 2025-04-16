@@ -107,24 +107,27 @@ public class Main{
                     ((Applicant)currUser).addEnquiry(storage);
                     break;
                 case 9:
-                    ((Applicant)currUser).removeEnquiry(storage);
+                    ((Applicant)currUser).editEnquiry(storage);
                     break;
                 case 10:
+                    ((Applicant)currUser).removeEnquiry(storage);
+                    break;
+                case 11:
                     if(currUser instanceof HDBOfficer) {
                         ((HDBOfficer)currUser).registerToJoinProject(storage);
                         break;
                     }
-                case 11:
+                case 12:
                     if(currUser instanceof HDBOfficer) {
                         System.out.println("Your registration status is: "+((HDBOfficer) currUser).checkRegistrationStatus(storage));
                         break;
                     }
-                case 12:
+                case 13:
                     if(currUser instanceof HDBOfficer) {
                         ((HDBOfficer)currUser).replyToEnquiry(storage);
                         break;
                     }
-                case 13:
+                case 14:
                     if(currUser instanceof HDBOfficer) {
                         ((HDBOfficer)currUser).changeBTOApplicationStatus(storage);
                         break;

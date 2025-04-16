@@ -19,14 +19,16 @@ public class Messages {
             
             8 ) Add Enquiries\
             
-            9 ) Remove Enquiries\
+            9 ) Edit Enquiry\
+            
+            10) Remove Enquiry\
             
             0 ) EXIT\
             """;
 
     public static final String OFFICER_MENU = """
             1 ) Add Filter\
-
+            
             2 ) View Filters\
             
             3 ) Remove Filter\
@@ -41,15 +43,17 @@ public class Messages {
             
             8 ) Add Enquiries\
             
-            9 ) Remove Enquiries\
+            9 ) Edit Enquiry\
             
-            10) Register as Officer to a Project\
+            10) Remove Enquiry\
             
-            11) View Registration Status\
+            11) Register as Officer to a Project\
             
-            12) Reply Enquiry\
+            12) View Registration Status\
+            
+            13) Reply Enquiry\
 
-            13) Change Application Status\
+            14) Change Application Status\
             
             0 ) EXIT\
             """;

@@ -4,7 +4,9 @@ import storage.*;
 import ui.*;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class Applicant extends User implements IApplicant {
     Ui ui = new Ui();
@@ -50,12 +52,11 @@ public class Applicant extends User implements IApplicant {
      */
     public void applyBTOProject(Storage st) {
         for(BTOApplication application : st.getBTOApplications().values()){
-            if(application.getApplicantID().equals(getUserID())){
+            if(application.getApplicantID().equals(getUserID()) && (!application.getApplicationStatus().equals(ApplicationStatus.WITHDRAWN) || !application.getApplicationStatus().equals(ApplicationStatus.UNSUCCESSFUL))){
                 System.out.println("You have already applied for a Project.");
                 return;
             }
         }
-        long currentTime = System.currentTimeMillis();
         int count=1;
         //check time, check marital status, check visibility, check if officer is in project
         List<List<String>> applicableUnits = new ArrayList<>(); //store data of options
@@ -145,15 +146,16 @@ public class Applicant extends User implements IApplicant {
     }
 
     /**
+     * Can Only Delete the Enquiry if it can has not been replied
      * @param storage DataBase
      */
     public void removeEnquiry(Storage storage){
         List<String> enquiryIDList = new ArrayList<>();
         int count=1;
         for(Enquiry e : storage.getEnquiries().values()) {
-            if(e.getAskerID().equals(getUserID())) {
+            if(e.getAskerID().equals(getUserID()) && e.getReply().equals("NULL")) {
                 enquiryIDList.add(e.getID());
-                System.out.println(count++ +")\n"+ "Your Question: " + e.getQuestion() + "\n" +"Your Reply: " + e.getReply());
+                System.out.println(count++ +")"+ "Your Question: " + e.getQuestion());
             }
         }
         if(!enquiryIDList.isEmpty()) {
@@ -167,6 +169,31 @@ public class Applicant extends User implements IApplicant {
         }
         else{
             System.out.println("Nothing to remove");
+        }
+    }
+
+    /**
+     * User can only edit their enquiry if it hasn't been replied
+     * @param st
+     */
+    public void editEnquiry(Storage st){
+        Map<Integer, Enquiry> editableEnquiries = new HashMap<>();
+        int count=1;
+        for(Enquiry e : st.getEnquiries().values()) {
+            if(e.getAskerID().equals(getUserID()) && e.getReply().equals("NULL")) {
+                editableEnquiries.put(count, e);
+                System.out.println(count++ +")"+ "Your Question: " + e.getQuestion());
+            }
+        }
+
+        if(!editableEnquiries.isEmpty()) {
+            System.out.println("Select an Enquiry");
+            count = ui.inputInt();
+            System.out.println("Enter Your NEW Enquiry: ");
+            editableEnquiries.get(count).setQuestion(ui.inputString());
+        }
+        else{
+            System.out.println("Nothing to edit. Exiting.");
         }
     }
 
