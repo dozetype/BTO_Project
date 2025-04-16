@@ -102,13 +102,13 @@ public class Applicant extends User implements IApplicant {
     }
 
     /**
-     *View All BTO Applications made by user throughout all Projects
+     *View All BTO Applications made by user
      * @param st DataBase
      */
     public void viewApplication(Storage st) {
         for(BTOApplication application : st.getBTOApplications().values()){
             if(application.getApplicantID().equals(getUserID())){
-                System.out.println(application); //TODO may need to change the UX
+                System.out.println(application);
             }
         }
     }
@@ -197,4 +197,13 @@ public class Applicant extends User implements IApplicant {
         }
     }
 
+    public void withdrawBTOApplication(Storage st){
+        for(BTOApplication application : st.getBTOApplications().values()) {
+            if(application.getApplicantID().equals(getUserID()) &&
+            (application.getApplicationStatus().equals(ApplicationStatus.PENDING)||application.getApplicationStatus().equals(ApplicationStatus.SUCCESSFUL)||application.getApplicationStatus().equals(ApplicationStatus.BOOKED))) {
+                System.out.println("Withdrawing from" + application.getProjectName()+", "+application.getFlatType());
+                application.setApplicationStatus(ApplicationStatus.WITHDRAWING);
+            }
+        }
+    }
 }

@@ -47,8 +47,7 @@ public class Storage {
     public void addProject(Project newProject) {
         PROJECTS.put(newProject.getProjectName(), newProject);
     }
-    public void removeProject(String projectName) 
-    {PROJECTS.remove(projectName);}
+    public void removeProject(String projectName) {PROJECTS.remove(projectName);}
 
     public void registerProject(String userID, String projectName) {
         PROJECTS.get(projectName).getProjectTeam().addOfficerApplying(userID);

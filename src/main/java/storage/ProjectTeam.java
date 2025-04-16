@@ -32,9 +32,6 @@ public class ProjectTeam {
                 .map(String::trim)
                 .filter(id -> !id.isEmpty())
                 .collect(Collectors.toList());
-
-
-        System.out.println("officersApplying (constructor): " + this.officersApplying);
     }
 
     public void decideOfficerApplication() {

@@ -7,7 +7,7 @@ public interface IApplicant {
     void applyBTOProject(Storage st);
     void viewApplication(Storage st);
 //    void bookFlat(Storage st);
-//    void withdrawApplication(Storage st);
+    void withdrawBTOApplication(Storage st);
     void viewEnquiries(Storage st);
     void addEnquiry(Storage st);
     void removeEnquiry(Storage st);

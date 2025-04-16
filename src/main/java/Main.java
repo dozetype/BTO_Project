@@ -13,7 +13,7 @@ public class Main{
     private Storage storage;
 
     public static void main(String[] args){
-        System.out.println(Messages.APPLICATION_NAME);
+        System.out.println(Messages.BTO_ART+"\n"+Messages.APPLICATION_NAME);
         new Main().run();
     }
 
@@ -77,17 +77,13 @@ public class Main{
             choice = ui.inputInt();
             switch (choice) {
                 case 1:
-                    System.out.print("Enter filter to add: ");
-                    currUser.setFilterList(ui.inputString());
+                    currUser.addFilter();
                     break;
                 case 2:
-                    System.out.println("Current Filters: ");
-                    currUser.getFilterList();
+                    currUser.viewFilters();
                     break;
                 case 3:
-                    System.out.println("Remove Filter");
-                    currUser.getFilterList();
-                    currUser.removeFilter(ui.inputInt());
+                    currUser.removeFilter();
                     break;
                 case 4:
                     System.out.print("Enter New Password: ");
@@ -144,17 +140,13 @@ public class Main{
             choice = ui.inputInt();
             switch (choice) {
                 case 1:
-                    System.out.print("Enter filter to add: ");
-                    currUser.setFilterList(ui.inputString());
+                    currUser.addFilter();
                     break;
                 case 2:
-                    System.out.println("Current Filters: ");
-                    currUser.getFilterList();
+                    currUser.viewFilters();
                     break;
                 case 3:
-                    System.out.println("Remove Filter");
-                    currUser.getFilterList();
-                    currUser.removeFilter(ui.inputInt());
+                    currUser.removeFilter();
                     break;
                 case 4:
                     System.out.print("Enter New Password: ");
