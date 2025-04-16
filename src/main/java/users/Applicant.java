@@ -17,7 +17,7 @@ public class Applicant extends User implements IApplicant {
         //check time, check marital status, check visibility
         System.out.println("Viewing Open Projects:");
         for(Project p : st.getProject().values()){
-            if(p.getProjectVisibility() && p.currentlyOpenOrClosed()){
+            if(p.getProjectVisibility() && p.currentlyOpenOrClosed()){ //User can see project listing if its open and its visible
                 if((getMaritalStatus()==MaritalStatus.SINGLE && getAge()>=35) || (getMaritalStatus()==MaritalStatus.MARRIED && getAge()>=21)){
                     System.out.println(p.getProjectName()+" 2 ROOMS, Price: "+p.getPrices().get(FlatType.TWO_ROOM)+", Available units: "+ p.getUnits().get(FlatType.TWO_ROOM));
                 }

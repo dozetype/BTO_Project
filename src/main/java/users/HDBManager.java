@@ -224,7 +224,7 @@ inclusive)
             List<String> updatedData = new ArrayList<>(project.getListOfStrings());
             System.out.print("Enter Visibility (0 for Not visbile, 1 for Visible): ");
             int visibilityInput = ui.inputInt();
-            updatedData.set(14, visibilityInput == 1 ? "TRUE" : "FALSE");
+            updatedData.set(15, visibilityInput == 1 ? "TRUE" : "FALSE");
             storage.updateProject(updatedData);
             System.out.println("Project visibility changed");
         } 
