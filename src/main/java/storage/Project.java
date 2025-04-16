@@ -17,6 +17,7 @@ public class Project {
     private HashMap<FlatType, Integer> prices = new HashMap<>();
     private ProjectTeam projectTeam;
     private boolean projectVisibility;
+    SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
 
     public Project(String[] data) {
         /*
@@ -27,7 +28,7 @@ public class Project {
          */
         projectName = data[0];
         neighbourhood = data[1];
-        SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
+
         try {
             openingDate = formatter.parse(data[8]).getTime();
             closingDate = formatter.parse(data[9]).getTime();
@@ -68,7 +69,7 @@ public class Project {
 
     public String getProjectName() { return projectName; }
     public String getNeighbourhood() { return neighbourhood; }
-    public long getOpeningDate() { return openingDate; }
+    public long getOpeningDate() {return openingDate; }
     public long getClosingDate() { return closingDate; }
     public String getCreatedBy() { return createdBy; }
     public HashMap<FlatType, Integer> getUnits() { return units; }
@@ -77,6 +78,11 @@ public class Project {
 //    public void setUnits(HashMap<String, Integer> units) {
 //        this.units = units;
 //    }
+    public boolean overlapping(Project other) {
+    // Project A starts before B ends AND Project A ends after B starts
+    return (this.openingDate <= other.closingDate) &&
+        (this.closingDate >= other.openingDate);
+}
 
     // method to check flat availability
     public void updateFlatAvailability(FlatType flatType, int numberOfUnits) {

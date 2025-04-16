@@ -6,7 +6,6 @@ import java.text.SimpleDateFormat;
 import java.util.*;
 
 public class HDBOfficer extends Applicant {
-    private RegistrationStatus registrationStatus;
     private List<String> projectsAllocated = new ArrayList<>(); //find out Project allocated and Registration from ProjectTeam
 
     public HDBOfficer(List<String> userData) {
@@ -32,12 +31,6 @@ public class HDBOfficer extends Applicant {
      */
 
     public void registerToJoinProject(Storage storage) {
-        for (Project p : storage.getProject().values()) {
-            if (p.getProjectTeam().getOfficers().contains(getUserID())) {
-                System.out.println("Cannot apply. You are an Officer in " + p.getProjectName());
-                return;
-            }
-        }
         List<String> projectNames = showProjectslist(storage);
         try {
             System.out.print("Pick which Project you would like to register as Officer: ");
@@ -48,9 +41,27 @@ public class HDBOfficer extends Applicant {
                     return;
                 }
             }
+            for (Project p : storage.getProject().values()) {
+                if (p.getProjectTeam().getOfficers().contains(getUserID())||p.getProjectTeam().getOfficersApplying().contains(getUserID())) {
+                    if (p.getProjectName().equals(projectName)&&p.getProjectTeam().getOfficers().contains(getUserID())) {
+                        System.out.println("You are an Officer of this project.");
+                        return;
+                    }
+                    if (p.getProjectName().equals(projectName)&&p.getProjectTeam().getOfficersApplying().contains(getUserID())) {
+                        System.out.println("You have already registering for this project.");
+                        return;
+                    }
+                    for (Project q : storage.getProject().values()) {
+                        if (q.getProjectName().equalsIgnoreCase(projectName)&&q.overlapping(p)){
+                            System.out.println("Cannot apply. The time is overlapping with " + p.getProjectName());
+                            return;
+                        }
+                    }
+                }
+            }
+
             storage.registerProject(getUserID(), projectName);
             System.out.println("Please wait for the result. You are applying as Officer in "+projectName);
-            setRegistrationStatus(RegistrationStatus.PENDING);
             System.out.println(storage.getProject());
         } catch (Exception e) {
             System.out.println(e.getMessage() + " " + e.getCause());
@@ -74,7 +85,6 @@ public class HDBOfficer extends Applicant {
      * @param storage DataBase
      */
     public void replyToEnquiry(Storage storage) {
-        //TODO only be able to view enq with unanswered qns
         Map<String, Enquiry> availableEnquiries = new HashMap<>(); //Used to store unanswered relavant
         for(Enquiry e : storage.getEnquiries().values()) {
                 if(projectsAllocated.contains(e.getProjectName())&& e.getReply().equals("NULL")) {
@@ -154,15 +164,14 @@ public class HDBOfficer extends Applicant {
         return RegistrationStatus.NOT_REGISTERED.toString();
     }
 
-public void checkProjectsAllocated(Storage storage) {
-    for (Project p : storage.getProject().values()) {
-        if (p.getProjectTeam().getOfficers().contains(getUserID())) {
-            addProjectsAllocated(p.getProjectName());
+    public void checkProjectsAllocated(Storage storage) {
+        for (Project p : storage.getProject().values()) {
+            if (p.getProjectTeam().getOfficers().contains(getUserID())) {
+                addProjectsAllocated(p.getProjectName());
+            }
         }
     }
-}
 
-    //TODO Changed projectAllocated
     public void updateNumOfFlats(Storage storage, String applicantID){
         for (Project p : storage.getProject().values()) {
             for (BTOApplication app : storage.getBTOApplications().values()) {
@@ -200,16 +209,6 @@ public void checkProjectsAllocated(Storage storage) {
         }
     }
 
-    public String getRegistrationStatus(){
-        return this.registrationStatus.toString();
-    }
-
-    public void setRegistrationStatus(RegistrationStatus status){
-        this.registrationStatus=status;
-    }
-
-    public List<String> getProjectsAllocated() { return
-            this.projectsAllocated; }
     public void addProjectsAllocated(String projectName){
         this.projectsAllocated.add(projectName);
     }

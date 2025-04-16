@@ -77,7 +77,8 @@ inclusive)
             getUserID(), 
             "10", 
             "", 
-            "", 
+            "",
+			"",
             String.valueOf(visibility)
         };
         
