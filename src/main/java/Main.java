@@ -73,7 +73,7 @@ public class Main{
         if (currUser instanceof HDBOfficer) {System.out.println(Messages.OFFICER_MENU);}
         else  {System.out.println(Messages.APPLICANT_MENU);}
         do {
-            System.out.print("\nMenu ");
+            System.out.print(Messages.printLine()+"Menu ");
             choice = ui.inputInt();
             switch (choice) {
                 case 1:

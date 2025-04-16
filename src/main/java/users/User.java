@@ -79,11 +79,10 @@ public abstract class User implements IUser {
         }
     }
 
-    public String getFilter(String key){ //show list of filter
+    public String getFilter(String key){
         return filters.get(key);
     }
 
-//    public
 
     //Accessor and Mutators
     public String getName(){ return this.name; }

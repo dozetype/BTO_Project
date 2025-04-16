@@ -1,5 +1,7 @@
 package ui;
 
+import static ui.Colours.*;
+
 public class Messages {
     public static final String APPLICATION_NAME = "🏢 BTO Management System";
 
@@ -40,4 +42,9 @@ public class Messages {
             1) Neighbourhood
             2) Flat Type
             """;
+
+    public static String printLine(){
+        System.out.println(YELLOW + "-----------------------------------------------------------------------" + RESET);
+        return "";
+    }
 }
