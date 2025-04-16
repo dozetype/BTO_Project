@@ -78,6 +78,9 @@ public class ProjectTeam {
     public List<String> getOfficersApplying() {
         return officersApplying;
     }
+    public List<String> getOfficersRejected() {
+        return officersRejected;
+    }
 
     public void addOfficerApplying(String officerID) {
         officersApplying.add(officerID);

@@ -58,7 +58,7 @@ public class Main{
             else {
                 if(currUser instanceof HDBOfficer){
                     //loading info for officer
-                    ((HDBOfficer)currUser).checkProjectAllocated(storage);
+                    ((HDBOfficer)currUser).checkProjectsAllocated(storage);
                 }
                 normalMenu();
             }
@@ -116,8 +116,7 @@ public class Main{
                     }
                 case 11:
                     if(currUser instanceof HDBOfficer) {
-                        System.out.println("Your officer registration status: " + ((HDBOfficer) currUser).getRegistrationStatus());
-                        System.out.println("Project: " + ((HDBOfficer) currUser).getProjectsAllocated());
+                        System.out.println("Your registration status is: "+((HDBOfficer) currUser).checkRegistrationStatus(storage));
                         break;
                     }
                 case 12:
@@ -127,17 +126,7 @@ public class Main{
                     }
                 case 13:
                     if(currUser instanceof HDBOfficer) {
-                        System.out.println(((HDBOfficer)currUser).generateReceipt(storage));
-                        break;
-                    }
-//                case 14:
-//                    if(currUser instanceof HDBOfficer) {
-//                        ((HDBOfficer)currUser).updateNumOfFlats(storage);
-//                        break;
-//                    }
-                case 15:
-                    if(currUser instanceof HDBOfficer) {
-                        ((HDBOfficer)currUser).changeApplicationStatus(storage);
+                        ((HDBOfficer)currUser).changeBTOApplicationStatus(storage);
                         break;
                     }
             }

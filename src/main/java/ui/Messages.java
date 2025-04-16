@@ -48,12 +48,8 @@ public class Messages {
             11) View Registration Status\
             
             12) Reply Enquiry\
-            
-            13) Generate Receipt\
-            
-            14) Update Number of Flats\
-            
-            15) Change Application Status\
+
+            13) Change Application Status\
             
             0 ) EXIT\
             """;
