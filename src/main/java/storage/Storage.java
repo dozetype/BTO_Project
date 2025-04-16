@@ -54,24 +54,16 @@ public class Storage {
         PROJECTS.get(projectName).getProjectTeam().addOfficerApplying(userID);
     }
     
-    public Project getProjectByName(String name) 
+    public Project getProjectByName(String projectName)
     {
         for (Project p : getProject().values()) 
         {
-            if (p.getProjectName().equalsIgnoreCase(name)) 
+            if (p.getProjectName().equalsIgnoreCase(projectName))
             {return p;}
         }
         return null;
     }
-    public BTOApplication getApplicantApplicationByID(String name) 
-    {
-        for (BTOApplication app : getBTOApplications().values()) 
-        {
-            if (app.getApplicantID().equalsIgnoreCase(name)) 
-            {return app;}
-        }
-        return null;
-    }
+
     public List<Project> getAllProjects() 
     {return new ArrayList<>(PROJECTS.values());}
     
@@ -101,6 +93,14 @@ public class Storage {
 
 
     public Map<String, BTOApplication> getBTOApplications(){ return BTOAPPLICATIONS; }
+
+    public BTOApplication getApplicantApplicationByID(String userID) { //TODO this only returns 1 BTO Application made by that user
+        for (BTOApplication app : getBTOApplications().values()) {
+            if (app.getApplicantID().equalsIgnoreCase(userID)) {return app;}
+        }
+        return null;
+    }
+
     public void addBTOApplication(String userID, String projectName, String price, String type) {
         storageController.addBTOApplication(userID, projectName, price, type, BTOAPPLICATIONS);
     }

@@ -11,13 +11,25 @@ public class Applicant extends User implements IApplicant {
 //    Storage storage;
     public Applicant(List<String> userData) {
         super(userData, "Applicant");
+
     }
 
+    /**
+     * User can see project listing if its open and its visible
+     * If User have applied before they should still be able to see the listing even after Time Frame
+     * @param st
+     */
     public void viewBTOProject(Storage st){
-        //check time, check marital status, check visibility
+        //Stores all the BTO project Names that User have applied for
+        List<String> appliedBTOProject = new ArrayList<>();
+        for(BTOApplication a : st.getBTOApplications().values()){
+            if(a.getApplicantID().equals(getUserID())){
+                appliedBTOProject.add(a.getProjectName());
+            }
+        }
         System.out.println("Viewing Open Projects:");
         for(Project p : st.getProject().values()){
-            if(p.getProjectVisibility() && p.currentlyOpenOrClosed()){ //User can see project listing if its open and its visible
+            if((p.getProjectVisibility() && p.currentlyOpenOrClosed()) || (appliedBTOProject.contains(p.getProjectName()))){
                 if((getMaritalStatus()==MaritalStatus.SINGLE && getAge()>=35) || (getMaritalStatus()==MaritalStatus.MARRIED && getAge()>=21)){
                     System.out.println(p.getProjectName()+" 2 ROOMS, Price: "+p.getPrices().get(FlatType.TWO_ROOM)+", Available units: "+ p.getUnits().get(FlatType.TWO_ROOM));
                 }
@@ -32,6 +44,10 @@ public class Applicant extends User implements IApplicant {
         }
     }
 
+    /**
+     * Only able to View and Apply for BTO Project if they have not applied or if their previous application was Unsuccessful or Withdrawn
+     * @param st
+     */
     public void applyBTOProject(Storage st) {
         for(BTOApplication application : st.getBTOApplications().values()){
             if(application.getApplicantID().equals(getUserID())){
