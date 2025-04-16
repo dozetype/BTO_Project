@@ -26,7 +26,9 @@ public class BTOApplication {
     public String getOfficerInCharge() { return officerInCharge; }
     public FlatType getFlatType() { return flatType; }
     public ApplicationStatus getApplicationStatus() { return applicationStatus; }
-
+    public void setOfficerInCharge(String officerInCharge) {
+        this.officerInCharge = officerInCharge;
+    }
     public void setApplicationStatus(ApplicationStatus status) {
         this.applicationStatus = status;
     }
