@@ -52,83 +52,73 @@ inclusive)
         
         SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy"); //checks that entry follows xx/xx/xxxx
         sdf.setLenient(false); //makes sure the date is a valid date too (so that cant be like 10/30/2020)
-        Long openingDate = 0L;
-        Long closingDate = 0L;
+        Date openingDate =null;
+        Date closingDate =null;
         int currentYear = Calendar.getInstance().get(Calendar.YEAR);
         int minYear = currentYear - 40; //can adjust to any number 
         int maxYear = currentYear + 40;
-        String openingDateStr = "";
-        String closingDateStr = "";
         List<Project> existingProjects = storage.getProjectsByManager(getUserID());
         boolean validDates = false;
 
         while (!validDates) 
         {
         
-	        while (true) 
-	        {
-	            System.out.print("Enter Application Opening Date (dd/MM/yyyy): ");
-	            openingDateStr = ui.inputString();
-	
-	            try 
-	            {
-					System.out.println(sdf.parse("hiiiiiiiiiiiiii"+openingDateStr));
-	                Date opencheck = sdf.parse(openingDateStr);  
-	                openingDate = opencheck.getTime();
-	                Calendar cal = Calendar.getInstance();
-	                cal.setTime(opencheck);
-	                int openYear = cal.get(Calendar.YEAR);
-	
-	                if (openYear < minYear || openYear > maxYear)  //check date recency
-	                {System.out.println("Opening year must be between " + minYear + " and " + maxYear + ".");} 
-	                else {break;}
-	            } catch (ParseException e) {System.out.println("Invalid date format. Please enter in dd/MM/yyyy format.");}
-	        }
-	        
-	        while (true) 
-	        {
-	            System.out.print("Enter Application Closing Date (dd/MM/yyyy): ");
-	            
-	            closingDateStr = ui.inputString();
-	
-	            try 
-	            {
-	                Date closecheck = sdf.parse(closingDateStr);  
-	                closingDate = closecheck.getTime();
-	                Calendar cal = Calendar.getInstance();
-	                cal.setTime(closecheck);
-	                int closeYear = cal.get(Calendar.YEAR);
-	
-	                if (closeYear < minYear || closeYear > maxYear) //check date recency
-	                {System.out.println("Closing date must be between " + minYear + " and " + maxYear + ".");} 
-	                else if (closingDate <= openingDate) //check that closes after the open
-	                {System.out.println("Closing date must be after the opening date.");}
-	                else 
-	                {
-	                	boolean overlapFound = false;
-	                    for (Project project : existingProjects) 
-	                    {
-	                        Long existingOpeningDate = project.getOpeningDate();
-	                        Long existingClosingDate = project.getClosingDate();
+        	while (true) 
+        	{
+                System.out.print("Enter Application Opening Date (dd/MM/yyyy): ");
+                String openingDateStr = ui.inputString();
 
-	                        if ((openingDate < existingClosingDate) && (closingDate > existingOpeningDate)) 
-	                        {
-	                            System.out.println("The project overlaps with an existing project. Please reenter the dates.");
-	                            overlapFound = true;
-	                            break;
-	                        }
-	                    }
+                try 
+                {
+                	openingDate = sdf.parse(openingDateStr);
+                    Calendar cal = Calendar.getInstance();
+                    cal.setTime(openingDate);
+                    int openYear = cal.get(Calendar.YEAR);
 
-	                    if (!overlapFound) 
-	                    {
-	                        validDates = true; // If no overlap, break out of big loop
-	                        break;
-	                    }
-	                }
+                    if (openYear < minYear || openYear > maxYear) 
+                    {System.out.println("Opening year must be between " + minYear + " and " + maxYear + ".");} 
+                    else {break;}
+                } catch (ParseException e) {System.out.println("Invalid date format. Please enter in dd/MM/yyyy format.");}
+            }
 
-	            } catch (ParseException e) {System.out.println("Invalid date format. Please enter in dd/MM/yyyy format.");}
-	        }
-	        
+            while (true) 
+            {
+                System.out.print("Enter Application Closing Date (dd/MM/yyyy): ");
+                String closingDateStr = ui.inputString();
+
+                try 
+                {
+                	closingDate = sdf.parse(closingDateStr);
+                    Calendar cal = Calendar.getInstance();
+                    cal.setTime(closingDate);
+                    int closeYear = cal.get(Calendar.YEAR);
+
+                    if (closeYear < minYear || closeYear > maxYear) 
+                    {System.out.println("Closing date must be between " + minYear + " and " + maxYear + "."); } 
+                    else if (!closingDate.after(openingDate)) 
+                    {System.out.println("Closing date must be after the opening date.");} 
+                    else {
+                        boolean overlapFound = false;
+                        for (Project project : existingProjects) 
+                        {
+                            Long existingOpen = project.getOpeningDate();
+                            Long existingClose = project.getClosingDate();
+                            if ((openingDate.getTime() < existingClose) && (closingDate.getTime() > existingOpen)) {
+                                System.out.println("The project overlaps with an existing project. Please reenter the dates.");
+                                overlapFound = true;
+                                break;
+                            }
+                        }
+
+                        if (!overlapFound) 
+                        {
+                            validDates = true;
+                            break;
+                        }
+                    }
+
+                } catch (ParseException e) {System.out.println("Invalid date format. Please enter in dd/MM/yyyy format.");}
+            }
         }
         
         int visibilityInput;
@@ -163,8 +153,8 @@ inclusive)
             flatType2, 
             String.valueOf(numUnits2), 
             String.valueOf(sellingPrice2), 
-            String.valueOf(openingDate), 
-            String.valueOf(closingDate), 
+            sdf.format(openingDate), 
+            sdf.format(closingDate), 
             getUserID(), 
             String.valueOf(officerSlots), 
             "", 
@@ -222,8 +212,28 @@ inclusive)
     {
     	List<String> projectNames = showProjectslist(storage);
     	if (projectNames.isEmpty()) {return;}
-        System.out.println("Enter the number of the project to edit: ");
-        String projectName = projectNames.get(ui.inputInt() - 1);
+    	int choice = -1;
+        while (true) 
+        {
+            System.out.println("Enter the number of the project to edit or 0 to cancel: ");
+
+            String input = ui.inputString();
+            try 
+            {
+                choice = Integer.parseInt(input); 
+
+                if (choice == 0) 
+                {
+                    System.out.println("Edit cancelled.");
+                    return;
+                }
+
+                if (choice >= 1 && choice <= projectNames.size()) {break;}
+                else {System.out.println("Invalid number. Please enter a number between 1 and " + projectNames.size() + ", or 0 to cancel.");}
+            } catch (NumberFormatException e) {System.out.println("Invalid input. Please enter a valid number.");}
+        }
+
+        String projectName = projectNames.get(choice - 1);
         Project project = storage.getProjectByName(projectName);
         
         if (project != null) 
@@ -247,10 +257,10 @@ inclusive)
             //System.out.println("12) Officers Applying"); 
             System.out.println("Note: Select Toggle Visibility to Change Visibility");
 
-            int choice = ui.inputInt();
+            int c = ui.inputInt();
             List<String> updatedData = new ArrayList<>(project.getListOfStrings());
 
-            switch (choice) 
+            switch (c) 
             {
                 /*case 1:
                     System.out.print("Enter new Project Name: ");
@@ -354,16 +364,37 @@ inclusive)
     {
     	List<String> projectNames = showProjectslist(storage);
     	if (projectNames.isEmpty()) {return;}
-        System.out.println("Enter the number of the project to delete: ");
-        String projectName = projectNames.get(ui.inputInt() - 1);
+    
+        int choice = -1;
+        while (true) 
+        {
+            System.out.println("Enter the number of the project to delete or 0 to cancel: ");
+
+            String input = ui.inputString();
+            try 
+            {
+                choice = Integer.parseInt(input); 
+
+                if (choice == 0) 
+                {
+                    System.out.println("Deletion cancelled.");
+                    return;
+                }
+
+                if (choice >= 1 && choice <= projectNames.size()) {break;}
+                else {System.out.println("Invalid number. Please enter a number between 1 and " + projectNames.size() + ", or 0 to cancel.");}
+            } catch (NumberFormatException e) {System.out.println("Invalid input. Please enter a valid number.");}
+        }
+
+        String projectName = projectNames.get(choice - 1);
         Project project = storage.getProjectByName(projectName);
         if (project != null) 
         {
             storage.removeProject(projectName);
-            System.out.println("Project deleted");
-        } else {System.out.println("Project not found");}
+            System.out.println("Project deleted.");
+        } else {System.out.println("Project not found.");}
     }
-    
+
 
     
     public void viewAllProjects(Storage storage) 
@@ -393,24 +424,39 @@ inclusive)
     	
     	List<String> projectNames = showProjectslist(storage);
     	if (projectNames.isEmpty()) {return;}
-        System.out.println("Enter the number of the project to toggle visibility: ");
-		try {
-			String projectName = projectNames.get(ui.inputInt() - 1);
-			Project project = storage.getProjectByName(projectName);
+    	int choice = -1;
+        while (true) 
+        {
+            System.out.println("Enter the number of the project to toggle visibility or 0 to cancel: ");
 
-			if (project != null) {
-				List<String> updatedData = new ArrayList<>(project.getListOfStrings());
-				System.out.print("Enter Visibility (0 for Not visible, 1 for Visible): ");
-				int visibilityInput = ui.inputInt();
-				updatedData.set(15, visibilityInput == 1 ? "TRUE" : "FALSE");
-				storage.updateProject(updatedData);
-				System.out.println("Project visibility changed");
-			} else {
-				System.out.println("Project not found");
-			}
-		} catch (IndexOutOfBoundsException e) {
-			System.out.println(e.getMessage());
-		}
+            String input = ui.inputString();
+            try 
+            {
+                choice = Integer.parseInt(input); 
+
+                if (choice == 0) 
+                {
+                    System.out.println("Toggling cancelled.");
+                    return;
+                }
+
+                if (choice >= 1 && choice <= projectNames.size()) {break;}
+                else {System.out.println("Invalid number. Please enter a number between 1 and " + projectNames.size() + ", or 0 to cancel.");}
+            } catch (NumberFormatException e) {System.out.println("Invalid input. Please enter a valid number.");}
+        }
+
+        String projectName = projectNames.get(choice - 1);
+        Project project = storage.getProjectByName(projectName);
+        if (project != null) 
+        {
+			List<String> updatedData = new ArrayList<>(project.getListOfStrings());
+			System.out.print("Enter Visibility (0 for Not visible, 1 for Visible): ");
+			int visibilityInput = ui.inputInt();
+			updatedData.set(15, visibilityInput == 1 ? "TRUE" : "FALSE");
+			storage.updateProject(updatedData);
+			System.out.println("Project visibility changed");
+		} else {System.out.println("Project not found");}
+		
     }
 
     
@@ -421,9 +467,29 @@ inclusive)
 		
 		List<String> projectNames = showProjectslist(storage);
 		if (projectNames.isEmpty()) {return;}
-        System.out.println("Enter the number of the project to view officer registration: ");
-        String projectName = projectNames.get(ui.inputInt() - 1);
-		Project project = storage.getProjectByName(projectName);
+		int choice = -1;
+        while (true) 
+        {
+            System.out.println("Enter the number of the project to view officer registration or 0 to cancel: ");
+
+            String input = ui.inputString();
+            try 
+            {
+                choice = Integer.parseInt(input); 
+
+                if (choice == 0) 
+                {
+                    System.out.println("Deletion cancelled.");
+                    return;
+                }
+
+                if (choice >= 1 && choice <= projectNames.size()) {break;}
+                else {System.out.println("Invalid number. Please enter a number between 1 and " + projectNames.size() + ", or 0 to cancel.");}
+            } catch (NumberFormatException e) {System.out.println("Invalid input. Please enter a valid number.");}
+        }
+
+        String projectName = projectNames.get(choice - 1);
+        Project project = storage.getProjectByName(projectName);
 		if (project != null) 
         {
 		    ProjectTeam team = project.getProjectTeam();
@@ -458,8 +524,28 @@ inclusive)
 	{
 		List<String> projectNames = showManagedProjectslist(storage);
 		if (projectNames.isEmpty()) {return;}
-        System.out.println("Enter the number of the project to decide officer registration: ");
-        String projectName = projectNames.get(ui.inputInt() - 1);
+		int choice = -1;
+        while (true) 
+        {
+            System.out.println("Enter the number of the project to decide officer application or 0 to cancel: ");
+
+            String input = ui.inputString();
+            try 
+            {
+                choice = Integer.parseInt(input); 
+
+                if (choice == 0) 
+                {
+                    System.out.println("Deletion cancelled.");
+                    return;
+                }
+
+                if (choice >= 1 && choice <= projectNames.size()) {break;}
+                else {System.out.println("Invalid number. Please enter a number between 1 and " + projectNames.size() + ", or 0 to cancel.");}
+            } catch (NumberFormatException e) {System.out.println("Invalid input. Please enter a valid number.");}
+        }
+
+        String projectName = projectNames.get(choice - 1);
 	    if (projectName == null) return;
 	    Project project = storage.getProjectByName(projectName);
 	    if (project == null || !project.getCreatedBy().equals(getUserID())) {
@@ -500,9 +586,29 @@ inclusive)
 	{
 		List<String> projectNames = showManagedProjectslist(storage);
 		if (projectNames.isEmpty()) {return;}
-        System.out.println("Enter the number of the project to approve applicant's application: ");
-        String projectName = projectNames.get(ui.inputInt() - 1);
-	    Project project = storage.getProjectByName(projectName);
+		int choice = -1;
+        while (true) 
+        {
+            System.out.println("Enter the number of the project to approve applicant's application or 0 to cancel: ");
+
+            String input = ui.inputString();
+            try 
+            {
+                choice = Integer.parseInt(input); 
+
+                if (choice == 0) 
+                {
+                    System.out.println("Deletion cancelled.");
+                    return;
+                }
+
+                if (choice >= 1 && choice <= projectNames.size()) {break;}
+                else {System.out.println("Invalid number. Please enter a number between 1 and " + projectNames.size() + ", or 0 to cancel.");}
+            } catch (NumberFormatException e) {System.out.println("Invalid input. Please enter a valid number.");}
+        }
+
+        String projectName = projectNames.get(choice - 1);
+        Project project = storage.getProjectByName(projectName);
 	    
 	    if (project != null && project.getCreatedBy().equals(getUserID())) 
 	    {
@@ -536,9 +642,29 @@ inclusive)
 	{
 		List<String> projectNames = showManagedProjectslist(storage);
 		if (projectNames.isEmpty()) {return;}
-        System.out.println("Enter the number of the project to reject applicant's application: ");
-        String projectName = projectNames.get(ui.inputInt() - 1);
-	    Project project = storage.getProjectByName(projectName);
+		int choice = -1;
+        while (true) 
+        {
+            System.out.println("Enter the number of the project to reject applicant's application or 0 to cancel: ");
+
+            String input = ui.inputString();
+            try 
+            {
+                choice = Integer.parseInt(input); 
+
+                if (choice == 0) 
+                {
+                    System.out.println("Deletion cancelled.");
+                    return;
+                }
+
+                if (choice >= 1 && choice <= projectNames.size()) {break;}
+                else {System.out.println("Invalid number. Please enter a number between 1 and " + projectNames.size() + ", or 0 to cancel.");}
+            } catch (NumberFormatException e) {System.out.println("Invalid input. Please enter a valid number.");}
+        }
+
+        String projectName = projectNames.get(choice - 1);
+        Project project = storage.getProjectByName(projectName);
 	    
 	    if (project != null && project.getCreatedBy().equals(getUserID())) 
 	    {
@@ -567,10 +693,30 @@ inclusive)
 	{
 		List<String> projectNames = showManagedProjectslist(storage);
 		if (projectNames.isEmpty()) {return;}
-        System.out.println("Enter the number of the project to approve applicant's withdrawal request: ");
-        String projectName = projectNames.get(ui.inputInt() - 1);
-	    Project project = storage.getProjectByName(projectName);
-	    
+		int choice = -1;
+        while (true) 
+        {
+            System.out.println("Enter the number of the project to approve applicant's withdrawal request or 0 to cancel: ");
+
+            String input = ui.inputString();
+            try 
+            {
+                choice = Integer.parseInt(input); 
+
+                if (choice == 0) 
+                {
+                    System.out.println("Deletion cancelled.");
+                    return;
+                }
+
+                if (choice >= 1 && choice <= projectNames.size()) {break;}
+                else {System.out.println("Invalid number. Please enter a number between 1 and " + projectNames.size() + ", or 0 to cancel.");}
+            } catch (NumberFormatException e) {System.out.println("Invalid input. Please enter a valid number.");}
+        }
+
+        String projectName = projectNames.get(choice - 1);
+        Project project = storage.getProjectByName(projectName);
+        
 	    if (project != null && project.getCreatedBy().equals(getUserID())) 
 	    {
 	        System.out.println("Enter Applicant ID to approve: ");
@@ -589,10 +735,30 @@ inclusive)
 	{
 		List<String> projectNames = showManagedProjectslist(storage);
 		if (projectNames.isEmpty()) {return;}
-        System.out.println("Enter the number of the project to reject applicant's withdrawal request: ");
-        String projectName = projectNames.get(ui.inputInt() - 1);
-	    Project project = storage.getProjectByName(projectName);
-	    
+		int choice = -1;
+        while (true) 
+        {
+            System.out.println("Enter the number of the project to reject applicant's withdrawal request or 0 to cancel: ");
+
+            String input = ui.inputString();
+            try 
+            {
+                choice = Integer.parseInt(input); 
+
+                if (choice == 0) 
+                {
+                    System.out.println("Deletion cancelled.");
+                    return;
+                }
+
+                if (choice >= 1 && choice <= projectNames.size()) {break;}
+                else {System.out.println("Invalid number. Please enter a number between 1 and " + projectNames.size() + ", or 0 to cancel.");}
+            } catch (NumberFormatException e) {System.out.println("Invalid input. Please enter a valid number.");}
+        }
+
+        String projectName = projectNames.get(choice - 1);
+        Project project = storage.getProjectByName(projectName);
+        
 	    if (project != null && project.getCreatedBy().equals(getUserID())) 
 	    {
 	        System.out.println("Enter Applicant ID to approve: ");
@@ -612,11 +778,31 @@ inclusive)
 	 */
 	public void generateApplicantReport(Storage storage)
 	{
-		List<String> projectNames = showProjectslist(storage);
+		List<String> projectNames = showManagedProjectslist(storage);
 		if (projectNames.isEmpty()) {return;}
-        System.out.println("Enter the number of the project to generate applicant report: ");
-        String projectName = projectNames.get(ui.inputInt() - 1);
-	    Project project = storage.getProjectByName(projectName);
+		int choice = -1;
+        while (true) 
+        {
+            System.out.println("Enter the number of the project to generate applicant report or 0 to cancel: ");
+
+            String input = ui.inputString();
+            try 
+            {
+                choice = Integer.parseInt(input); 
+
+                if (choice == 0) 
+                {
+                    System.out.println("Deletion cancelled.");
+                    return;
+                }
+
+                if (choice >= 1 && choice <= projectNames.size()) {break;}
+                else {System.out.println("Invalid number. Please enter a number between 1 and " + projectNames.size() + ", or 0 to cancel.");}
+            } catch (NumberFormatException e) {System.out.println("Invalid input. Please enter a valid number.");}
+        }
+
+        String projectName = projectNames.get(choice - 1);
+        Project project = storage.getProjectByName(projectName);
 	    
 	    if (project != null) 
 	    {
@@ -654,10 +840,29 @@ inclusive)
 	{
 		List<String> projectNames = showProjectslist(storage);
 		
-        System.out.println("Enter the number of the project to view enquiries: ");
-        String projectName = projectNames.get(ui.inputInt() - 1);
-	    Project project = storage.getProjectByName(projectName);
+		int choice = -1;
+        while (true) 
+        {
+            System.out.println("Enter the number of the project to view enquiries or 0 to cancel: ");
 
+            String input = ui.inputString();
+            try 
+            {
+                choice = Integer.parseInt(input); 
+
+                if (choice == 0) 
+                {
+                    System.out.println("Deletion cancelled.");
+                    return;
+                }
+
+                if (choice >= 1 && choice <= projectNames.size()) {break;}
+                else {System.out.println("Invalid number. Please enter a number between 1 and " + projectNames.size() + ", or 0 to cancel.");}
+            } catch (NumberFormatException e) {System.out.println("Invalid input. Please enter a valid number.");}
+        }
+
+        String projectName = projectNames.get(choice - 1);
+        Project project = storage.getProjectByName(projectName);
 	    
 	    if (project != null) 
 	    {
@@ -673,6 +878,7 @@ inclusive)
 	public void replyToEnquiry(Storage storage) 
 	{
 		List<String> projectNames = showManagedProjectslist(storage);
+		
 		System.out.println("Enter the number of the project to view enquiries: ");
 		//catches all Index out of bound error
 		try {
