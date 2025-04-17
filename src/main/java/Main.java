@@ -175,30 +175,27 @@ public class Main{
                 	((HDBManager)currUser).viewHDBOfficerRegistration(storage);
                 	break;
                 case 12:
-                	((HDBManager)currUser).approveHDBOfficerRegistration(storage);
+                	((HDBManager)currUser).decideOfficerApplication(storage);
                 	break;
                 case 13:
-                	((HDBManager)currUser).rejectHDBOfficerRegistration(storage);
-                	break;
-                case 14:
                 	((HDBManager)currUser).approveApplicantApplication(storage);
                 	break;
-                case 15:
+                case 14:
                 	((HDBManager)currUser).rejectApplicantApplication(storage);
                 	break;
-                case 16:
+                case 15:
                 	((HDBManager)currUser).approveWithdrawalRequest(storage);
                 	break;
-                case 17:
+                case 16:
                 	((HDBManager)currUser).rejectWithdrawalRequest(storage);  
                 	break;
-                case 18:
+                case 17:
                 	((HDBManager)currUser).generateApplicantReport(storage);
                 	break;
-                case 19:
+                case 18:
                 	((HDBManager)currUser).viewEnquiries(storage);
                 	break;
-                case 20:
+                case 19:
                 	((HDBManager)currUser).replyToEnquiry(storage);      
                 	break;
             }
