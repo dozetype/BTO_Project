@@ -1,21 +1,12 @@
 
 package users;
 
-import storage.ApplicationStatus;
-import storage.BTOApplication;
-import storage.Enquiry;
-import storage.FlatType;
-import storage.Project;
-import storage.Storage;
-import storage.ProjectTeam;
+import storage.*;
 import ui.Ui;
-import java.util.List;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.HashMap;
+
+import java.util.*;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.Date;
 
 public class HDBManager extends User 
 {
@@ -81,6 +72,7 @@ inclusive)
 	
 	            try 
 	            {
+					System.out.println(sdf.parse("hiiiiiiiiiiiiii"+openingDateStr));
 	                Date opencheck = sdf.parse(openingDateStr);  
 	                openingDate = opencheck.getTime();
 	                Calendar cal = Calendar.getInstance();
@@ -402,19 +394,23 @@ inclusive)
     	List<String> projectNames = showProjectslist(storage);
     	if (projectNames.isEmpty()) {return;}
         System.out.println("Enter the number of the project to toggle visibility: ");
-        String projectName = projectNames.get(ui.inputInt() - 1);
-        Project project = storage.getProjectByName(projectName);
+		try {
+			String projectName = projectNames.get(ui.inputInt() - 1);
+			Project project = storage.getProjectByName(projectName);
 
-        if (project != null) 
-        {
-            List<String> updatedData = new ArrayList<>(project.getListOfStrings());
-            System.out.print("Enter Visibility (0 for Not visible, 1 for Visible): ");
-            int visibilityInput = ui.inputInt();
-            updatedData.set(15, visibilityInput == 1 ? "TRUE" : "FALSE");
-            storage.updateProject(updatedData);
-            System.out.println("Project visibility changed");
-        } 
-        else {System.out.println("Project not found");}
+			if (project != null) {
+				List<String> updatedData = new ArrayList<>(project.getListOfStrings());
+				System.out.print("Enter Visibility (0 for Not visible, 1 for Visible): ");
+				int visibilityInput = ui.inputInt();
+				updatedData.set(15, visibilityInput == 1 ? "TRUE" : "FALSE");
+				storage.updateProject(updatedData);
+				System.out.println("Project visibility changed");
+			} else {
+				System.out.println("Project not found");
+			}
+		} catch (IndexOutOfBoundsException e) {
+			System.out.println(e.getMessage());
+		}
     }
 
     
@@ -625,6 +621,7 @@ inclusive)
 	    if (project != null) 
 	    {
 	    	String flatTypeFilter = getFilter("FLAT_TYPE");
+//			storage.getBTOApplications().values().stream().filter(a -> a.getFlatType().toString().equals(flatTypeFilter));
 	    	for (BTOApplication app : storage.getBTOApplications().values()) 
 	    	{
 	    		if(app.getProjectName().equals(projectName)) 
@@ -675,28 +672,31 @@ inclusive)
 
 	public void replyToEnquiry(Storage storage) 
 	{
-	    viewEnquiries(storage);
-	    System.out.println("Please choose the Enquiries ID to reply: ");
-	    String enquiryID = ui.inputString();
-	    for(Enquiry e : storage.getEnquiries().values()) 
-	    {	
-	    	String enquiryProjectName = e.getProjectName();
-    	    Project p = storage.getProjectByName(enquiryProjectName);
-	    
-	    	if (p.getCreatedBy().equals(getUserID()))
-    	    {
-		        if (e.getID().equals(enquiryID)&&e.getReply().equals("NULL")) 
-		        {
-		            System.out.println("Please write your reply: ");
-		            String reply = ui.inputString();
-		            e.setReply(reply);
-		            System.out.println("Reply sent");
-		        }
-		        else {System.out.println("No enquiry found or enquiry has been answered");}
-	            
-    	    }
-    	    //else {System.out.println("You may not reply to this enquiry as it is not your project");}
-
-	    }
+		List<String> projectNames = showManagedProjectslist(storage);
+		System.out.println("Enter the number of the project to view enquiries: ");
+		//catches all Index out of bound error
+		try {
+			String projectName = projectNames.get(ui.inputInt() - 1);
+			Map<String, Enquiry> availableEnquiries = new HashMap<>(); //Used to store unanswered relavant
+			for (Enquiry e : storage.getEnquiries().values()) {
+				if (e.getReply().equals("NULL") && e.getProjectName().equals(projectName)) {
+					availableEnquiries.put(e.getID(), e);
+					System.out.println(e);
+				}
+			}
+			if (!availableEnquiries.isEmpty()) {
+				System.out.println("Please choose the Enquiries ID: ");
+				Enquiry toBeReplied = availableEnquiries.get(ui.inputString());
+				if (toBeReplied != null) {
+					System.out.println("Please write your reply: ");
+					toBeReplied.setReply(ui.inputString());
+					System.out.println("Thank you for your reply!");
+				} else {
+					System.out.println("Entered ID does not exist. Exiting.");
+				}
+			}
+		}catch (IndexOutOfBoundsException e) {
+			System.out.println("Entered ID does not exist. Exiting.");
+		}
 	}
 }

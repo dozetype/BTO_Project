@@ -131,6 +131,7 @@ public class Main{
         System.out.println("Hello "+currUser.getName()+"");
         System.out.println(Messages.MANAGER_MENU);
         do {
+            System.out.print(Messages.printLine()+"Menu ");
             choice = ui.inputInt();
             switch (choice) {
                 case 1:

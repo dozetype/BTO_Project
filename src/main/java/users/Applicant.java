@@ -186,14 +186,18 @@ public class Applicant extends User implements IApplicant {
             }
         }
 
-        if(!editableEnquiries.isEmpty()) {
-            System.out.println("Select an Enquiry");
-            count = ui.inputInt();
-            System.out.println("Enter Your NEW Enquiry: ");
-            editableEnquiries.get(count).setQuestion(ui.inputString());
+        try {
+            if (!editableEnquiries.isEmpty()) {
+                System.out.println("Select an Enquiry");
+                count = ui.inputInt();
+                System.out.println("Enter Your NEW Enquiry: ");
+                editableEnquiries.get(count).setQuestion(ui.inputString());
+            } else {
+                System.out.println("Nothing to edit. Exiting.");
+            }
         }
-        else{
-            System.out.println("Nothing to edit. Exiting.");
+        catch (NullPointerException e) {
+            System.out.println(e.getMessage());
         }
     }
 
