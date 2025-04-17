@@ -35,28 +35,51 @@ public class Storage {
         USERS.replace(userData.get(1), (ArrayList<String>) userData);
     }
 
+    /**
+     * @return PROJECTS
+     */
+    public Map<String, Project> getProject(){ return PROJECTS; }
 
-    public Map<String, Project> getProject(){;
-        return PROJECTS;
-    }
+    /**
+     * Update data of indicated Project
+     * @param projectData
+     */
     public void updateProject(List<String> projectData) 
     {
     	String originalProjectName = projectData.get(0);
         Project updatedProject = new Project(projectData.toArray(new String[0]));
         PROJECTS.put(originalProjectName, updatedProject);
     }
-    public void addProject(Project newProject) {
-        PROJECTS.put(newProject.getProjectName(), newProject);
-    }
+
+    /**
+     * Add a New Project
+     * @param newProject
+     */
+    public void addProject(Project newProject) { PROJECTS.put(newProject.getProjectName(), newProject); }
+
+    /**
+     * Remove indicated Project
+     * @param projectName
+     */
     public void removeProject(String projectName) {PROJECTS.remove(projectName);}
 
+    /**
+     * Add a new Officer into Officer applying inside projectTeam
+     * @param userID
+     * @param projectName
+     */
     public void registerProject(String userID, String projectName) {
         PROJECTS.get(projectName).getProjectTeam().addOfficerApplying(userID);
     }
-    
+
+    /**
+     * Returns Project by using it's project name
+     * @param projectName
+     * @return
+     */
     public Project getProjectByName(String projectName)
     {
-        for (Project p : getProject().values()) 
+        for (Project p : PROJECTS.values())
         {
             if (p.getProjectName().equalsIgnoreCase(projectName))
             {return p;}
@@ -64,9 +87,17 @@ public class Storage {
         return null;
     }
 
+    /**
+     * @return ArrayList of Project
+     */
     public List<Project> getAllProjects() 
     {return new ArrayList<>(PROJECTS.values());}
-    
+
+    /**
+     * Returns the Project that the Manager is handling
+     * @param managerID
+     * @return
+     */
     public List<Project> getProjectsByManager(String managerID) 
     {
         List<Project> result = new ArrayList<>();
@@ -104,6 +135,18 @@ public class Storage {
     public void addBTOApplication(String userID, String projectName, String price, String type) {
         storageController.addBTOApplication(userID, projectName, price, type, BTOAPPLICATIONS);
     }
+
+    public List<Project> getFilteredProjects(Map<String, String> filters) {
+        List<Project> copy = new ArrayList<>(PROJECTS.values());
+        for(Map.Entry<String, String> entry : filters.entrySet()){
+            if(entry.getKey().equals("NEIGHBOURHOOD")){
+                copy = copy.stream().filter(project -> project.getNeighbourhood().equalsIgnoreCase(entry.getValue())).toList();
+            }
+            //can add more filters (besides Flat Type)
+        }
+        return copy;
+    }
+
 
     /**
      * Called when quitting the Application

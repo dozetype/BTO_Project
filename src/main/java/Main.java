@@ -9,8 +9,8 @@ import java.util.Objects;
 public class Main{
     List<String> loginUserData;
     User currUser;
-    private Ui ui;
-    private Storage storage;
+    private Ui ui = new Ui();
+    private Storage storage = new Storage();
 
     public static void main(String[] args){
         System.out.println(Messages.BTO_ART+"\n"+Messages.APPLICATION_NAME);
@@ -18,17 +18,9 @@ public class Main{
     }
 
     public void run(){
-        initialize();
+        //Initialise
         loginIn();
         exit();
-    }
-
-    /**
-     * Method used to Initialize
-     */
-    private void initialize(){
-        ui = new Ui();
-        storage = new Storage();
     }
 
     /**
@@ -38,29 +30,31 @@ public class Main{
         while(!Objects.equals(ui.switchOff(), "0")) {
             Login login = new Login();
             while (loginUserData == null) {
-                loginUserData = login.fetchDatabase(ui.readUserID(), ui.readPassword(), storage);
+                loginUserData = login.authenticate(ui.readUserID(), ui.readPassword(), storage);
                 if (loginUserData == null) {
                     System.out.println("Invalid credentials!");
+                    break; //Escape to Starting
                 }
             }
 
-            currUser = switch (loginUserData.get(5)){
-                case "Manager" -> new HDBManager(loginUserData);
-                case "Officer" -> new HDBOfficer(loginUserData);
-                default -> new Applicant(loginUserData);
-            };
+            //If Successfully Login
+            if(loginUserData!=null) {
+                currUser = switch (loginUserData.get(5)) {
+                    case "Manager" -> new HDBManager(loginUserData);
+                    case "Officer" -> new HDBOfficer(loginUserData);
+                    default -> new Applicant(loginUserData);
+                };
 
-            //MENU
-
-            if(currUser instanceof HDBManager) {
-                managerMenu();
-            }
-            else {
-                if(currUser instanceof HDBOfficer){
-                    //loading info for officer
-                    ((HDBOfficer)currUser).checkProjectsAllocated(storage);
+                //MENU
+                if (currUser instanceof HDBManager) {
+                    managerMenu();
+                } else {
+                    if (currUser instanceof HDBOfficer) {
+                        //loading info for officer
+                        ((HDBOfficer) currUser).checkProjectsAllocated(storage);
+                    }
+                    normalMenu();
                 }
-                normalMenu();
             }
 
             loginUserData = null;//log out
@@ -200,13 +194,11 @@ public class Main{
                 	break;
             }
         }while(choice != 0);
-    
 
     }
 
-
     private void exit(){
-        storage.close(); //Override UserList.csv
+        storage.close(); //Override All csv files
         System.exit(0);
     }
 

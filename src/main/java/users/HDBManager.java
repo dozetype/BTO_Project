@@ -28,7 +28,6 @@ public class HDBManager extends User
     }
     
     /*
-     * MISC THINGS TO NOTE: officersApplying (constructor): [] appears sometimes when testing
      * ui.inputInt adds a "enter Number:" on top of the existing message
      */
     /*
@@ -197,7 +196,7 @@ inclusive)
             System.out.println(count++ + ") " + p.getProjectName());
         }
 
-        if (projectNames == null || projectNames.isEmpty()) 
+        if (projectNames.isEmpty())
         {
             System.out.println("No projects found.");
             return projectNames;
@@ -701,9 +700,3 @@ inclusive)
 	    }
 	}
 }
-
-
-	
-	
-
-	  

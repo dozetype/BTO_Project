@@ -14,14 +14,15 @@ public class Messages {
         ╚═════╝    ╚═╝    ╚═════╝ 
 """;
 
-    public static final String APPLICANT_MENU = """
+    public static final String APPLICANT_MENU = CYAN+"""
+    
             1) Add Filter        2) View Filters       3) Remove Filter
             4) Change Password   5) View Projects      6) Apply Project
             7) View Enquiries    8) Add Enquiry        9) Edit Enquiry
            10) Remove Enquiry    0) Exit
-            """;
+            """+RESET;
 
-    public static final String OFFICER_MENU = """
+    public static final String OFFICER_MENU = BRIGHT_BLUE+"""
             1) Add Filter        2) View Filters       3) Remove Filter
             4) Change Password   5) View Projects      6) Apply Project
             7) View Enquiries    8) Add Enquiry        9) Edit Enquiry
@@ -29,9 +30,9 @@ public class Messages {
            12) View Registration Status
            13) Reply to Enquiry 14) Change Application Status
             0) Exit
-            """;
+            """+RESET;
 
-    public static final String MANAGER_MENU = """
+    public static final String MANAGER_MENU = BRIGHT_YELLOW+"""
             1) Add Filter        2) View Filters       3) Remove Filter
             4) Change Password   5) Create Project     6) Edit Project
             7) Delete Project    8) View All Projects  9) View My Projects
@@ -42,7 +43,7 @@ public class Messages {
            16) Reject Applicant's Withdrawal Application
            17) Generate Applicant Report   18) View Enquiries  19) Reply to Enquiry
             0) Exit
-            """;
+            """+RESET;
 
     public static final String FILTER_MENU = """
             1) Neighbourhood

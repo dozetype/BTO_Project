@@ -30,18 +30,18 @@ public class Applicant extends User implements IApplicant {
             }
         }
         System.out.println("Viewing Open Projects:");
-        for(Project p : st.getProject().values()){
+        for(Project p : st.getFilteredProjects(getFilters())){
             if((p.getProjectVisibility() && p.currentlyOpenOrClosed()) || (appliedBTOProject.contains(p.getProjectName()))){
-                if((getMaritalStatus()==MaritalStatus.SINGLE && getAge()>=35) || (getMaritalStatus()==MaritalStatus.MARRIED && getAge()>=21)){
-                    System.out.println(p.getProjectName()+" 2 ROOMS, Price: "+p.getPrices().get(FlatType.TWO_ROOM)+", Available units: "+ p.getUnits().get(FlatType.TWO_ROOM));
+                if(!"THREE_ROOM".equals(getFilters().get("FLAT_TYPE"))) {
+                    if ((getMaritalStatus() == MaritalStatus.SINGLE && getAge() >= 35) || (getMaritalStatus() == MaritalStatus.MARRIED && getAge() >= 21)) {
+                        System.out.println(p.getProjectName() +" "+p.getNeighbourhood()+", 2 ROOMS, Price: "+p.getPrices().get(FlatType.TWO_ROOM)+", Available units: "+p.getUnits().get(FlatType.TWO_ROOM)+", Opening Date: "+p.getOpeningDateString()+", Closing Date: "+p.getClosingDateString());
+                    }
                 }
-                else
-                    System.out.println(p.getProjectName()+": Not able to view 2 ROOMS");
-                if(getMaritalStatus()==MaritalStatus.MARRIED && getAge()>=21){
-                    System.out.println(p.getProjectName()+" 3 ROOMS, Price: "+p.getPrices().get(FlatType.THREE_ROOM)+", Available units: "+ p.getUnits().get(FlatType.THREE_ROOM));
+                if(!"TWO_ROOM".equals(getFilters().get("FLAT_TYPE"))) {
+                    if (getMaritalStatus() == MaritalStatus.MARRIED && getAge() >= 21) {
+                        System.out.println(p.getProjectName()+" "+p.getNeighbourhood()+", 3 ROOMS, Price:"+p.getPrices().get(FlatType.THREE_ROOM)+", Available units: "+p.getUnits().get(FlatType.THREE_ROOM)+", Opening Date: "+p.getOpeningDateString()+", Closing Date: "+ p.getClosingDateString());
+                    }
                 }
-                else
-                    System.out.println(p.getProjectName()+": Not able to view 3 ROOMS");
             }
         }
     }
@@ -52,7 +52,7 @@ public class Applicant extends User implements IApplicant {
      */
     public void applyBTOProject(Storage st) {
         for(BTOApplication application : st.getBTOApplications().values()){
-            if(application.getApplicantID().equals(getUserID()) && (!application.getApplicationStatus().equals(ApplicationStatus.WITHDRAWN) || !application.getApplicationStatus().equals(ApplicationStatus.UNSUCCESSFUL))){
+            if(application.getApplicantID().equals(getUserID()) && (!application.getApplicationStatus().equals(ApplicationStatus.WITHDRAWN) && !application.getApplicationStatus().equals(ApplicationStatus.UNSUCCESSFUL))){
                 System.out.println("You have already applied for a Project.");
                 return;
             }
@@ -62,13 +62,13 @@ public class Applicant extends User implements IApplicant {
         List<List<String>> applicableUnits = new ArrayList<>(); //store data of options
         List<String> unit =  new ArrayList<>();
         System.out.println("Which Project would you like to apply? (0 to quit)");
-        for(Project p : st.getProject().values()){
+        for(Project p : st.getFilteredProjects(getFilters())){
             if(p.getProjectTeam().getOfficers().contains(getUserID())){
                 continue; //check if he is an officer
             }
             if(p.getProjectVisibility() && p.currentlyOpenOrClosed()){ //if visible and within timeframe
                 if((getMaritalStatus()==MaritalStatus.SINGLE && getAge()>=35) || (getMaritalStatus()==MaritalStatus.MARRIED && getAge()>=21)){
-                    System.out.println(count+")"+p.getProjectName()+" 2 ROOMS, Price: "+p.getPrices().get(FlatType.TWO_ROOM)+", Available units: "+ p.getUnits().get(FlatType.TWO_ROOM));
+                    System.out.println(count+")"+p.getProjectName()+" "+p.getNeighbourhood()+", 2 ROOMS, Price: "+p.getPrices().get(FlatType.TWO_ROOM)+", Available units: "+ p.getUnits().get(FlatType.TWO_ROOM));
                     unit.add(p.getProjectName());
                     unit.add(String.valueOf(p.getPrices().get(FlatType.TWO_ROOM)));
                     unit.add("TWO_ROOM");
@@ -77,7 +77,7 @@ public class Applicant extends User implements IApplicant {
                     unit =  new ArrayList<>(); //clear
                 }
                 if(getMaritalStatus()==MaritalStatus.MARRIED && getAge()>=21){
-                    System.out.println(count+")"+p.getProjectName()+" 3 ROOMS, Price: "+p.getPrices().get(FlatType.THREE_ROOM)+", Available units: "+ p.getUnits().get(FlatType.THREE_ROOM));
+                    System.out.println(count+")"+p.getProjectName()+" "+p.getNeighbourhood()+", 3 ROOMS, Price: "+p.getPrices().get(FlatType.THREE_ROOM)+", Available units: "+ p.getUnits().get(FlatType.THREE_ROOM));
                     unit.add(p.getProjectName());
                     unit.add(String.valueOf(p.getPrices().get(FlatType.THREE_ROOM)));
                     unit.add("THREE_ROOM");

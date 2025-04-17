@@ -51,7 +51,6 @@ public class Project {
      * @return List of Strings of each attribute
      */
     public List<String> getListOfStrings(){
-        SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
         List<String> list = new ArrayList<>();
         list.add(projectName);
         list.add(neighbourhood);
@@ -89,9 +88,8 @@ public class Project {
         this.units.put(flatType, numberOfUnits);
     }
 
-    public void toggleProjectVisibility() {
-        projectVisibility = !projectVisibility;
-    }
+    public String getOpeningDateString() { return formatter.format(new Date(openingDate)); }
+    public String getClosingDateString() { return formatter.format(new Date(closingDate)); }
 
     /**
      * Check if this Project is open for BTO Applications

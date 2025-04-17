@@ -83,6 +83,11 @@ public abstract class User implements IUser {
         return filters.get(key);
     }
 
+    /**
+     * @return filter with key
+     */
+    public Map<String, String> getFilters(){ return filters; }
+
 
     //Accessor and Mutators
     public String getName(){ return this.name; }
