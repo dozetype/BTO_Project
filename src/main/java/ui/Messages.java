@@ -32,7 +32,7 @@ public class Messages {
             0) Exit
             """+RESET;
 
-    public static final String MANAGER_MENU = BRIGHT_YELLOW+"""
+    public static final String MANAGER_MENU = RED+"""
             1) Add Filter        2) View Filters       3) Remove Filter
             4) Change Password   5) Create Project     6) Edit Project
             7) Delete Project    8) View All Projects  9) View My Projects
