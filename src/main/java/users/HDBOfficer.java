@@ -112,11 +112,13 @@ public class HDBOfficer extends Applicant {
      * @param storage
      */
     public void viewProjectsBTOApplication(IStorage storage) {
+        System.out.println("Showing BTO Applications for project(s) you are assigned:");
         for(BTOApplication app : storage.getBTOApplications().values()) {
             if (projectsAllocated.contains(app.getProjectName())) {
                 System.out.println(app);
             }
         }
+        System.out.println();
     }
 
     public String generateReceipt(IStorage storage, String applicantID) {
