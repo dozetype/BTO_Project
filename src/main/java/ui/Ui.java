@@ -2,7 +2,7 @@ package ui;
 
 import java.util.Scanner;
 
-public class Ui {
+public class Ui implements IUi {
     private Scanner scanner;
 
     public Ui(){
@@ -44,10 +44,6 @@ public class Ui {
         return inputString();
     }
 
-    public String readNewPassword(){
-        System.out.print("Enter New Password: ");
-        return inputString();
-    }
 
     public String switchOff(){
         System.out.print ("Press ENTER to Login, 0 to Quit: ");

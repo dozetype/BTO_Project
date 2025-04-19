@@ -13,7 +13,7 @@ public class HDBOfficer extends Applicant {
         setUserType("Officer"); //Override "Applicant"
     }
 
-    public List<String> showProjectslist(Storage storage){
+    public List<String> showProjectslist(IStorage storage){
         List<String> projectNames = new ArrayList<>();
         int count = 1;
         for (Project p : storage.getProject().values()) {
@@ -30,7 +30,7 @@ public class HDBOfficer extends Applicant {
      * @param storage DataBase
      */
 
-    public void registerToJoinProject(Storage storage) {
+    public void registerToJoinProject(IStorage storage) {
         List<String> projectNames = showProjectslist(storage);
         try {
             System.out.print("Pick which Project you would like to register as Officer: ");
@@ -72,7 +72,7 @@ public class HDBOfficer extends Applicant {
      * @param storage DataBase
      */
     @Override
-    public void viewEnquiries(Storage storage) {
+    public void viewEnquiries(IStorage storage) {
         for(Enquiry e : storage.getEnquiries().values()) {
             if(projectsAllocated.contains(e.getProjectName())) {
                 System.out.println(e);
@@ -84,7 +84,7 @@ public class HDBOfficer extends Applicant {
      * Only able to view and reply to UNANSWERED Enquiries
      * @param storage DataBase
      */
-    public void replyToEnquiry(Storage storage) {
+    public void replyToEnquiry(IStorage storage) {
         Map<String, Enquiry> availableEnquiries = new HashMap<>(); //Used to store unanswered relavant
         for(Enquiry e : storage.getEnquiries().values()) {
                 if(projectsAllocated.contains(e.getProjectName())&& e.getReply().equals("NULL")) {
@@ -111,7 +111,7 @@ public class HDBOfficer extends Applicant {
      * View BTO Applications of all project Officer is in
      * @param storage
      */
-    public void viewProjectsBTOApplication(Storage storage) {
+    public void viewProjectsBTOApplication(IStorage storage) {
         for(BTOApplication app : storage.getBTOApplications().values()) {
             if (projectsAllocated.contains(app.getProjectName())) {
                 System.out.println(app);
@@ -119,7 +119,7 @@ public class HDBOfficer extends Applicant {
         }
     }
 
-    public String generateReceipt(Storage storage, String applicantID) {
+    public String generateReceipt(IStorage storage, String applicantID) {
         SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
         String currentDate = dateFormat.format(new Date());
 
@@ -148,7 +148,7 @@ public class HDBOfficer extends Applicant {
         return receipt.toString();
     }
 
-    public String checkRegistrationStatus(Storage storage) {
+    public String checkRegistrationStatus(IStorage storage) {
         List<String> projectNames = showProjectslist(storage);
         System.out.print("Pick which project you would like to see the registration status: ");
         String projectName = projectNames.get(ui.inputInt() - 1);
@@ -164,7 +164,7 @@ public class HDBOfficer extends Applicant {
         return RegistrationStatus.NOT_REGISTERED.toString();
     }
 
-    public void checkProjectsAllocated(Storage storage) {
+    public void checkProjectsAllocated(IStorage storage) {
         for (Project p : storage.getProject().values()) {
             if (p.getProjectTeam().getOfficers().contains(getUserID())) {
                 addProjectsAllocated(p.getProjectName());
@@ -172,7 +172,7 @@ public class HDBOfficer extends Applicant {
         }
     }
 
-    public void updateNumOfFlats(Storage storage, String applicantID){
+    public void updateNumOfFlats(IStorage storage, String applicantID){
         for (Project p : storage.getProject().values()) {
             for (BTOApplication app : storage.getBTOApplications().values()) {
                 if (projectsAllocated.contains(p.getProjectName())&& app.getApplicantID().equals(applicantID)) {
@@ -186,7 +186,7 @@ public class HDBOfficer extends Applicant {
         }
     }
 
-    public void changeBTOApplicationStatus(Storage storage) {
+    public void changeBTOApplicationStatus(IStorage storage) {
         viewProjectsBTOApplication(storage);
         System.out.print("Please type the Applicant ID: ");
         String ApplicantID = ui.inputString();

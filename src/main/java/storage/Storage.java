@@ -3,7 +3,7 @@ package storage;
 
 import java.util.*;
 
-public class Storage {
+public class Storage implements IStorage {
     StorageController storageController;
     //NAME, USER_ID, AGE, MARITAL, PASSWORD, TYPE
     private Map<String, ArrayList<String>> USERS; //Main storage for user info, only creating one user at a time

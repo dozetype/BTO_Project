@@ -17,11 +17,11 @@ public class Applicant extends User implements IApplicant {
     }
 
     /**
-     * User can see project listing if its open and its visible
+     * User can see all project listing if its open and its visible
      * If User have applied before they should still be able to see the listing even after Time Frame
      * @param st
      */
-    public void viewBTOProject(Storage st){
+    public void viewBTOProject(IStorage st){
         //Stores all the BTO project Names that User have applied for
         List<String> appliedBTOProject = new ArrayList<>();
         for(BTOApplication a : st.getBTOApplications().values()){
@@ -50,7 +50,7 @@ public class Applicant extends User implements IApplicant {
      * Only able to View and Apply for BTO Project if they have not applied or if their previous application was Unsuccessful or Withdrawn
      * @param st
      */
-    public void applyBTOProject(Storage st) {
+    public void applyBTOProject(IStorage st) {
         for(BTOApplication application : st.getBTOApplications().values()){
             if(application.getApplicantID().equals(getUserID()) && (!application.getApplicationStatus().equals(ApplicationStatus.WITHDRAWN) && !application.getApplicationStatus().equals(ApplicationStatus.UNSUCCESSFUL))){
                 System.out.println("You have already applied for a Project.");
@@ -105,7 +105,7 @@ public class Applicant extends User implements IApplicant {
      *View All BTO Applications made by user
      * @param st DataBase
      */
-    public void viewApplication(Storage st) {
+    public void viewBTOApplication(IStorage st) {
         for(BTOApplication application : st.getBTOApplications().values()){
             if(application.getApplicantID().equals(getUserID())){
                 System.out.println(application);
@@ -116,7 +116,7 @@ public class Applicant extends User implements IApplicant {
     /**
      * @param storage DataBase
      */
-    public void viewEnquiries(Storage storage){
+    public void viewEnquiries(IStorage storage){
         for(Enquiry e : storage.getEnquiries().values()) {
             if(e.getAskerID().equals(getUserID())) {
                 System.out.println("Your Question: " + e.getQuestion() + "\n" +"Your Reply: " + e.getReply());
@@ -127,7 +127,7 @@ public class Applicant extends User implements IApplicant {
     /**
      * @param storage DataBase
      */
-    public void addEnquiry(Storage storage){
+    public void addEnquiry(IStorage storage){
         List<String> projectNames = new ArrayList<>();
         int count=1;
         for(Project p : storage.getProject().values()) {
@@ -146,10 +146,11 @@ public class Applicant extends User implements IApplicant {
     }
 
     /**
-     * Can Only Delete the Enquiry if it can has not been replied
+     * Can Only Delete the Enquiry if it has not been replied
+     *
      * @param storage DataBase
      */
-    public void removeEnquiry(Storage storage){
+    public void removeEnquiry(IStorage storage){
         List<String> enquiryIDList = new ArrayList<>();
         int count=1;
         for(Enquiry e : storage.getEnquiries().values()) {
@@ -176,7 +177,7 @@ public class Applicant extends User implements IApplicant {
      * User can only edit their enquiry if it hasn't been replied
      * @param st
      */
-    public void editEnquiry(Storage st){
+    public void editEnquiry(IStorage st){
         Map<Integer, Enquiry> editableEnquiries = new HashMap<>();
         int count=1;
         for(Enquiry e : st.getEnquiries().values()) {
@@ -201,13 +202,15 @@ public class Applicant extends User implements IApplicant {
         }
     }
 
-    public void withdrawBTOApplication(Storage st){
+    public void withdrawBTOApplication(IStorage st){
         for(BTOApplication application : st.getBTOApplications().values()) {
             if(application.getApplicantID().equals(getUserID()) &&
             (application.getApplicationStatus().equals(ApplicationStatus.PENDING)||application.getApplicationStatus().equals(ApplicationStatus.SUCCESSFUL)||application.getApplicationStatus().equals(ApplicationStatus.BOOKED))) {
-                System.out.println("Withdrawing from" + application.getProjectName()+", "+application.getFlatType());
+                System.out.println("Withdrawing from " + application.getProjectName()+", "+application.getFlatType());
                 application.setApplicationStatus(ApplicationStatus.WITHDRAWING);
+                return;
             }
         }
+        System.out.println("No BTO Application found that can be withdrawn");
     }
 }

@@ -1,3 +1,4 @@
+import storage.IStorage;
 import storage.Storage;
 import system.Login;
 import ui.*;
@@ -6,15 +7,15 @@ import users.*;
 import java.util.List;
 import java.util.Objects;
 
-public class Main{
-    List<String> loginUserData;
-    User currUser;
-    private Ui ui = new Ui();
-    private Storage storage = new Storage();
+public class BTOSystem {
+    List<String> loginUserData; //Basic info of the Current User
+    IUser currUser; //Object of the Current User
+    private final IUi ui = new Ui();
+    private final IStorage storage = new Storage();
 
     public static void main(String[] args){
-        System.out.println(Messages.BTO_ART+"\n"+Messages.APPLICATION_NAME);
-        new Main().run();
+        System.out.println(Messages.BTO_ART+Messages.APPLICATION_NAME);
+        new BTOSystem().run();
     }
 
     public void run(){
@@ -61,7 +62,7 @@ public class Main{
         }
     }
 
-    public void normalMenu(){ //TODO make UX better
+    public void normalMenu(){
         int choice;
         System.out.println("Hello "+currUser.getName()+", "+currUser.getUserType());
         if (currUser instanceof HDBOfficer) {System.out.println(Messages.OFFICER_MENU);}
@@ -103,21 +104,26 @@ public class Main{
                     ((Applicant)currUser).removeEnquiry(storage);
                     break;
                 case 11:
+                    ((Applicant)currUser).viewBTOApplication(storage);
+                    break;
+                case 12:
+                    ((Applicant)currUser).withdrawBTOApplication(storage);
+                case 13:
                     if(currUser instanceof HDBOfficer) {
                         ((HDBOfficer)currUser).registerToJoinProject(storage);
                         break;
                     }
-                case 12:
+                case 14:
                     if(currUser instanceof HDBOfficer) {
                         System.out.println("Your registration status is: "+((HDBOfficer) currUser).checkRegistrationStatus(storage));
                         break;
                     }
-                case 13:
+                case 15:
                     if(currUser instanceof HDBOfficer) {
                         ((HDBOfficer)currUser).replyToEnquiry(storage);
                         break;
                     }
-                case 14:
+                case 16:
                     if(currUser instanceof HDBOfficer) {
                         ((HDBOfficer)currUser).changeBTOApplicationStatus(storage);
                         break;
@@ -128,7 +134,7 @@ public class Main{
 
     public void managerMenu(){
         int choice;
-        System.out.println("Hello "+currUser.getName()+"");
+        System.out.println("Hello "+currUser.getName());
         System.out.println(Messages.MANAGER_MENU);
         do {
             System.out.print(Messages.printLine()+"Menu ");
@@ -199,8 +205,8 @@ public class Main{
     }
 
     private void exit(){
+        System.out.println("\nThank you for using our application!");
         storage.close(); //Override All csv files
         System.exit(0);
     }
-
 }

@@ -26,7 +26,7 @@ public class HDBManager extends User
 application opening date, inclusive, to application closing date,
 inclusive)
      */
-    public void createProject(Storage storage) 
+    public void createProject(IStorage storage)
     {
         System.out.print("Enter Project Name: ");
         String projectName = ui.inputString();
@@ -169,7 +169,7 @@ inclusive)
     }
 
 
-    public List<String> showProjectslist(Storage storage){
+    public List<String> showProjectslist(IStorage storage){
         List<String> projectNames = new ArrayList<>();
         int count = 1;
 
@@ -186,7 +186,7 @@ inclusive)
         return projectNames;
     }
     
-    public List<String> showManagedProjectslist(Storage storage)
+    public List<String> showManagedProjectslist(IStorage storage)
     {
         List<String> projectNames = new ArrayList<>();
         int count = 1;
@@ -208,7 +208,7 @@ inclusive)
         return projectNames;
     }
     
-    public void editProject(Storage storage) 
+    public void editProject(IStorage storage)
     {
     	List<String> projectNames = showProjectslist(storage);
     	if (projectNames.isEmpty()) {return;}
@@ -360,7 +360,7 @@ inclusive)
 
 
     
-    public void deleteProject(Storage storage) 
+    public void deleteProject(IStorage storage)
     {
     	List<String> projectNames = showProjectslist(storage);
     	if (projectNames.isEmpty()) {return;}
@@ -397,7 +397,7 @@ inclusive)
 
 
     
-    public void viewAllProjects(Storage storage) 
+    public void viewAllProjects(IStorage storage)
     {
         List<Project> projects = storage.getAllProjects();
         for (Project project : projects) {System.out.println(project);}
@@ -408,14 +408,14 @@ inclusive)
      * Able to filter and view the list of projects that they have created only.
      */
     
-    public void viewCreatedProject(Storage storage) 
+    public void viewCreatedProject(IStorage storage)
     {
         List<Project> projects = storage.getProjectsByManager(getUserID());
         for (Project project : projects) {System.out.println(project);}
     }
     
     
-    public void toggleProjectVisibility(Storage storage) 
+    public void toggleProjectVisibility(IStorage storage)
     {
     	/*
     	 * not sure if they want toggled as in like a yes/no switch but i thought being able to 
@@ -462,7 +462,7 @@ inclusive)
     
 	
 	
-	public void viewHDBOfficerRegistration(Storage storage) 
+	public void viewHDBOfficerRegistration(IStorage storage)
 	{
 		
 		List<String> projectNames = showProjectslist(storage);
@@ -520,7 +520,7 @@ inclusive)
 	    } else {System.out.println("Project not accessible"); }
 	}
 	*/
-	public void decideOfficerApplication(Storage storage) 
+	public void decideOfficerApplication(IStorage storage)
 	{
 		List<String> projectNames = showManagedProjectslist(storage);
 		if (projectNames.isEmpty()) {return;}
@@ -582,7 +582,7 @@ inclusive)
 	 */
 	
 	
-	public void approveApplicantApplication(Storage storage) 
+	public void approveApplicantApplication(IStorage storage)
 	{
 		List<String> projectNames = showManagedProjectslist(storage);
 		if (projectNames.isEmpty()) {return;}
@@ -638,7 +638,7 @@ inclusive)
 	    } else {System.out.println("Project not accessible");}
 	}
 	
-	public void rejectApplicantApplication(Storage storage) 
+	public void rejectApplicantApplication(IStorage storage)
 	{
 		List<String> projectNames = showManagedProjectslist(storage);
 		if (projectNames.isEmpty()) {return;}
@@ -689,7 +689,7 @@ inclusive)
 	 * wasnt rly sure if rejecting withdrawal wld lead to successful or which category
 	 */
 	
-	public void approveWithdrawalRequest(Storage storage) 
+	public void approveWithdrawalRequest(IStorage storage)
 	{
 		List<String> projectNames = showManagedProjectslist(storage);
 		if (projectNames.isEmpty()) {return;}
@@ -731,7 +731,7 @@ inclusive)
 	    } else {System.out.println("Project not accessible");}
 	}
 	
-	public void rejectWithdrawalRequest(Storage storage) 
+	public void rejectWithdrawalRequest(IStorage storage)
 	{
 		List<String> projectNames = showManagedProjectslist(storage);
 		if (projectNames.isEmpty()) {return;}
@@ -776,7 +776,7 @@ inclusive)
 	/*
 	 * need to be able to add filters for various categories 
 	 */
-	public void generateApplicantReport(Storage storage)
+	public void generateApplicantReport(IStorage storage)
 	{
 		List<String> projectNames = showManagedProjectslist(storage);
 		if (projectNames.isEmpty()) {return;}
@@ -836,7 +836,7 @@ inclusive)
 	}
 	
 
-	public void viewEnquiries(Storage storage) 
+	public void viewEnquiries(IStorage storage)
 	{
 		List<String> projectNames = showProjectslist(storage);
 		
@@ -875,7 +875,7 @@ inclusive)
 	    } else {System.out.println("Project not found");}
 	}
 
-	public void replyToEnquiry(Storage storage) 
+	public void replyToEnquiry(IStorage storage)
 	{
 		List<String> projectNames = showManagedProjectslist(storage);
 		

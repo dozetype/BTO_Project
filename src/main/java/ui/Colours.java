@@ -1,11 +1,7 @@
 package ui;
 
-import java.util.Scanner;
-
 public class Colours
 {
-
-
     // ANSI escape codes for colors and styles.
     public static final String RESET = "\u001B[0m";
     public static final String BOLD = "\u001B[1m";
@@ -18,7 +14,4 @@ public class Colours
     public static final String GREEN = "\u001B[32m";
     public static final String BRIGHT_YELLOW = "\u001B[93m";
     public static final String BRIGHT_MAGENTA = "\u001B[95m";
-
-    private static final Scanner sc = new Scanner(System.in);
-
 }
