@@ -28,11 +28,13 @@ public interface IApplicant {
     public void viewBTOApplication(IStorage st);
 
     /**
+     * View all enquiry sent by current user
      * @param storage DataBase
      */
     public void viewEnquiries(IStorage storage);
 
     /**
+     * Adds a new enquiry for selected project name
      * @param storage DataBase
      */
     public void addEnquiry(IStorage storage);
@@ -50,5 +52,9 @@ public interface IApplicant {
      */
     public void editEnquiry(IStorage st);
 
+    /**
+     * Changes the User current active application status to "WITHDRAWING"
+     * @param st
+     */
     public void withdrawBTOApplication(IStorage st);
 }

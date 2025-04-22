@@ -1,5 +1,4 @@
 package users;
-import storage.Enquiry;
 import storage.*;
 import ui.*;
 
@@ -10,17 +9,11 @@ import java.util.Map;
 
 public class Applicant extends User implements IApplicant {
     Ui ui = new Ui();
-//    Storage storage;
+
     public Applicant(List<String> userData) {
         super(userData, "Applicant");
-
     }
 
-    /**
-     * User can see all project listing if its open and its visible
-     * If User have applied before they should still be able to see the listing even after Time Frame
-     * @param st
-     */
     public void viewBTOProject(IStorage st){
         //Stores all the BTO project Names that User have applied for
         List<String> appliedBTOProject = new ArrayList<>();
@@ -46,10 +39,6 @@ public class Applicant extends User implements IApplicant {
         }
     }
 
-    /**
-     * Only able to View and Apply for BTO Project if they have not applied or if their previous application was Unsuccessful or Withdrawn
-     * @param st
-     */
     public void applyBTOProject(IStorage st) {
         for(BTOApplication application : st.getBTOApplications().values()){
             if(application.getApplicantID().equals(getUserID()) && (!application.getApplicationStatus().equals(ApplicationStatus.WITHDRAWN) && !application.getApplicationStatus().equals(ApplicationStatus.UNSUCCESSFUL))){
@@ -96,15 +85,11 @@ public class Applicant extends User implements IApplicant {
             else{
                 System.out.println("No applicable units found");
             }
-        } catch(Exception e){ //out of index
+        } catch(IndexOutOfBoundsException e){ //out of index
             System.out.println(e.getMessage());
         }
     }
 
-    /**
-     *View All BTO Applications made by user
-     * @param st DataBase
-     */
     public void viewBTOApplication(IStorage st) {
         for(BTOApplication application : st.getBTOApplications().values()){
             if(application.getApplicantID().equals(getUserID())){
@@ -113,9 +98,6 @@ public class Applicant extends User implements IApplicant {
         }
     }
 
-    /**
-     * @param storage DataBase
-     */
     public void viewEnquiries(IStorage storage){
         for(Enquiry e : storage.getEnquiries().values()) {
             if(e.getAskerID().equals(getUserID())) {
@@ -124,9 +106,6 @@ public class Applicant extends User implements IApplicant {
         }
     }
 
-    /**
-     * @param storage DataBase
-     */
     public void addEnquiry(IStorage storage){
         List<String> projectNames = new ArrayList<>();
         int count=1;
@@ -140,16 +119,11 @@ public class Applicant extends User implements IApplicant {
             System.out.print("Enter Your Enquiry: ");
             String question = ui.inputString();
             storage.addEnquiries(getUserID(), projectName, question);
-        } catch (Exception e) {
+        } catch (IndexOutOfBoundsException e) {
             System.out.println(e.getMessage());
         }
     }
 
-    /**
-     * Can Only Delete the Enquiry if it has not been replied
-     *
-     * @param storage DataBase
-     */
     public void removeEnquiry(IStorage storage){
         List<String> enquiryIDList = new ArrayList<>();
         int count=1;
@@ -164,7 +138,7 @@ public class Applicant extends User implements IApplicant {
                 System.out.print("Pick which Enquiry you would like to remove: ");
                 String enquiryID = enquiryIDList.get(ui.inputInt() - 1);
                 storage.removeEnquiries(enquiryID);
-            }catch (Exception e) {
+            }catch (IndexOutOfBoundsException e) {
                 System.out.println(e.getMessage());
             }
         }
@@ -173,10 +147,6 @@ public class Applicant extends User implements IApplicant {
         }
     }
 
-    /**
-     * User can only edit their enquiry if it hasn't been replied
-     * @param st
-     */
     public void editEnquiry(IStorage st){
         Map<Integer, Enquiry> editableEnquiries = new HashMap<>();
         int count=1;

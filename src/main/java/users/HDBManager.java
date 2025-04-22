@@ -1,9 +1,7 @@
-
 package users;
 
 import storage.*;
 import ui.Ui;
-
 import java.util.*;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -236,25 +234,17 @@ inclusive)
         String projectName = projectNames.get(choice - 1);
         Project project = storage.getProjectByName(projectName);
         
-        if (project != null) 
-        {	/*
-        	* was wondering if should comment out 1, 2, 9, 11, 12? not sure if those would change but just wanted to give option in case
-        	* plus i didnt add officers rejected in for the same reason, but lmk if need add
-        	*/
+        if (project != null)
+        {
             System.out.println("Editing Project: " + project.getProjectName());
             System.out.println("Which category would you like to edit?");
-            //System.out.println("1) Project Name");
-            //System.out.println("2) Neighbourhood");
             System.out.println("1) Number of Units for Type 1");
             System.out.println("2) Selling Price for Type 1");
             System.out.println("3) Number of Units for Type 2");
             System.out.println("4) Selling Price for Type 2");
             System.out.println("5) Application Opening Date");
             System.out.println("6) Application Closing Date");
-            //System.out.println("9) Manager");
             System.out.println("7) Number of Officer Slots");
-            //System.out.println("11) Officers");
-            //System.out.println("12) Officers Applying"); 
             System.out.println("Note: Select Toggle Visibility to Change Visibility");
 
             int c = ui.inputInt();
@@ -262,14 +252,6 @@ inclusive)
 
             switch (c) 
             {
-                /*case 1:
-                    System.out.print("Enter new Project Name: ");
-                    updatedData.set(0, ui.inputString()); 
-                    break;
-                case 2:
-                    System.out.print("Enter new Neighborhood: ");
-                    updatedData.set(1, ui.inputString());  
-                    break; */
                 case 1:
                     System.out.print("Enter new Number of Units for Type 1: ");
                     updatedData.set(3, ui.inputString());  
@@ -287,14 +269,12 @@ inclusive)
                     updatedData.set(7, ui.inputString());  
                     break;
                 case 5:
-                    
                     SimpleDateFormat sdfo = new SimpleDateFormat("dd/MM/yyyy"); //checks that entry follows xx/xx/xxxx
                     sdfo.setLenient(false); //makes sure the date is a valid date too (so that cant be like 10/30/2020)
                     while (true) 
                     {
                         System.out.print("Enter Application Opening Date (dd/MM/yyyy): ");
                         String inputDate = ui.inputString();
-                        
 
                         try {
                             Date opencheck = sdfo.parse(inputDate);  
@@ -305,15 +285,11 @@ inclusive)
                             System.out.println("Invalid date format. Please enter in dd/MM/yyyy format.");
                         }
                     }
-                    
-                    
                     break;
                 case 6:
-
                     SimpleDateFormat sdfc = new SimpleDateFormat("dd/MM/yyyy"); //checks that entry follows xx/xx/xxxx
                     sdfc.setLenient(false); //makes sure the date is a valid date too (so that cant be like 10/30/2020)
-                    
-                    
+
                     while (true) 
                     {
                         System.out.print("Enter Application Closing Date (dd/MM/yyyy): ");
@@ -330,22 +306,10 @@ inclusive)
                     }
                     
                     break;
-                /*case 9:
-                    System.out.print("Enter new Manager: ");
-                    updatedData.set(10, ui.inputString());  
-                    break;*/
                 case 7:
                     System.out.print("Enter new Number of Officer Slots: ");
                     updatedData.set(11, ui.inputString()); 
                     break;
-                /*case 11:
-                    System.out.print("Enter new Officers: ");
-                    updatedData.set(12, ui.inputString()); 
-                    break;
-                case 12:
-                    System.out.print("Enter new Officer Applying: ");
-                    updatedData.set(13, ui.inputString());  
-                    break;*/
                 default:
                     System.out.println("Please select a valid category");
                     break;

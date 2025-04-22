@@ -19,31 +19,17 @@ public class Storage implements IStorage {
         BTOAPPLICATIONS = storageController.readBTOApplicationFile();
     }
 
-    /**
-     * @param userID Users NRIC
-     * @return The Users basic details
-     */
     public ArrayList<String> getUserData(String userID){
         return USERS.get(userID);
     }
 
-    /**
-     * Update basic detail of the User
-     * @param userData List of new basic details of User
-     */
     public void updateUserData(List<String> userData) { //update with new info
         USERS.replace(userData.get(1), (ArrayList<String>) userData);
     }
 
-    /**
-     * @return PROJECTS
-     */
+
     public Map<String, Project> getProject(){ return PROJECTS; }
 
-    /**
-     * Update data of indicated Project
-     * @param projectData
-     */
     public void updateProject(List<String> projectData) 
     {
     	String originalProjectName = projectData.get(0);
@@ -51,32 +37,16 @@ public class Storage implements IStorage {
         PROJECTS.put(originalProjectName, updatedProject);
     }
 
-    /**
-     * Add a New Project
-     * @param newProject
-     */
     public void addProject(Project newProject) { PROJECTS.put(newProject.getProjectName(), newProject); }
 
-    /**
-     * Remove indicated Project
-     * @param projectName
-     */
+
     public void removeProject(String projectName) {PROJECTS.remove(projectName);}
 
-    /**
-     * Add a new Officer into Officer applying inside projectTeam
-     * @param userID
-     * @param projectName
-     */
+
     public void registerProject(String userID, String projectName) {
         PROJECTS.get(projectName).getProjectTeam().addOfficerApplying(userID);
     }
 
-    /**
-     * Returns Project by using it's project name
-     * @param projectName
-     * @return
-     */
     public Project getProjectByName(String projectName)
     {
         for (Project p : PROJECTS.values())
@@ -87,17 +57,8 @@ public class Storage implements IStorage {
         return null;
     }
 
-    /**
-     * @return ArrayList of Project
-     */
-    public List<Project> getAllProjects() 
-    {return new ArrayList<>(PROJECTS.values());}
+    public List<Project> getAllProjects() {return new ArrayList<>(PROJECTS.values());}
 
-    /**
-     * Returns the Project that the Manager is handling
-     * @param managerID
-     * @return
-     */
     public List<Project> getProjectsByManager(String managerID) 
     {
         List<Project> result = new ArrayList<>();
@@ -112,16 +73,16 @@ public class Storage implements IStorage {
     public Map<String, Enquiry> getEnquiries(){
         return ENQUIRIES;
     }
+
     public void updateEnquiries(String ID, Enquiry newEnquiry) {
         ENQUIRIES.put(ID, newEnquiry);
     }
-    public void addEnquiries(String askerID, String projectName, String question) {
-        storageController.addEnquiry(askerID, projectName, question, ENQUIRIES);
-    }
+
+    public void addEnquiries(String askerID, String projectName, String question) { storageController.addEnquiry(askerID, projectName, question, ENQUIRIES); }
+
     public void removeEnquiries(String ID) {
         ENQUIRIES.remove(ID);
     }
-
 
     public Map<String, BTOApplication> getBTOApplications(){ return BTOAPPLICATIONS; }
 
@@ -148,9 +109,6 @@ public class Storage implements IStorage {
     }
 
 
-    /**
-     * Called when quitting the Application
-     */
     public void close(){
         storageController.writeUserFile(USERS);
         storageController.writeProjectFile(PROJECTS);

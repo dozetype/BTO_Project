@@ -40,22 +40,32 @@ public class ProjectTeam {
         for (int i=0; i < officersApplying.size(); i++){
             System.out.println(i+1+") " + officersApplying.get(i));
         }
-        String decidedOfficerID = officersApplying.get(ui.inputInt()-1);
-        if(!decidedOfficerID.isEmpty()){
-            System.out.println("ENTER 1 to ACCEPT, 0 to REJECT "+decidedOfficerID+" officer application?");
-            int decision = ui.inputInt();
-            if (decision == 0){ //Add the officer into the TEAM(SUCCESSFUL)
-                officersRejected.add(decidedOfficerID);
-                officersApplying.remove(decidedOfficerID);
-            } else if(decision == 1){ //Add the officer into the REJECTED LIST(UNSUCCESSFUL)
-                officers.add(decidedOfficerID);
-                officersApplying.remove(decidedOfficerID);
+        try {
+            String decidedOfficerID = officersApplying.get(ui.inputInt() - 1);
+            if (!decidedOfficerID.isEmpty()) {
+                System.out.println("ENTER 1 to ACCEPT, 0 to REJECT " + decidedOfficerID + " officer application?");
+                int decision = ui.inputInt();
+                if (decision == 0) { //Add the officer into the TEAM(SUCCESSFUL)
+                    officersRejected.add(decidedOfficerID);
+                    officersApplying.remove(decidedOfficerID);
+                } else if (decision == 1) { //Add the officer into the REJECTED LIST(UNSUCCESSFUL)
+                    if(officers.size()<maxSlots) { //checking max team size
+                        officers.add(decidedOfficerID);
+                        officersApplying.remove(decidedOfficerID);
+                    }
+                    else{
+                        System.out.println("Cannot Accept more officer application.");
+                    }
+                }
+            } else {
+                System.out.println("DIDN'T Select an officer. Exiting.");
             }
         }
-        else{
-            System.out.println("DIDN'T Select an officer. Exiting.");
+        catch (IndexOutOfBoundsException e) {
+            System.out.println("ERROR: Officer application does not exist. Exiting.");
         }
     }
+
     public List<String> getListOfStrings() {
         List<String> list = new ArrayList<>();
         list.add(manager);
@@ -83,20 +93,4 @@ public class ProjectTeam {
         officersApplying.add(officerID);
         System.out.println(officersApplying);
     }
-    public int getSlots() {
-        return maxSlots;
-    }
-    
-    public void setSlots(int newSlots) {
-        this.maxSlots = newSlots;
-    }
-    /**
-     * @return NRIC of Manager
-     */
-    public String getManager() {
-        return manager;
-    }
-//    public List<String> getOfficerRegistration() {
-//        return officerRegistration;
-//    }
 }

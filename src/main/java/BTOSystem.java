@@ -3,9 +3,10 @@ import storage.Storage;
 import system.Login;
 import ui.*;
 import users.*;
-
 import java.util.List;
 import java.util.Objects;
+
+
 
 public class BTOSystem {
     List<String> loginUserData; //Basic info of the Current User
@@ -13,6 +14,9 @@ public class BTOSystem {
     private final IUi ui = new Ui();
     private final IStorage storage = new Storage();
 
+    /**
+     * ENTRY point of the whole Application
+     */
     public static void main(String[] args){
         System.out.println(Messages.BTO_ART+Messages.APPLICATION_NAME);
         new BTOSystem().run();
@@ -25,7 +29,7 @@ public class BTOSystem {
     }
 
     /**
-     * User login, and create the type of User
+     * User login, create the type of User and Run their MENU
      */
     private void loginIn(){
         while(!Objects.equals(ui.switchOff(), "0")) {
@@ -62,6 +66,9 @@ public class BTOSystem {
         }
     }
 
+    /**
+     * Menu Used by Applicant and Officer
+     */
     public void normalMenu(){
         int choice;
         System.out.println("Hello "+currUser.getName()+", "+currUser.getUserType());
@@ -82,7 +89,7 @@ public class BTOSystem {
                     break;
                 case 4:
                     System.out.print("Enter New Password: ");
-                    currUser.setPassword(ui.inputString());
+                    currUser.changePassword(ui.inputString());
                     storage.updateUserData(currUser.getAllUserData());
                     break;
                 case 5:
@@ -132,9 +139,12 @@ public class BTOSystem {
         }while(choice != 0);
     }
 
+    /**
+     * MENU used by Manager ONLY
+     */
     public void managerMenu(){
         int choice;
-        System.out.println("Hello "+currUser.getName());
+        System.out.println("Hello "+currUser.getName()+", "+currUser.getUserType());
         System.out.println(Messages.MANAGER_MENU);
         do {
             System.out.print(Messages.printLine()+"Menu ");
@@ -151,7 +161,7 @@ public class BTOSystem {
                     break;
                 case 4:
                     System.out.print("Enter New Password: ");
-                    currUser.setPassword(ui.inputString());
+                    currUser.changePassword(ui.inputString());
                     storage.updateUserData(currUser.getAllUserData());
                     break;
                 case 5:
@@ -204,6 +214,9 @@ public class BTOSystem {
 
     }
 
+    /**
+     * Executed when user Closes Application
+     */
     private void exit(){
         System.out.println("\nThank you for using our application!");
         storage.close(); //Override All csv files
