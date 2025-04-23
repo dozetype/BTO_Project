@@ -16,11 +16,11 @@ public class HDBManager extends User
         super(userData, "Manager");
     }
     
-    /*
+    /**
      * ui.inputInt adds a "enter Number:" on top of the existing message
      */
     
-    /*
+    /**
      * Create project function, with feature:
      * Can only be handling one project within an application period (from
      * application opening date, inclusive, to application closing date,
@@ -50,17 +50,22 @@ public class HDBManager extends User
         System.out.print("Enter Selling Price for " + flatType2 + ": ");
         int sellingPrice2 = ui.inputInt();
         
-        SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy"); //checks that entry follows xx/xx/xxxx
-        sdf.setLenient(false); //makes sure the date is a valid date too (so that cant be like 10/30/2020)
+        /**
+         * checks that entry follows xx/xx/xxxx
+         * makes sure the date is a valid date too (so that cant be like 10/30/2020)
+         * min/max year can adjust to any number, using 30 years span currently 
+         */
+        SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy"); 
+        sdf.setLenient(false);
         Date openingDate =null;
         Date closingDate =null;
         int currentYear = Calendar.getInstance().get(Calendar.YEAR);
-        int minYear = currentYear - 30; //can adjust to any number, using 30 years span currently 
+        int minYear = currentYear - 30; //
         int maxYear = currentYear + 30;
         List<Project> existingProjects = storage.getProjectsByManager(getUserID());
         boolean validDates = false;
         
-        /*
+        /**
          * ensures loop until valid dates (no overlaps with other managed projects)
          */
         validDatesLoop:
@@ -72,7 +77,7 @@ public class HDBManager extends User
                 System.out.print("Enter Application Opening Date (dd/MM/yyyy): ");
                 String openingDateStr = ui.inputString();
 
-                /*
+                /**
                  * obtains opening date, ensuring that it is in valid dd/MM/yyyy format and in somewhat
                  * recent years to minimise typos causing dates which would not be realistic/too far off
                  * from current times
@@ -95,7 +100,7 @@ public class HDBManager extends User
                 System.out.print("Enter Application Closing Date (dd/MM/yyyy): ");
                 String closingDateStr = ui.inputString();
 
-                /*
+                /**
                  * does the same as for opening date, but with additional check that the closing
                  * date is after the opening date, so that it makes chronological sense
                  */
@@ -112,7 +117,7 @@ public class HDBManager extends User
                     {System.out.println("Closing date must be after the opening date.");} 
                     else 
                     {
-                    	/*
+                    	/**
                     	 * check for overlaps in projects
                     	 */
                         boolean overlapFound = false;
@@ -128,7 +133,7 @@ public class HDBManager extends User
                             }
                         }
 
-                        /*
+                        /**
                          * if overlap go back to re-enter opening date again
                          * no overlap, then break loop
                          */
@@ -196,7 +201,7 @@ public class HDBManager extends User
     }
 
 
-    /*
+    /**
      * function to show list of projects, so that it is easier for manager to select
      * which project they would like to perform an action for, by choosing a number, rather
      * than having to type out a long name
@@ -218,7 +223,7 @@ public class HDBManager extends User
         return projectNames;
     }
     
-    /*
+    /**
      * same function as above, but only for the projects the manager is managing/has created
      */
     public List<String> showManagedProjectslist(IStorage storage)
@@ -243,7 +248,7 @@ public class HDBManager extends User
         return projectNames;
     }
     
-    /*
+    /**
      * function to edit the different fields of the project, other than visibility, which has its
      * own "toggle visibility" function. did not allow edits for certain fields, such as neighborhood
      * (would be difficult or almost impossible to change location of a current project), project name
@@ -369,7 +374,7 @@ public class HDBManager extends User
 
 
 
-    /*
+    /**
      * function to delete project
      */
     
@@ -409,7 +414,7 @@ public class HDBManager extends User
     }
 
 
-    /*
+    /**
      * function to view all created projects, including projects created by other
      * HDB Managers, regardless of visibility setting.
      */
@@ -428,14 +433,18 @@ public class HDBManager extends User
     		    System.out.println("Closing Date       : " + closeDate);
     		    System.out.println("Manager            : " + p.getCreatedBy());
     		    System.out.println("Visibility         : " + (p.getProjectVisibility() ? "Visible" : "Not Visible"));
-    		    //get the units and number available
+    		    /**
+    		     * get the units and number available
+    		     */
     		    StringBuilder unitStr = new StringBuilder();
     		    for (Map.Entry<FlatType, Integer> entry : p.getUnits().entrySet()) {
     		        unitStr.append(entry.getKey()).append("=").append(entry.getValue()).append(", ");
     		    }
     		    if (!unitStr.isEmpty()) unitStr.setLength(unitStr.length() - 2); // remove trailing comma
     		    System.out.println("Unit Breakdown     : " + unitStr);
-    		    //get the prices for each unit type 
+    		    /**
+    		     * get the prices for each unit type 
+    		     */
     		    StringBuilder priceStr = new StringBuilder();
     		    for (Map.Entry<FlatType, Integer> entry : p.getPrices().entrySet()) {
     		        priceStr.append(entry.getKey()).append("=$").append(String.format("%,d", entry.getValue())).append(", ");
@@ -446,7 +455,9 @@ public class HDBManager extends User
     		    List<String> teamDetails = p.getProjectTeam().getListOfStrings();
     		    System.out.println("Max Officer Slots  : " + teamDetails.get(1));
 
-    		    // officers on project
+    		    /**
+    		     *  officers on project, appplying and rejected
+    		     */
     		    String accepted = teamDetails.get(2).replace("\"", "").trim();
     		    System.out.println("Approved Officers  :");
     		    if (!accepted.isEmpty()) {
@@ -457,7 +468,6 @@ public class HDBManager extends User
     		        System.out.println("None");
     		    }
 
-    		    // officers applying
     		    String applying = teamDetails.get(3).replace("\"", "").trim();
     		    System.out.println("Pending Applications  :");
     		    if (!applying.isEmpty()) {
@@ -468,7 +478,6 @@ public class HDBManager extends User
     		        System.out.println("None");
     		    }
 
-    		    // officers rejected
     		    String rejected = teamDetails.get(4).replace("\"", "").trim();
     		    System.out.println("Rejected Applications :");
     		    if (!rejected.isEmpty()) {
@@ -486,8 +495,9 @@ public class HDBManager extends User
     }
     
     
-    /*
-     * Able to filter and view the list of projects that they have created only.
+    /**
+     * Able to filter and view the list of projects that they have created only. uses same structure 
+     * as viewing all functions, but ensures created by is the user ID
      */
     
     public void viewCreatedProject(IStorage storage)
@@ -561,7 +571,7 @@ public class HDBManager extends User
     }
     
     
-    /*
+    /**
 	 * To toggle the visibility of the project to “on” or “off”.
 	 * Instead of toggling, for user convenience the manager can select either 0 for not visible
 	 * or 1 for visible, to ensure that they are selecting the visibility they would like to opt for, 
@@ -610,7 +620,7 @@ public class HDBManager extends User
     }
 
     
-    /*
+    /**
      * View pending and approved HDB officer registration
      */
 	
@@ -652,7 +662,7 @@ public class HDBManager extends User
 	}
 
 	
-	/*
+	/**
 	 * Combined function to to approve or reject HDB Officer’s registration as the HDB Manager 
 	 * in-charge of the project and update project’s remaining HDB Officer slots
 	 */
@@ -693,7 +703,7 @@ public class HDBManager extends User
 	
 
 	
-	/*
+	/**
 	 * Approving applicant's applications, but using the assumption that they are only able to
 	 * access the applications for their own managed projects
 	 */
@@ -755,7 +765,7 @@ public class HDBManager extends User
 	    } else {System.out.println("Project not accessible");}
 	}
 	
-	/*
+	/**
 	 * Rejecting applicant's applications, but using the assumption that they are only able to
 	 * access the applications for their own managed projects
 	 */
@@ -806,7 +816,7 @@ public class HDBManager extends User
 	}
 	
 	
-	/*
+	/**
 	 * Approving withdrawal request: application is set to unsuccessful as long as there is a valid
 	 * application
 	 */
@@ -854,8 +864,9 @@ public class HDBManager extends User
 	}
 	
 
-    /*
-     * Rejecting withdrawal request: Application status remains constant if withdrawal is rejected
+    /**
+     * Rejecting withdrawal request: Application status changed to withdrawal rejected
+     * if withdrawal is rejected
      * 
      */
 	public void rejectWithdrawalRequest(IStorage storage)
@@ -900,7 +911,7 @@ public class HDBManager extends User
 	    } else {System.out.println("Project not accessible");}
 	}
 	
-	/*
+	/**
 	 * Generating an applicant report; a list of applicants with their respective applications, 
 	 * with flat type, age, marital status and filtering based on applicant's choice of flat type 
 	 */
@@ -964,7 +975,7 @@ public class HDBManager extends User
 	}
 	
 
-	/*
+	/**
 	 * viewing enquiries for all projects
 	 */
 	public void viewEnquiries(IStorage storage)
@@ -1006,7 +1017,7 @@ public class HDBManager extends User
 	    } else {System.out.println("Project not found");}
 	}
 
-	/*
+	/**
 	 * Replying to enquiries but only for their own projects
 	 */
 	public void replyToEnquiry(IStorage storage)
