@@ -41,7 +41,7 @@ public class Applicant extends User implements IApplicant {
 
     public void applyBTOProject(IStorage st) {
         for(BTOApplication application : st.getBTOApplications().values()){
-            if(application.getApplicantID().equals(getUserID()) && (!application.getApplicationStatus().equals(ApplicationStatus.WITHDRAWN) && !application.getApplicationStatus().equals(ApplicationStatus.UNSUCCESSFUL))){
+            if(application.getApplicantID().equals(getUserID()) && !application.getApplicationStatus().equals(ApplicationStatus.UNSUCCESSFUL)){
                 System.out.println("You have already applied for a Project.");
                 return;
             }
@@ -177,7 +177,7 @@ public class Applicant extends User implements IApplicant {
             if(application.getApplicantID().equals(getUserID()) &&
             (application.getApplicationStatus().equals(ApplicationStatus.PENDING)||application.getApplicationStatus().equals(ApplicationStatus.SUCCESSFUL)||application.getApplicationStatus().equals(ApplicationStatus.BOOKED))) {
                 System.out.println("Withdrawing from " + application.getProjectName()+", "+application.getFlatType());
-                application.setApplicationStatus(ApplicationStatus.WITHDRAWING);
+                application.setApplicationStatus(ApplicationStatus.UNSUCCESSFUL);
                 return;
             }
         }
