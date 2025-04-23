@@ -74,9 +74,7 @@ public class Project {
     public HashMap<FlatType, Integer> getUnits() { return units; }
     public HashMap<FlatType, Integer> getPrices() { return prices; }
     public ProjectTeam getProjectTeam() { return projectTeam; }
-//    public void setUnits(HashMap<String, Integer> units) {
-//        this.units = units;
-//    }
+
     public boolean overlapping(Project other) {
     // Project A starts before B ends AND Project A ends after B starts
     return (this.openingDate <= other.closingDate) &&

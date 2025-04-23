@@ -4,6 +4,7 @@ Rachel,S3456789E,25,Single,password,Applicant
 Emily,S6543210I,28,Single,password,Officer
 David,T1234567J,29,Married,password,Officer
 Sarah,T7654321B,40,MARRIED,password,Applicant
+ExampleManager,T1234567X,100,SINGLE,password,Manager
 Daniel,T2109876H,36,SINGLE,password,Officer
 Jessica,S5678901G,26,Married,password,Manager
 Grace,S9876543C,37,MARRIED,password,Applicant

@@ -17,8 +17,8 @@ public class Applicant extends User implements IApplicant {
     public void viewBTOProject(IStorage st){
         //Stores all the BTO project Names that User have applied for
         List<String> appliedBTOProject = new ArrayList<>();
-        for(BTOApplication a : st.getBTOApplications().values()){
-            if(a.getApplicantID().equals(getUserID())){
+        for(BTOApplication a : st.getBTOApplications().values()) {
+            if (a.getApplicantID().equals(getUserID())) {
                 appliedBTOProject.add(a.getProjectName());
             }
         }

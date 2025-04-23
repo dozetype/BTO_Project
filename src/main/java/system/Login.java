@@ -4,7 +4,7 @@ import storage.IStorage;
 import java.util.ArrayList;
 
 public class Login{
-    ArrayList<String> userData = new ArrayList<>();
+    private ArrayList<String> userData = new ArrayList<>();
 
     /**
      * For Authenticating the User login details

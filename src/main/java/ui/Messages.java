@@ -17,7 +17,7 @@ public class Messages {
     public static final String APPLICANT_MENU = CYAN+"""
     
             1) Add Filter        2) View Filters       3) Remove Filter
-            4) Change Password   5) View Projects      6) Apply Project
+            4) Change Password   5) View Projects      6) Apply for BTO
             7) View Enquiries    8) Add Enquiry        9) Edit Enquiry
            10) Remove Enquiry    11)View BTO Applications
            12) Withdraw BTO Application
@@ -26,7 +26,7 @@ public class Messages {
 
     public static final String OFFICER_MENU = BRIGHT_BLUE+"""
             1) Add Filter        2) View Filters       3) Remove Filter
-            4) Change Password   5) View Projects      6) Apply Project
+            4) Change Password   5) View Projects      6) Apply for BTO
             7) View Enquiries    8) Add Enquiry        9) Edit Enquiry
            10) Remove Enquiry
            11) View BTO Applications            12) Withdraw BTO Application

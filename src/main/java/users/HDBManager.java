@@ -420,6 +420,7 @@ public class HDBManager extends User
      */
     public void viewAllProjects(IStorage storage)
     {
+        System.out.println("Viewing all projects: ");
         List<Project> projects = storage.getAllProjects();
         for (Project p : projects) 
         {
@@ -502,6 +503,7 @@ public class HDBManager extends User
     
     public void viewCreatedProject(IStorage storage)
     {
+        System.out.println("Viewing my projects: ");
         List<Project> projects = storage.getProjectsByManager(getUserID());
         for (Project p : projects) 
         {
@@ -1090,7 +1092,7 @@ public class HDBManager extends User
                 else {System.out.println("Invalid number. Please enter a number between 1 and " + projectNames.size() + ", or 0 to cancel.");}
             } catch (NumberFormatException e) {System.out.println("Invalid input. Please enter a valid number.");}
         }
-
+        System.out.println("Generating applicant report: ");
         String projectName = projectNames.get(choice - 1);
         Project project = storage.getProjectByName(projectName);
 	    

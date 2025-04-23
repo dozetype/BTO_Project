@@ -66,14 +66,14 @@ public class StorageController implements IStorageController {
         readCSV("src/main/database/Enquiry.csv").stream().skip(1)
                 .forEach(line -> ENQUIRIES.put(line[0], new Enquiry(line[0], line[1], line[2], line[3], line[4])));
         for (String e : ENQUIRIES.keySet()) //Go through the EnquiryID and take the Largest
-            nextEnquiryID = Math.max(nextEnquiryID, Integer.parseInt(e)) + 1;
+            nextEnquiryID = Math.max(nextEnquiryID, Integer.parseInt(e));
         return ENQUIRIES;
     }
 
     public void addEnquiry(String askerID, String projectName, String question, Map<String, Enquiry> ENQUIRIES) {
-        String ID = Integer.toString(nextEnquiryID);
+        String ID = Integer.toString(++nextEnquiryID);
         ENQUIRIES.put(ID, new Enquiry(ID, askerID, projectName, question, "NULL"));
-        nextEnquiryID++;
+        System.out.println(nextEnquiryID);
     }
 
     public void writeEnquiryFile(Map<String, Enquiry> ENQUIRY){ //WRITES using ENQUIRY in Storage
