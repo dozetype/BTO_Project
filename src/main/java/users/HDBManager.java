@@ -739,11 +739,49 @@ public class HDBManager extends User
 	    
 	    if (project != null && project.getCreatedBy().equals(getUserID())) 
 	    {
-	        System.out.println("Enter Applicant ID to approve: ");
-	        String applicantID = ui.inputString();
-	        BTOApplication application = storage.getApplicantApplicationByID(applicantID);
+	    	List<BTOApplication> withdrawingApplicants = new ArrayList<>();
+	        for (BTOApplication app : storage.getBTOApplications().values()) 
+	        {
+	            if (app.getProjectName().equals(projectName) && app.getApplicationStatus() == ApplicationStatus.PENDING) 
+	            {withdrawingApplicants.add(app);}
+	        }
+
+	        if (withdrawingApplicants.isEmpty()) 
+	        {
+	            System.out.println("No application found");
+	            return;
+	        }
+	        
+	        for (int i = 0; i < withdrawingApplicants.size(); i++) 
+	        {
+	            BTOApplication app = withdrawingApplicants.get(i);
+	            System.out.println((i + 1) + ") Applicant ID: " + app.getApplicantID());
+	        }
+	        
+	        int choice2 = -1;
+	        while (true) 
+	        {
+	            System.out.println("Enter the number of the applicant to approve or 0 to cancel: ");
+	            
+	            String input = ui.inputString();
+	            try 
+	            {
+	            	choice2 = Integer.parseInt(input);
+	                if (choice2 == 0) 
+	                {
+	                    System.out.println("Approval cancelled.");
+	                    return;
+	                }
+	                if (choice2 >= 1 && choice2 <= withdrawingApplicants.size()) break;
+	                else System.out.println("Invalid choice. Please choose between 1 and " + withdrawingApplicants.size());
+	            } 
+	            catch (NumberFormatException e) 
+	            {System.out.println("Invalid input. Please enter a valid number.");}
+	        }
+	        BTOApplication application = withdrawingApplicants.get(choice2 - 1);
+	        
 	        if (application == null) {
-	            System.out.println("No application found for Applicant ID: " + applicantID);
+	            System.out.println("No application found");
 	            return; 
 	        }
 	        FlatType targetType = application.getFlatType(); 
@@ -800,11 +838,49 @@ public class HDBManager extends User
 	    
 	    if (project != null && project.getCreatedBy().equals(getUserID())) 
 	    {
-	        System.out.println("Enter Applicant ID to reject: ");
-	        String applicantID = ui.inputString();
-	        BTOApplication application = storage.getApplicantApplicationByID(applicantID);
+	    	List<BTOApplication> applyingApplicants = new ArrayList<>();
+	        for (BTOApplication app : storage.getBTOApplications().values()) 
+	        {
+	            if (app.getProjectName().equals(projectName) && app.getApplicationStatus() == ApplicationStatus.PENDING) 
+	            {applyingApplicants.add(app);}
+	        }
+
+	        if (applyingApplicants.isEmpty()) 
+	        {
+	            System.out.println("No application found");
+	            return;
+	        }
+	        
+	        for (int i = 0; i < applyingApplicants.size(); i++) 
+	        {
+	            BTOApplication app = applyingApplicants.get(i);
+	            System.out.println((i + 1) + ") Applicant ID: " + app.getApplicantID());
+	        }
+	        
+	        int choice2 = -1;
+	        while (true) 
+	        {
+	            System.out.println("Enter the number of the applicant to reject or 0 to cancel: ");
+	            
+	            String input = ui.inputString();
+	            try 
+	            {
+	            	choice2 = Integer.parseInt(input);
+	                if (choice2 == 0) 
+	                {
+	                    System.out.println("Rejection cancelled.");
+	                    return;
+	                }
+	                if (choice2 >= 1 && choice2 <= applyingApplicants.size()) break;
+	                else System.out.println("Invalid choice. Please choose between 1 and " + applyingApplicants.size());
+	            } 
+	            catch (NumberFormatException e) 
+	            {System.out.println("Invalid input. Please enter a valid number.");}
+	        }
+	        BTOApplication application = applyingApplicants.get(choice2 - 1);
+	        
 	        if (application == null) {
-	            System.out.println("No application found for Applicant ID: " + applicantID);
+	            System.out.println("No application found");
 	            return; 
 	        }
 	        if (application.getApplicationStatus()==ApplicationStatus.PENDING) 
@@ -851,9 +927,47 @@ public class HDBManager extends User
         
 	    if (project != null && project.getCreatedBy().equals(getUserID())) 
 	    {
-	        System.out.println("Enter Applicant ID to approve: ");
-	        String applicantID = ui.inputString();
-	        BTOApplication application = storage.getApplicantApplicationByID(applicantID);
+	    	List<BTOApplication> withdrawingApplicants = new ArrayList<>();
+	        for (BTOApplication app : storage.getBTOApplications().values()) 
+	        {
+	            if (app.getProjectName().equals(projectName) && app.getApplicationStatus() == ApplicationStatus.WITHDRAWING) 
+	            {withdrawingApplicants.add(app);}
+	        }
+
+	        if (withdrawingApplicants.isEmpty()) 
+	        {
+	            System.out.println("No withdrawals found");
+	            return;
+	        }
+	        
+	        for (int i = 0; i < withdrawingApplicants.size(); i++) 
+	        {
+	            BTOApplication app = withdrawingApplicants.get(i);
+	            System.out.println((i + 1) + ") Applicant ID: " + app.getApplicantID());
+	        }
+	        
+	        int choice2 = -1;
+	        while (true) 
+	        {
+	            System.out.println("Enter the number of the applicant to approve or 0 to cancel: ");
+	            
+	            String input = ui.inputString();
+	            try 
+	            {
+	            	choice2 = Integer.parseInt(input);
+	                if (choice2 == 0) 
+	                {
+	                    System.out.println("Approval cancelled.");
+	                    return;
+	                }
+	                if (choice2 >= 1 && choice2 <= withdrawingApplicants.size()) break;
+	                else System.out.println("Invalid choice. Please choose between 1 and " + withdrawingApplicants.size());
+	            } 
+	            catch (NumberFormatException e) 
+	            {System.out.println("Invalid input. Please enter a valid number.");}
+	        }
+	        BTOApplication application = withdrawingApplicants.get(choice2 - 1);
+	        
 	        
 	        if (application != null && application.getApplicationStatus()==ApplicationStatus.WITHDRAWING) 
 		    {
@@ -899,9 +1013,46 @@ public class HDBManager extends User
         
 	    if (project != null && project.getCreatedBy().equals(getUserID())) 
 	    {
-	        System.out.println("Enter Applicant ID to approve: ");
-	        String applicantID = ui.inputString();
-	        BTOApplication application = storage.getApplicantApplicationByID(applicantID);
+	    	List<BTOApplication> withdrawingApplicants = new ArrayList<>();
+	        for (BTOApplication app : storage.getBTOApplications().values()) 
+	        {
+	            if (app.getProjectName().equals(projectName) && app.getApplicationStatus() == ApplicationStatus.WITHDRAWING) 
+	            {withdrawingApplicants.add(app);}
+	        }
+
+	        if (withdrawingApplicants.isEmpty()) 
+	        {
+	            System.out.println("No withdrawals found");
+	            return;
+	        }
+	        
+	        for (int i = 0; i < withdrawingApplicants.size(); i++) 
+	        {
+	            BTOApplication app = withdrawingApplicants.get(i);
+	            System.out.println((i + 1) + ") Applicant ID: " + app.getApplicantID());
+	        }
+	        
+	        int choice2 = -1;
+	        while (true) 
+	        {
+	            System.out.println("Enter the number of the applicant to reject or 0 to cancel: ");
+	            
+	            String input = ui.inputString();
+	            try 
+	            {
+	            	choice2 = Integer.parseInt(input);
+	                if (choice2 == 0) 
+	                {
+	                    System.out.println("Rejection cancelled.");
+	                    return;
+	                }
+	                if (choice2 >= 1 && choice2 <= withdrawingApplicants.size()) break;
+	                else System.out.println("Invalid choice. Please choose between 1 and " + withdrawingApplicants.size());
+	            } 
+	            catch (NumberFormatException e) 
+	            {System.out.println("Invalid input. Please enter a valid number.");}
+	        }
+	        BTOApplication application = withdrawingApplicants.get(choice2 - 1);
 	        
 	        if (application != null && application.getApplicationStatus()==ApplicationStatus.WITHDRAWING) 
 	        {
@@ -1034,7 +1185,7 @@ public class HDBManager extends User
 					availableEnquiries.put(e.getID(), e);
 					System.out.println(e);
 				}
-			}
+			} 
 			if (!availableEnquiries.isEmpty()) {
 				System.out.println("Please choose the Enquiries ID: ");
 				Enquiry toBeReplied = availableEnquiries.get(ui.inputString());
