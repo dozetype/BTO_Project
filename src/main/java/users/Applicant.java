@@ -177,7 +177,7 @@ public class Applicant extends User implements IApplicant {
             if(application.getApplicantID().equals(getUserID()) &&
             (application.getApplicationStatus().equals(ApplicationStatus.PENDING)||application.getApplicationStatus().equals(ApplicationStatus.SUCCESSFUL)||application.getApplicationStatus().equals(ApplicationStatus.BOOKED))) {
                 System.out.println("Withdrawing from " + application.getProjectName()+", "+application.getFlatType());
-                application.setApplicationStatus(ApplicationStatus.UNSUCCESSFUL);
+                application.setApplicationStatus(ApplicationStatus.WITHDRAWING);
                 return;
             }
         }
