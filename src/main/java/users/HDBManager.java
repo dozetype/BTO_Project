@@ -845,8 +845,8 @@ public class HDBManager extends User
 	        String applicantID = ui.inputString();
 	        BTOApplication application = storage.getApplicantApplicationByID(applicantID);
 	        
-	        if (application != null) 
-	        {
+	        if (application != null && application.getApplicationStatus()==ApplicationStatus.WITHDRAWING) 
+		    {
 	        	application.setApplicationStatus(ApplicationStatus.UNSUCCESSFUL);
 	        	System.out.println("Withdrawal approved");
 	        } else {System.out.println("No withdrawal application");}
@@ -892,8 +892,9 @@ public class HDBManager extends User
 	        String applicantID = ui.inputString();
 	        BTOApplication application = storage.getApplicantApplicationByID(applicantID);
 	        
-	        if (application != null) 
+	        if (application != null && application.getApplicationStatus()==ApplicationStatus.WITHDRAWING) 
 	        {
+	        	application.setApplicationStatus(ApplicationStatus.WITHDRAWAL_REJECTED);
 	        	System.out.println("Withdrawal rejected");
 	        } else {System.out.println("No withdrawal application");}
 	    } else {System.out.println("Project not accessible");}
