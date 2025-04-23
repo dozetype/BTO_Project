@@ -13,6 +13,12 @@ public class HDBOfficer extends Applicant {
         setUserType("Officer"); //Override "Applicant"
     }
 
+    /**
+     * Showing the project list by name
+     * Called in some of the methods
+     * @param storage DataBase
+     * @return list of projectNames
+     */
     public List<String> showProjectslist(IStorage storage){
         List<String> projectNames = new ArrayList<>();
         int count = 1;
@@ -21,6 +27,36 @@ public class HDBOfficer extends Applicant {
             System.out.println(count++ + ") " + p.getProjectName());
         }
         return projectNames;
+    }
+    /**
+     * View the list of BTO project that applicable or handled by officer
+     * Override and use the same method from Applicant class
+     * @param st DataBase
+     */
+    @Override
+    public void viewBTOProject(IStorage st) {
+        System.out.println("1. View open project to apply as applicant");
+        System.out.println("2. View my projects");
+        System.out.print("Pick which project you want to view: ");
+        switch (ui.inputInt()){
+            case 1:
+                super.viewBTOProject(st);
+                break;
+            case 2:
+                if (projectsAllocated.isEmpty()){
+                    System.out.println("No project handled");
+                    return;
+                }
+                for(Project p : st.getProject().values()) {
+                    if (projectsAllocated.contains(p.getProjectName())) {
+                        System.out.println(p);
+                    }
+                }
+                break;
+
+            default:
+                System.out.println("Unexpected value, return to main menu");
+                }
     }
 
     /**
@@ -53,7 +89,7 @@ public class HDBOfficer extends Applicant {
                     }
                     for (Project q : storage.getProject().values()) {
                         if (q.getProjectName().equalsIgnoreCase(projectName)&&q.overlapping(p)){
-                            System.out.println("Cannot apply. The time is overlapping with " + p.getProjectName());
+                            System.out.println("Cannot apply. The time is overlapping with the project you are handling: " + p.getProjectName());
                             return;
                         }
                     }
@@ -69,31 +105,50 @@ public class HDBOfficer extends Applicant {
     }
 
     /**
+     * View the list of enquiries that written by officer or from the project handled by
+     * Override and use the same method from Applicant class
      * @param storage DataBase
      */
     @Override
     public void viewEnquiries(IStorage storage) {
-        for(Enquiry e : storage.getEnquiries().values()) {
-            if(projectsAllocated.contains(e.getProjectName())) {
-                System.out.println(e);
-            }
+        System.out.println("1. View my enquiries");
+        System.out.println("2. View all enquiries I am handling");
+        System.out.print("Pick which enquiries you want to view: ");
+        switch (ui.inputInt()){
+            case 1:
+                super.viewEnquiries(storage);
+                break;
+            case 2:
+                if (projectsAllocated.isEmpty()){
+                    System.out.println("No project handled.");
+                    return;
+                }
+                for(Enquiry e : storage.getEnquiries().values()) {
+                    if(projectsAllocated.contains(e.getProjectName())) {
+                        System.out.println(e);
+                    }
+                }
+                break;
+
+            default:
+                System.out.println("Unexpected value, return to main menu");
         }
     }
 
     /**
-     * Only able to view and reply to UNANSWERED Enquiries
+     * Only able to view and reply to UNANSWERED Enquiries in the project handled
      * @param storage DataBase
      */
     public void replyToEnquiry(IStorage storage) {
         Map<String, Enquiry> availableEnquiries = new HashMap<>(); //Used to store unanswered relavant
         for(Enquiry e : storage.getEnquiries().values()) {
-                if(projectsAllocated.contains(e.getProjectName())&& e.getReply().equals("NULL")) {
-                    availableEnquiries.put(e.getID(), e);
-                    System.out.println(e);
-                }
+            if (projectsAllocated.contains(e.getProjectName()) && e.getReply().equals("NULL")) {
+                availableEnquiries.put(e.getID(), e);
+                System.out.println(e.toStringReply());
             }
+        }
         if(!availableEnquiries.isEmpty()){
-            System.out.println("Please choose the Enquiries ID: ");
+            System.out.print("Please choose the Enquiries ID: ");
             Enquiry toBeReplied = availableEnquiries.get(ui.inputString());
             if(toBeReplied != null) {
                 System.out.println("Please write your reply: ");
@@ -101,15 +156,15 @@ public class HDBOfficer extends Applicant {
                 System.out.println("Thank you for your reply!");
             }
             else{
-                System.out.println("Entered ID does not exist. Exiting.");
+                System.out.println("Entered ID does not exist. Return to main menu.");
             }
         }
     }
 
 
     /**
-     * View BTO Applications of all project Officer is in
-     * @param storage
+     * View BTO Applications that officer applied to
+     * @param storage DataBase
      */
     public void viewProjectsBTOApplication(IStorage storage) {
         System.out.println("Showing BTO Applications for project(s) you are assigned:");
@@ -120,8 +175,13 @@ public class HDBOfficer extends Applicant {
         }
         System.out.println();
     }
-
-    public String generateReceipt(IStorage storage, String applicantID) {
+    /**
+     * Method for creating an application receipt
+     * Called in changeApplicationStatus method
+     * @param storage DataBase
+     * @return String of receipt
+     */
+    private String generateReceipt(IStorage storage, String applicantID) {
         SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
         String currentDate = dateFormat.format(new Date());
 
@@ -149,7 +209,11 @@ public class HDBOfficer extends Applicant {
 
         return receipt.toString();
     }
-
+    /**
+     * Method for checking the Registration Status for each project
+     * @param storage DataBase
+     * @return String of Registration Status
+     */
     public String checkRegistrationStatus(IStorage storage) {
         List<String> projectNames = showProjectslist(storage);
         System.out.print("Pick which project you would like to see the registration status: ");
@@ -166,6 +230,10 @@ public class HDBOfficer extends Applicant {
         return RegistrationStatus.NOT_REGISTERED.toString();
     }
 
+    /**
+     * Method for checking the Project Handled in the ProjectList.csv and store it locally
+     * @param storage DataBase
+     */
     public void checkProjectsAllocated(IStorage storage) {
         for (Project p : storage.getProject().values()) {
             if (p.getProjectTeam().getOfficers().contains(getUserID())) {
@@ -174,7 +242,12 @@ public class HDBOfficer extends Applicant {
         }
     }
 
-    public void updateNumOfFlats(IStorage storage, String applicantID){
+    /**
+     * Method for updating the Number Of Flats
+     * Called in changeApplicationStatus Method
+     * @param storage,applicantID DataBase and Applicant ID
+     */
+    private void updateNumOfFlats(IStorage storage, String applicantID){
         for (Project p : storage.getProject().values()) {
             for (BTOApplication app : storage.getBTOApplications().values()) {
                 if (projectsAllocated.contains(p.getProjectName())&& app.getApplicantID().equals(applicantID)) {
@@ -188,21 +261,27 @@ public class HDBOfficer extends Applicant {
         }
     }
 
+    /**
+     * Method for change the application status from Successful to Booked
+     * Then, update number of flats available by calling the method
+     * Then, generate the receipt
+     * @param storage DataBase
+     */
     public void changeBTOApplicationStatus(IStorage storage) {
         viewProjectsBTOApplication(storage);
-        System.out.print("Please type the Applicant ID: ");
-        String ApplicantID = ui.inputString();
+        System.out.print("Please type the Application ID: ");
+        String AppID = ui.inputString();
 
         for (BTOApplication app : storage.getBTOApplications().values()) {
-            if(app.getApplicantID().contains(ApplicantID)) { //Check the applicantID, need to change to BTOApplication ID
+            if(app.getID().equals(AppID)) {
                 System.out.println("Current Application Status: "+app.getApplicationStatus());
                 System.out.print("Do you want to change the status from Successful to Booked? Y/N: ");
                 if (ui.inputString().equals("Y")){
                     app.setApplicationStatus(ApplicationStatus.BOOKED);
                     app.setOfficerInCharge(getUserID());
                     System.out.println("Application status for "+app.getApplicantID()+" changed to Booked");
-                    updateNumOfFlats(storage,ApplicantID);
-                    System.out.println(generateReceipt(storage,ApplicantID));
+                    updateNumOfFlats(storage,app.getApplicantID());
+                    System.out.println(generateReceipt(storage,app.getApplicantID()));
                 }
                 else {
                     System.out.println("Application status for "+app.getApplicantID()+" is not changed");
@@ -211,6 +290,10 @@ public class HDBOfficer extends Applicant {
         }
     }
 
+    /**
+     * Method for adding the Project Handled
+     * @param projectName ProjectName
+     */
     public void addProjectsAllocated(String projectName){
         this.projectsAllocated.add(projectName);
     }

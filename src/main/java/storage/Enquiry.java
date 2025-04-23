@@ -34,13 +34,14 @@ public class Enquiry {
     public void setQuestion(String question) { this.question = question; }
 
     public String toString() {
-        return "Enquiry{" +
-                "ID='" + ID + '\'' +
-                ", asker ID='" + askerID + '\'' +
-                ", projectName='" + projectName + '\'' +
-                ", question='" + question + '\'' +
-                ", reply='" + reply + '\'' +
-                // Add other fields you want to display
-                '}';
+        return "Enquiry ID: " + ID + "\tAsker ID: " + askerID +  "\tProject Name: " + projectName +
+                "\nQuestion: " + question +
+                "\nReply: " + reply +
+                '\n';
+    }
+
+    public String toStringReply() {
+        return "Enquiry ID: " + ID + "\tAsker ID: " + askerID +  "\tProject Name: " + projectName +
+                "\nQuestion: " + question;
     }
 }

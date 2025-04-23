@@ -101,7 +101,7 @@ public class Applicant extends User implements IApplicant {
     public void viewEnquiries(IStorage storage){
         for(Enquiry e : storage.getEnquiries().values()) {
             if(e.getAskerID().equals(getUserID())) {
-                System.out.println("Your Question: " + e.getQuestion() + "\n" +"Your Reply: " + e.getReply());
+                System.out.println("Project Name: "+e.getProjectName() + "\nQuestion: " + e.getQuestion() + "\nTheReply: " + e.getReply()+"\n");
             }
         }
     }
@@ -130,7 +130,7 @@ public class Applicant extends User implements IApplicant {
         for(Enquiry e : storage.getEnquiries().values()) {
             if(e.getAskerID().equals(getUserID()) && e.getReply().equals("NULL")) {
                 enquiryIDList.add(e.getID());
-                System.out.println(count++ +")"+ "Your Question: " + e.getQuestion());
+                System.out.println(count++ +")"+ e.getProjectName()+"\tQuestion: " + e.getQuestion());
             }
         }
         if(!enquiryIDList.isEmpty()) {
@@ -153,7 +153,7 @@ public class Applicant extends User implements IApplicant {
         for(Enquiry e : st.getEnquiries().values()) {
             if(e.getAskerID().equals(getUserID()) && e.getReply().equals("NULL")) {
                 editableEnquiries.put(count, e);
-                System.out.println(count++ +")"+ "Your Question: " + e.getQuestion());
+                System.out.println(count++ +")"+ e.getProjectName()+"\tQuestion: " + e.getQuestion());
             }
         }
 

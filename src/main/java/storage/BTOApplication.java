@@ -33,14 +33,7 @@ public class BTOApplication {
         this.applicationStatus = status;
     }
     public String toString() {
-        return "BTOApplication{" +
-                "ID='" + ID + '\'' +
-                ", applicantID='" + applicantID + '\'' +
-                ", projectName='" + projectName + '\'' +
-                ", price='" + price + '\'' +
-                ", officerInCharge='" + officerInCharge + '\'' +
-                ", flatType=" + flatType +
-                ", applicationStatus=" + applicationStatus +
-                '}';
+        return  "ID: " + ID + "\tApplicant ID: " + applicantID + "\tProject Name: " + projectName +
+                "\nFlat Type: " + flatType + "\t\t\tApplication Status=" + applicationStatus+"\n";
     }
 }
