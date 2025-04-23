@@ -103,17 +103,10 @@ public class Project {
     public boolean getProjectVisibility() {return projectVisibility;}
 
     public String toString() {
-        return "Project{" +
-                "projectName='" + projectName + '\'' +
-                ", neighbourhood='" + neighbourhood + '\'' +
-                ", openingDate=" + new Date(openingDate) +
-                ", closingDate=" + new Date(closingDate) +
-                ", createdBy='" + createdBy + '\'' +
-                ", units=" + units +
-                ", prices=" + prices +
-                ", projectTeam=" + projectTeam +
-                ", projectVisibility=" + projectVisibility +
-                '}';
+        return  "Project Name: " + projectName + "\t\t\tNeighbourhood: " + neighbourhood +
+                "\nOpening Date: " + getOpeningDateString() +  "\t\t\tClosing Date: " + getClosingDateString() +
+                "\nUnits: " + units +    "\tPrices: " + prices +
+                "\nProject Visibility: " + projectVisibility;
     }
 }
 
