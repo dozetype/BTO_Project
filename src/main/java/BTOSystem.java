@@ -217,7 +217,7 @@ public class BTOSystem {
     /**
      * Executed when user Closes Application
      */
-    private void exit(){
+    public void exit(){
         System.out.println("\nThank you for using our application!");
         storage.close(); //Override All csv files
         System.exit(0);

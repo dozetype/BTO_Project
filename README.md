@@ -8,3 +8,5 @@ apply and manage for BTO projects.
 **Requirements:**
 JDK Version: JDK 21, External Libraries: Nil
 
+**Open index.html to open javadoc**
+
