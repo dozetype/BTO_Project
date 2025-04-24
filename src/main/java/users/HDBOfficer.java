@@ -56,7 +56,7 @@ public class HDBOfficer extends Applicant {
 
             default:
                 System.out.println("Unexpected value, return to main menu");
-                }
+        }
     }
 
     /**

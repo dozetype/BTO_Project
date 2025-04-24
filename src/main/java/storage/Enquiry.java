@@ -14,6 +14,8 @@ public class Enquiry {
         this.question = question;
         this.reply = reply;
     }
+
+
     public String getID() {
         return ID;
     }
@@ -27,6 +29,7 @@ public class Enquiry {
     public String getReply(){
         return reply;
     }
+
 
     public void setReply(String reply) {
         this.reply = reply;
