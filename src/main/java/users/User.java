@@ -27,9 +27,6 @@ public abstract class User implements IUser {
         this.userType = userType;
     }
 
-    public void changePassword(String newPassword) {
-        this.password = newPassword;
-    }
 
     public void addFilter(){ //adds 1 filter
         System.out.println("Which type of filter do you want to add?\n" + Messages.FILTER_MENU);
@@ -76,24 +73,18 @@ public abstract class User implements IUser {
         }
     }
 
+
+
+    //Accessor
     public String getFilter(String key){
         return filters.get(key);
     }
-
     public Map<String, String> getFilters(){ return filters; }
-
-
-    //Accessor and Mutators
     public String getName(){ return this.name; }
-
     public String getUserID(){ return this.userID; }
-
     public int getAge(){ return this.age; }
-
     public MaritalStatus getMaritalStatus(){ return this.maritalStatus; }
-
     public String getUserType(){ return this.userType; }
-
     public List<String> getAllUserData(){
         List<String> list = new ArrayList<>();
         list.add(name);
@@ -105,7 +96,7 @@ public abstract class User implements IUser {
         return list;
     }
 
-    public void setUserType(String userType){
-        this.userType = userType;
-    }
+    //Mutators
+    public void setUserType(String userType){ this.userType = userType; }
+    public void changePassword(String newPassword) { this.password = newPassword; }
 }
