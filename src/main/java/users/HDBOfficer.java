@@ -84,7 +84,7 @@ public class HDBOfficer extends Applicant {
                         return;
                     }
                     if (p.getProjectName().equals(projectName)&&p.getProjectTeam().getOfficersApplying().contains(getUserID())) {
-                        System.out.println("You have already registering for this project.");
+                        System.out.println("You have already registered for this project.");
                         return;
                     }
                     for (Project q : storage.getProject().values()) {

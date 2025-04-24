@@ -73,7 +73,6 @@ public class StorageController implements IStorageController {
     public void addEnquiry(String askerID, String projectName, String question, Map<String, Enquiry> ENQUIRIES) {
         String ID = Integer.toString(++nextEnquiryID);
         ENQUIRIES.put(ID, new Enquiry(ID, askerID, projectName, question, "NULL"));
-        System.out.println(nextEnquiryID);
     }
 
     public void writeEnquiryFile(Map<String, Enquiry> ENQUIRY){ //WRITES using ENQUIRY in Storage
@@ -93,14 +92,13 @@ public class StorageController implements IStorageController {
         readCSV("src/main/database/BTOApplication.csv").stream().skip(1)
                 .forEach(line -> BTOAPPLICATIONS.put(line[0], new BTOApplication(line[0], line[1], line[2], line[3], line[4], line[5], line[6])));
         for (String a : BTOAPPLICATIONS.keySet()) //Go through the ID and take the Largest
-            nextBTOApplicationID = Math.max(nextBTOApplicationID, Integer.parseInt(a)) + 1;
+            nextBTOApplicationID = Math.max(nextBTOApplicationID, Integer.parseInt(a));
         return BTOAPPLICATIONS;
     }
 
     public void addBTOApplication(String userID, String projectName, String price, String type, Map<String, BTOApplication> BTOAPPLICATIONS) {
-        String ID = Integer.toString(nextBTOApplicationID);
+        String ID = Integer.toString(++nextBTOApplicationID);
         BTOAPPLICATIONS.put(ID, new BTOApplication(ID, userID, projectName, price, "NULL", type, "PENDING"));
-        nextBTOApplicationID++;
     }
 
     public void writeBTOApplicationFile(Map<String, BTOApplication> BTOAPPLICATIONS){
