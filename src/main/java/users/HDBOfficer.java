@@ -271,11 +271,11 @@ public class HDBOfficer extends Applicant {
         String AppID = ui.inputString();
 
         for (BTOApplication app : storage.getBTOApplications().values()) {
-            if(app.getApplicationStatus()!=ApplicationStatus.SUCCESSFUL) {
-                System.out.println("This application has not been successful or withdrawn.");
-                return;
-            }
             if(app.getID().equals(AppID)) {
+                if(app.getApplicationStatus()!=ApplicationStatus.SUCCESSFUL) {
+                    System.out.println("This application has not been successful or withdrawn.");
+                    return;
+                }
                 System.out.println("Current Application Status: "+app.getApplicationStatus());
                 System.out.print("Do you want to change the status from Successful to Booked? Y/N: ");
                 if (ui.inputString().equals("Y")){
