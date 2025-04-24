@@ -98,7 +98,6 @@ public class HDBOfficer extends Applicant {
 
             storage.registerProject(getUserID(), projectName);
             System.out.println("Please wait for the result. You are applying as Officer in "+projectName);
-            System.out.println(storage.getProject());
         } catch (Exception e) {
             System.out.println(e.getMessage() + " " + e.getCause());
         }
@@ -187,26 +186,27 @@ public class HDBOfficer extends Applicant {
 
         StringBuilder receipt = null;
         for (BTOApplication app : storage.getBTOApplications().values()) {
-            receipt = new StringBuilder();
-            List<String> applicant = storage.getUserData(applicantID);
-            receipt.append("=== BTO APPLICATION RECEIPT ===\n");
-            receipt.append("Date: ").append(currentDate).append("\n\n");
-            receipt.append("APPLICANT DETAILS:\n");
-            receipt.append("Name: ").append(applicant.get(0)).append("\n");
-            receipt.append("NRIC: ").append(applicant.get(1)).append("\n");
-            receipt.append("Age: ").append(applicant.get(2)).append("\n");
-            receipt.append("Marital Status: ").append(applicant.get(3)).append("\n\n");
+            if (app.getApplicantID().equals(applicantID)) {
+                receipt = new StringBuilder();
+                List<String> applicant = storage.getUserData(applicantID);
+                receipt.append("=== BTO APPLICATION RECEIPT ===\n");
+                receipt.append("Date: ").append(currentDate).append("\n\n");
+                receipt.append("APPLICANT DETAILS:\n");
+                receipt.append("Name: ").append(applicant.get(0)).append("\n");
+                receipt.append("NRIC: ").append(applicant.get(1)).append("\n");
+                receipt.append("Age: ").append(applicant.get(2)).append("\n");
+                receipt.append("Marital Status: ").append(applicant.get(3)).append("\n\n");
 
-            receipt.append("APPLICATION DETAILS:\n");
-            receipt.append("Project Name: ").append(app.getProjectName()).append("\n");
-            receipt.append("Flat Type: ").append(app.getFlatType()).append("\n");
-            receipt.append("Price: ").append(app.getPrice()).append("\n");
-            receipt.append("Officer In Charge: ").append(app.getOfficerInCharge()).append("\n");
-            receipt.append("Status: ").append(app.getApplicationStatus()).append("\n\n");
+                receipt.append("APPLICATION DETAILS:\n");
+                receipt.append("Project Name: ").append(app.getProjectName()).append("\n");
+                receipt.append("Flat Type: ").append(app.getFlatType()).append("\n");
+                receipt.append("Price: ").append(app.getPrice()).append("\n");
+                receipt.append("Officer In Charge: ").append(app.getOfficerInCharge()).append("\n");
+                receipt.append("Status: ").append(app.getApplicationStatus()).append("\n\n");
 
-            receipt.append("=== THANK YOU FOR YOUR APPLICATION ===\n");
+                receipt.append("=== THANK YOU FOR YOUR APPLICATION ===\n");
             }
-
+        }
         return receipt.toString();
     }
     /**
@@ -251,10 +251,8 @@ public class HDBOfficer extends Applicant {
         for (Project p : storage.getProject().values()) {
             for (BTOApplication app : storage.getBTOApplications().values()) {
                 if (projectsAllocated.contains(p.getProjectName())&& app.getApplicantID().equals(applicantID)) {
-                    System.out.println(p.getUnits());
                     p.updateFlatAvailability(app.getFlatType(), (p.getUnits().get(app.getFlatType())-1));
                     System.out.println("Successfully changed the number of flats!");
-                    System.out.println(p.getUnits());
                     return;
                 }
             }
@@ -273,6 +271,10 @@ public class HDBOfficer extends Applicant {
         String AppID = ui.inputString();
 
         for (BTOApplication app : storage.getBTOApplications().values()) {
+            if(app.getApplicationStatus()!=ApplicationStatus.SUCCESSFUL) {
+                System.out.println("This application has not been successful or withdrawn.");
+                return;
+            }
             if(app.getID().equals(AppID)) {
                 System.out.println("Current Application Status: "+app.getApplicationStatus());
                 System.out.print("Do you want to change the status from Successful to Booked? Y/N: ");
