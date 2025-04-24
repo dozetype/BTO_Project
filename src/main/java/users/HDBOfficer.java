@@ -56,7 +56,7 @@ public class HDBOfficer extends Applicant {
 
             default:
                 System.out.println("Unexpected value, return to main menu");
-                }
+        }
     }
 
     /**
@@ -197,7 +197,6 @@ public class HDBOfficer extends Applicant {
                 receipt.append("Age: ").append(applicant.get(2)).append("\n");
                 receipt.append("Marital Status: ").append(applicant.get(3)).append("\n\n");
 
-<<<<<<< Updated upstream
                 receipt.append("APPLICATION DETAILS:\n");
                 receipt.append("Project Name: ").append(app.getProjectName()).append("\n");
                 receipt.append("Flat Type: ").append(app.getFlatType()).append("\n");
@@ -208,18 +207,6 @@ public class HDBOfficer extends Applicant {
                 receipt.append("=== THANK YOU FOR YOUR APPLICATION ===\n");
             }
         }
-=======
-            receipt.append("APPLICATION DETAILS:\n");
-            receipt.append("Project Name: ").append(app.getProjectName()).append("\n");
-            receipt.append("Flat Type: ").append(app.getFlatType()).append("\n");
-            receipt.append("Price: ").append(app.getPrice()).append("\n");
-            receipt.append("Officer In Charge: ").append(getUserID()).append("\n");
-            receipt.append("Status: ").append(app.getApplicationStatus()).append("\n\n");
-
-            receipt.append("=== THANK YOU FOR YOUR APPLICATION ===\n");
-        }
-
->>>>>>> Stashed changes
         return receipt.toString();
     }
     /**
@@ -293,11 +280,9 @@ public class HDBOfficer extends Applicant {
                 System.out.print("Do you want to change the status from Successful to Booked? Y/N: ");
                 if (ui.inputString().equals("Y")){
                     app.setApplicationStatus(ApplicationStatus.BOOKED);
-                    System.out.println(app.getApplicationStatus());
                     app.setOfficerInCharge(getUserID());
                     System.out.println("Application status for "+app.getApplicantID()+" changed to Booked");
                     updateNumOfFlats(storage,app.getApplicantID());
-                    System.out.println(app.getApplicantID());
                     System.out.println(generateReceipt(storage,app.getApplicantID()));
                 }
                 else {
