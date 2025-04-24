@@ -9,7 +9,7 @@ public class Storage implements IStorage {
     private Map<String, ArrayList<String>> USERS; //Main storage for user info, only creating one user at a time
     private Map<String, Project> PROJECTS; //Key: Project Name, Value: Project
     private Map<String, Enquiry> ENQUIRIES; //Key: ID, Value: Enquiry
-    private Map<String, BTOApplication> BTOAPPLICATIONS; //Key: UserID, Value: BTOApplication
+    private Map<String, BTOApplication> BTOAPPLICATIONS; //Key: ID, Value: BTOApplication
 
     public Storage(){
         storageController = new StorageController();

@@ -116,6 +116,7 @@ public class BTOSystem {
                     break;
                 case 12:
                     ((Applicant)currUser).withdrawBTOApplication(storage);
+                    break;
                 case 13:
                     if(currUser instanceof HDBOfficer) {
                         ((HDBOfficer)currUser).registerToJoinProject(storage);
